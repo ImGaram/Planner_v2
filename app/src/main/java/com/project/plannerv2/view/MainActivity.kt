@@ -1,4 +1,4 @@
-package com.project.plannerv2
+package com.project.plannerv2.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.project.plannerv2.ui.theme.PlannerV2Theme
+import com.project.plannerv2.view.ui.theme.PlannerV2Theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

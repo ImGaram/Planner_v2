@@ -1,4 +1,4 @@
-package com.project.plannerv2.ui.theme
+package com.project.plannerv2.view.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
