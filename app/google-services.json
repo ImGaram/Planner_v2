@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "918596624634",
+    "project_id": "planner-v2-24fba",
+    "storage_bucket": "planner-v2-24fba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:918596624634:android:027422d2d4cfdb1861e943",
+        "android_client_info": {
+          "package_name": "com.project.plannerv2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChP55SfvezPbHk7sSxQJJoy6XKj4CIjp4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
