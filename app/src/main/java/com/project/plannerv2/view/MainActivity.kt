@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.project.plannerv2.view.login.navigation.loginRoute
 import com.project.plannerv2.view.ui.theme.PlannerV2Theme
 
 class MainActivity : ComponentActivity() {
@@ -15,7 +16,7 @@ class MainActivity : ComponentActivity() {
             PlannerV2Theme {
                 PlannerV2NavHost(
                     navHostController = rememberNavController(),
-                    startDestination = ""
+                    startDestination = loginRoute
                 )
             }
         }
