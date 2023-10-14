@@ -8,12 +8,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.project.plannerv2.view.component.bottomnavigation.PlannerV2BottomNavigation
+import com.project.plannerv2.view.component.topbar.PlannerV2TopAppBar
+import com.project.plannerv2.view.login.navigation.loginRoute
 import com.project.plannerv2.view.plan.navigation.planRoute
+import com.project.plannerv2.view.statistics.navigation.statisticsRoute
 import com.project.plannerv2.view.ui.theme.PlannerV2Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,10 +26,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             PlannerV2Theme {
                 val navHostController = rememberNavController()
+                val currentRoute by navHostController.currentBackStackEntryAsState()
 
                 Scaffold(
+                    topBar = { PlannerV2TopAppBar() },
                     bottomBar = {
-                        PlannerV2BottomNavigation(navHostController = navHostController)
+                        when (currentRoute?.destination?.route) {
+                            planRoute, statisticsRoute -> PlannerV2BottomNavigation(navHostController = navHostController)
+                        }
                     }
                 ) {
                     Box(
@@ -36,17 +43,11 @@ class MainActivity : ComponentActivity() {
                     ) {
                         PlannerV2NavHost(
                             navHostController = navHostController,
-                            startDestination = planRoute
+                            startDestination = loginRoute
                         )
                     }
                 }
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-
 }
