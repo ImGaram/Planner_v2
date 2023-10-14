@@ -25,7 +25,7 @@ import com.project.plannerv2.R
 import com.project.plannerv2.view.login.component.GoogleSignInButton
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navigateToPlan: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -69,7 +69,7 @@ fun LoginScreen() {
         Spacer(modifier = Modifier.weight(3f))
 
         GoogleSignInButton {
-
+            navigateToPlan()
         }
 
         Spacer(modifier = Modifier.weight(2f))
@@ -79,5 +79,5 @@ fun LoginScreen() {
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen()
+    LoginScreen(navigateToPlan = {})
 }
