@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.project.plannerv2.view.plan.component.ScheduleHeader
 import com.project.plannerv2.view.plan.component.ScheduleItem
-import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -46,7 +45,7 @@ fun PlanScreen() {
                 factory = { CalendarView(it) }
             ) { calendarView ->
                 val selectedDate = "${yearState}-${monthState}-${dayState}"
-                calendarView.date = formatter.parse(selectedDate, ParsePosition(0))!!.time
+                calendarView.date = formatter.parse(selectedDate)!!.time
 
                 calendarView.setOnDateChangeListener { _, year, month, day ->
                     yearState = year.toString()
