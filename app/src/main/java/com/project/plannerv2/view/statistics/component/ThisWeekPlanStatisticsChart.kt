@@ -29,7 +29,6 @@ fun ThisWeekPlanStatisticsChart(totalPlanCount: Int, completedPlanCount: Int) {
             .fillMaxWidth()
             .height(400.dp)
             .padding(horizontal = 15.dp, vertical = 5.dp),
-
         chart = columnChart(
             columns = listOf(
                 lineComponent(
