@@ -1,5 +1,6 @@
 package com.project.plannerv2.view.component.bottomnavigation
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -21,8 +22,8 @@ fun PlannerV2BottomNavigation(navHostController: NavHostController) {
     )
 
     NavigationBar(
-        modifier = Modifier,
-        containerColor = Color.White
+        modifier = Modifier.fillMaxWidth(),
+        containerColor = Color(0xFFFAFAFA)
     ) {
         val navBackStackEntry by navHostController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
@@ -48,7 +49,7 @@ fun PlannerV2BottomNavigation(navHostController: NavHostController) {
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color.Black,
                     unselectedIconColor = Color.LightGray,
-                    indicatorColor = Color.White
+                    indicatorColor = Color(0xFFFAFAFA)
                 )
             )
         }
