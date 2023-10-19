@@ -51,6 +51,12 @@ android {
 }
 
 dependencies {
+    // compose chart
+    implementation("com.patrykandpatrick.vico:compose:1.12.0")
+    implementation("com.patrykandpatrick.vico:compose-m3:1.12.0")
+    implementation("com.patrykandpatrick.vico:core:1.12.0")
+    implementation("com.patrykandpatrick.vico:views:1.12.0")
+
     // compose navigation
     implementation("androidx.navigation:navigation-compose:2.7.4")
 
