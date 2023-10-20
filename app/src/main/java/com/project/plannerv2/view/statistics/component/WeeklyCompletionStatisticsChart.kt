@@ -99,7 +99,7 @@ fun rememberChartStyle(columnChartColors: List<Color>): ChartStyle {
         val defaultColors = if (isSystemInDarkTheme) DefaultColors.Dark else DefaultColors.Light
 
         ChartStyle(
-            ChartStyle.Axis(
+            axis = ChartStyle.Axis(
                 axisLabelColor = Color(defaultColors.axisLabelColor),
                 axisGuidelineColor = Color(defaultColors.axisGuidelineColor),
                 axisLineColor = Color(defaultColors.axisLineColor)
