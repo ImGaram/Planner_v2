@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.project.plannerv2.R
+import com.project.plannerv2.view.plan.component.AddScheduleCard
 import com.project.plannerv2.view.plan.component.ScheduleHeader
 import com.project.plannerv2.view.plan.component.ScheduleItem
 import kotlinx.coroutines.launch
@@ -100,6 +101,10 @@ fun PlanScreen() {
                         .height(1.dp)
                         .padding(horizontal = 15.dp)
                 )
+            }
+
+            item {
+                AddScheduleCard {}
             }
         }
 
