@@ -128,6 +128,7 @@ fun PlanScreen() {
                     .padding(10.dp)
                     .rotate(if (scrollIsLastState) 180f else 0f),
                 painter = painterResource(id = R.drawable.ic_scroll_arrow),
+                tint = Color.White,
                 contentDescription = "down arrow"
             )
         }
