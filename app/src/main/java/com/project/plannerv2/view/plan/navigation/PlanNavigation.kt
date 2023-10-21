@@ -11,8 +11,8 @@ fun NavHostController.navigateToPlan() {
     this.navigate(planRoute)
 }
 
-fun NavGraphBuilder.planScreen() {
+fun NavGraphBuilder.planScreen(navigateToCreatePlan: () -> Unit) {
     composable(route = planRoute) {
-        PlanScreen()
+        PlanScreen(navigateToCreatePlan = navigateToCreatePlan)
     }
 }
