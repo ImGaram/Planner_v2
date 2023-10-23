@@ -42,7 +42,9 @@ import java.util.Locale
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
-fun PlanScreen() {
+fun PlanScreen(
+    navigateToCreatePlan: () -> Unit
+) {
     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
     val date = Date()
 
@@ -104,7 +106,7 @@ fun PlanScreen() {
             }
 
             item {
-                AddScheduleCard {}
+                AddScheduleCard { navigateToCreatePlan() }
             }
         }
 
@@ -138,5 +140,5 @@ fun PlanScreen() {
 @Preview(showBackground = true)
 @Composable
 fun PlanScreenPreview() {
-    PlanScreen()
+    PlanScreen {}
 }

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.project.plannerv2.view.create.navigation.createPlanScreen
+import com.project.plannerv2.view.create.navigation.navigateToCreatePlan
 import com.project.plannerv2.view.login.navigation.loginScreen
 import com.project.plannerv2.view.plan.navigation.navigateToPlan
 import com.project.plannerv2.view.plan.navigation.planScreen
@@ -19,9 +20,13 @@ fun PlannerV2NavHost(
             navigateToPlan = { navHostController.navigateToPlan() }
         )
 
-        planScreen()
+        planScreen(
+            navigateToCreatePlan = { navHostController.navigateToCreatePlan() }
+        )
 
-        createPlanScreen()
+        createPlanScreen(
+            navigateToPlan = { navHostController.navigateToPlan() }
+        )
 
         statisticsScreen()
     }
