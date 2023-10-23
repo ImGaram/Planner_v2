@@ -21,12 +21,12 @@ fun PlannerV2NavHost(
         )
 
         planScreen(
-            navigateToCreatePlan = {
-                navHostController.navigateToCreatePlan()
-            }
+            navigateToCreatePlan = { navHostController.navigateToCreatePlan() }
         )
 
-        createPlanScreen()
+        createPlanScreen(
+            navigateToPlan = { navHostController.navigateToPlan() }
+        )
 
         statisticsScreen()
     }
