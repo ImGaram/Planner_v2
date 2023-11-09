@@ -1,5 +1,8 @@
 package com.project.plannerv2.view.login
 
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -15,17 +18,36 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.project.plannerv2.R
 import com.project.plannerv2.view.login.component.GoogleSignInButton
+import com.project.plannerv2.viewmodel.LoginViewModel
 
 @Composable
-fun LoginScreen(navigateToPlan: () -> Unit) {
+fun LoginScreen(
+    loginViewModel: LoginViewModel = viewModel(),
+    navigateToPlan: () -> Unit
+) {
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) {
+        loginViewModel.login(activityResult = it) {
+            Toast.makeText(context, "로그인이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+            navigateToPlan()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,8 +90,16 @@ fun LoginScreen(navigateToPlan: () -> Unit) {
 
         Spacer(modifier = Modifier.weight(3f))
 
+        val token = stringResource(id = R.string.default_web_client_id)
         GoogleSignInButton {
-            navigateToPlan()
+            val googleSignInOptions = GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(token)
+                .requestEmail()
+                .build()
+
+            val googleSignInClient = GoogleSignIn.getClient(context, googleSignInOptions)
+            launcher.launch(googleSignInClient.signInIntent)
         }
 
         Spacer(modifier = Modifier.weight(2f))
