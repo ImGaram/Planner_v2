@@ -23,6 +23,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.project.plannerv2.R
 import com.project.plannerv2.data.PlanData
 import com.project.plannerv2.view.create.component.CreatePlanCard
@@ -48,46 +50,25 @@ fun CreatePlanScreen(
     navigateToPlan: () -> Unit
 ) {
     val planList = createPlanViewModel.planList
+    val savePlanState = createPlanViewModel.savePlan.collectAsState()
     val planListState = remember { planList }
     var buttonsVisibility by remember { mutableStateOf(false) }
 
     LaunchedEffect(planListState.toList()) {
-        buttonsVisibility = planListState.isNotEmpty() && planListState[0].title.isNotEmpty()
+        var titleIsEmpty = false
+        repeat(planListState.size) { titleIsEmpty = planListState[it].title.isEmpty() }
+        buttonsVisibility = planListState.isNotEmpty() && !titleIsEmpty
+    }
+
+    LaunchedEffect(savePlanState.value) {
+        if (savePlanState.value) navigateToPlan()
     }
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.End
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 10.dp, end = 15.dp, top = 15.dp, bottom = 10.dp)
-        ) {
-            IconButton(
-                modifier = Modifier.size(36.dp),
-                onClick = { navigateToPlan() }
-            ) {
-                Icon(
-                    modifier = Modifier.padding(5.dp),
-                    painter = painterResource(id = R.drawable.ic_back_arrow),
-                    contentDescription = "back arrow"
-                )
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Text(
-                text = "일정 생성",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
-
-        Text(
-            modifier = Modifier.padding(end = 15.dp, bottom = 15.dp),
-            text = "생성한 일정을 클릭하여 수정하세요."
-        )
+        CreatePlanTitle(navigateToPlan = navigateToPlan)
 
         Divider(
             modifier = Modifier
@@ -137,31 +118,80 @@ fun CreatePlanScreen(
                     .padding(horizontal = 15.dp)
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 15.dp, vertical = 10.dp)
-            ) {
-                Button(
-                    modifier = Modifier.width(100.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6EC4A7)),
-                    onClick = { navigateToPlan() }
-                ) {
-                    Text(text = "취소")
+            SaveCancelButtons(
+                navigateToPlan = navigateToPlan,
+                savePlanLogic = {
+                    createPlanViewModel.savePlan(
+                        plans = planListState.toList(),
+                        uid = FirebaseAuth.getInstance().uid!!
+                    )
                 }
+            )
+        }
+    }
+}
 
-                Spacer(modifier = Modifier.weight(1f))
+@Composable
+fun CreatePlanTitle(navigateToPlan: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 10.dp, end = 15.dp, top = 15.dp, bottom = 10.dp)
+    ) {
+        IconButton(
+            modifier = Modifier.size(36.dp),
+            onClick = { navigateToPlan() }
+        ) {
+            Icon(
+                modifier = Modifier.padding(5.dp),
+                painter = painterResource(id = R.drawable.ic_back_arrow),
+                contentDescription = "back arrow"
+            )
+        }
 
-                Button(
-                    modifier = Modifier.width(100.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB86)),
-                    onClick = { /*TODO :: add firebase save logic */ }
-                ) {
-                    Text(text = "생성")
-                }
-            }
+        Spacer(modifier = Modifier.weight(1f))
+
+        Text(
+            text = "일정 생성",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.SemiBold
+        )
+    }
+
+    Text(
+        modifier = Modifier.padding(end = 15.dp, bottom = 15.dp),
+        text = "생성한 일정을 클릭하여 수정하세요."
+    )
+}
+
+@Composable
+fun SaveCancelButtons(
+    navigateToPlan: () -> Unit,
+    savePlanLogic: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 15.dp, vertical = 10.dp)
+    ) {
+        Button(
+            modifier = Modifier.width(100.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6EC4A7)),
+            onClick = { navigateToPlan() }
+        ) {
+            Text(text = "취소")
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Button(
+            modifier = Modifier.width(100.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB86)),
+            onClick = { savePlanLogic() }
+        ) {
+            Text(text = "생성")
         }
     }
 }
