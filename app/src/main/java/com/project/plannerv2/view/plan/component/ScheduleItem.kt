@@ -19,9 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.project.plannerv2.data.PlanData
 
 @Composable
 fun ScheduleItem(
+    planData: PlanData,
     checked: Boolean,
     onCheckBoxClick: (Boolean) -> Unit
 ) {
@@ -48,13 +50,13 @@ fun ScheduleItem(
                 .padding(10.dp)
         ) {
             Text(
-                text = "title",
+                text = planData.title,
                 fontSize = 17.sp,
                 fontWeight = FontWeight.Normal
             )
             Text(
                 modifier = Modifier.padding(top = 5.dp),
-                text = "description",
+                text = planData.description,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Thin
             )
@@ -66,6 +68,7 @@ fun ScheduleItem(
 @Composable
 fun ScheduleItemPreview() {
     ScheduleItem(
+        planData = PlanData("", ""),
         checked = false,
         onCheckBoxClick = {}
     )
