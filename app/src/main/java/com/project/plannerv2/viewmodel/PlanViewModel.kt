@@ -15,7 +15,6 @@ class PlanViewModel: ViewModel() {
     val plans: StateFlow<List<PlanData>?> = _plans.asStateFlow()
 
     fun getPlans(uid: String, date: String) {
-        println("is called")
         val getPlanReference = FirebaseDatabase.getInstance().reference
             .child("schedule")
             .child(uid)
