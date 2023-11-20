@@ -11,8 +11,6 @@ import com.project.plannerv2.data.PlanData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class CreatePlanViewModel: ViewModel() {
     private val _planList = mutableStateListOf<PlanData>()
@@ -33,12 +31,11 @@ class CreatePlanViewModel: ViewModel() {
         _planList.removeAt(position)
     }
 
-    fun savePlan(plans: List<PlanData>, uid: String) {
-        val currentDate = getCurrentDate()
+    fun savePlan(plans: List<PlanData>, uid: String, date: String) {
         val saveFirebaseRef = FirebaseDatabase.getInstance().reference
             .child("schedule")
             .child(uid)
-            .child(currentDate)
+            .child(date)
         val objectMap = mutableMapOf<String, PlanData>()
 
         saveFirebaseRef.addListenerForSingleValueEvent(object: ValueEventListener {
@@ -59,10 +56,5 @@ class CreatePlanViewModel: ViewModel() {
 
             override fun onCancelled(error: DatabaseError) {}
         })
-    }
-
-    private fun getCurrentDate(): String {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        return LocalDate.now().format(formatter)
     }
 }
