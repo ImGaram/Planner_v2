@@ -22,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,13 +35,13 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.project.plannerv2.R
+import com.project.plannerv2.application.PlannerV2Application
 import com.project.plannerv2.view.plan.component.AddScheduleCard
 import com.project.plannerv2.view.plan.component.ScheduleHeader
 import com.project.plannerv2.view.plan.component.ScheduleItem
 import com.project.plannerv2.viewmodel.PlanViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 @Composable
@@ -51,20 +50,16 @@ fun PlanScreen(
     planViewModel: PlanViewModel = viewModel(),
     navigateToCreatePlan: () -> Unit
 ) {
-    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
-    val date = Date()
-    var yearState by rememberSaveable { mutableStateOf(formatter.format(date).split("-").first()) }
-    var monthState by rememberSaveable { mutableStateOf(formatter.format(date).split("-")[1]) }
-    var dayState by rememberSaveable { mutableStateOf(formatter.format(date).split("-").last()) }
+    val dataStore = PlannerV2Application.getInstance().getDataStore()
+    val dateFlow = dataStore.dateFlow.collectAsState(initial = "").value
+    var monthState by remember { mutableStateOf("") }
+    var dayState by remember { mutableStateOf("") }
 
     val plans = planViewModel.plans.collectAsState()
-    val uid = FirebaseAuth.getInstance().uid
-    var selectedDate by remember { mutableStateOf("$yearState-$monthState-$dayState") }
 
     val scrollState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     var scrollIsLastState by remember { mutableStateOf(false) }     // 스크롤을 더 이상 할수 없는가?(마지막 스크롤인가?)
-
     val cantScrollForward = !scrollState.canScrollForward       // 앞으로는 더 스크롤할 수 없음
     val cantScrollBackward = !scrollState.canScrollBackward     // 뒤로는 더 스크롤할 수 없음
 
@@ -73,9 +68,13 @@ fun PlanScreen(
         if (cantScrollBackward) scrollIsLastState = false
     }
 
-    LaunchedEffect(yearState, monthState, dayState) {
-        selectedDate = "${yearState}-${monthState}-${dayState}"
-        planViewModel.getPlans(uid!!, selectedDate)
+    LaunchedEffect(dateFlow) {
+        val uid = FirebaseAuth.getInstance().uid
+        if (!dateFlow.isNullOrEmpty() && uid != null) {
+            monthState = dateFlow.split("-")[1]
+            dayState = dateFlow.split("-").last()
+            planViewModel.getPlans(uid, dateFlow)
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -88,12 +87,16 @@ fun PlanScreen(
                     modifier = Modifier.fillMaxWidth(),
                     factory = { CalendarView(it) }
                 ) { calendarView ->
-                    calendarView.date = formatter.parse(selectedDate)!!.time
+                    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+                    if (!dateFlow.isNullOrEmpty())
+                        calendarView.date = formatter.parse(dateFlow)!!.time
 
                     calendarView.setOnDateChangeListener { _, year, month, day ->
-                        yearState = year.toString()
-                        monthState = (month + 1).toString()
-                        dayState = day.toString()
+                        scope.launch {
+                            monthState = (month + 1).toString()
+                            dayState = day.toString()
+                            dataStore.setDate("$year-${month+1}-$day")
+                        }
                     }
                 }
             }
