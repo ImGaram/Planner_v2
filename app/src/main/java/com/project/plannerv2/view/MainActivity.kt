@@ -7,9 +7,16 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -37,6 +44,11 @@ class MainActivity : ComponentActivity() {
                 val navHostController = rememberNavController()
                 val currentRoute by navHostController.currentBackStackEntryAsState()
 
+                val initDataStoreState = remember { mutableStateOf(false) }
+                LaunchedEffect(Unit) {
+                    splashViewModel.initDataStore(initDataStoreState)
+                }
+
                 Scaffold(
                     topBar = { PlannerV2TopAppBar() },
                     bottomBar = {
@@ -50,13 +62,27 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(it)
                     ) {
-                        PlannerV2NavHost(
-                            navHostController = navHostController,
-                            startDestination = if (loginState!!) planRoute else loginRoute
-                        )
+                        if (initDataStoreState.value) {
+                            if (loginState != null) {
+                                PlannerV2NavHost(
+                                    navHostController = navHostController,
+                                    startDestination = if (loginState!!) planRoute else loginRoute
+                                )
+                            }
+                        } else CircularProgressScreen()
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    fun CircularProgressScreen() {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(color = Color(0xFF6EC4A7))
         }
     }
 }
