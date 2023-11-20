@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.project.plannerv2.R
+import com.project.plannerv2.application.PlannerV2Application
 import com.project.plannerv2.data.PlanData
 import com.project.plannerv2.view.create.component.CreatePlanCard
 import com.project.plannerv2.view.create.component.PlanCard
@@ -51,6 +52,7 @@ fun CreatePlanScreen(
 ) {
     val planList = createPlanViewModel.planList
     val savePlanState = createPlanViewModel.savePlan.collectAsState()
+    val currentDate = PlannerV2Application.getInstance().getDataStore().dateFlow.collectAsState(initial = "").value
     val planListState = remember { planList }
     var buttonsVisibility by remember { mutableStateOf(false) }
 
@@ -121,10 +123,13 @@ fun CreatePlanScreen(
             SaveCancelButtons(
                 navigateToPlan = navigateToPlan,
                 savePlanLogic = {
-                    createPlanViewModel.savePlan(
-                        plans = planListState.toList(),
-                        uid = FirebaseAuth.getInstance().uid!!
-                    )
+                    if (!currentDate.isNullOrEmpty()) {
+                        createPlanViewModel.savePlan(
+                            plans = planListState.toList(),
+                            uid = FirebaseAuth.getInstance().uid!!,
+                            date = currentDate
+                        )
+                    }
                 }
             )
         }
