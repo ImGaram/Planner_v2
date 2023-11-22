@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
@@ -50,6 +50,8 @@ fun PlanScreen(
     planViewModel: PlanViewModel = viewModel(),
     navigateToCreatePlan: () -> Unit
 ) {
+    val uid = FirebaseAuth.getInstance().uid
+
     val dataStore = PlannerV2Application.getInstance().getDataStore()
     val dateFlow = dataStore.dateFlow.collectAsState(initial = "").value
     var monthState by remember { mutableStateOf("") }
@@ -69,7 +71,6 @@ fun PlanScreen(
     }
 
     LaunchedEffect(dateFlow) {
-        val uid = FirebaseAuth.getInstance().uid
         if (!dateFlow.isNullOrEmpty() && uid != null) {
             monthState = dateFlow.split("-")[1]
             dayState = dateFlow.split("-").last()
@@ -104,12 +105,16 @@ fun PlanScreen(
             stickyHeader { ScheduleHeader(month = monthState, day = dayState) }
 
             if (plans.value != null) {
-                items(plans.value!!) {
+                itemsIndexed(plans.value!!) { position, it ->
                     ScheduleItem(
                         planData = it,
                         checked = it.complete,
                         onCheckBoxClick = {
-
+                            planViewModel.planCheck(
+                                uid = uid!!,
+                                date = dateFlow.toString(),
+                                position = position.toString()
+                            )
                         }
                     )
 
