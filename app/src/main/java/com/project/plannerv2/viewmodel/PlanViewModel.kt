@@ -34,4 +34,26 @@ class PlanViewModel: ViewModel() {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+
+    fun planCheck(uid: String, date: String, position: String) {
+        val changeCompleteStateReference = FirebaseDatabase.getInstance().reference
+            .child("schedule")
+            .child(uid)
+            .child(date)
+            .child(position)
+
+        changeCompleteStateReference.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val targetPlan = snapshot.getValue(PlanData::class.java)
+                val map = mutableMapOf<String, Boolean>()
+
+                if (targetPlan != null) {
+                    map["complete"] = !targetPlan.complete
+                    changeCompleteStateReference.updateChildren(map as Map<String, Boolean>)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
 }
