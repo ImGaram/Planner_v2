@@ -41,13 +41,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.project.plannerv2.R
 import com.project.plannerv2.application.PlannerV2Application
 import com.project.plannerv2.data.PlanData
+import com.project.plannerv2.util.StatisticsMode
 import com.project.plannerv2.view.create.component.CreatePlanCard
 import com.project.plannerv2.view.create.component.PlanCard
 import com.project.plannerv2.viewmodel.CreatePlanViewModel
+import com.project.plannerv2.viewmodel.StatisticsViewModel
 
 @Composable
 fun CreatePlanScreen(
     createPlanViewModel: CreatePlanViewModel = viewModel(),
+    statisticsViewModel: StatisticsViewModel = viewModel(),
     navigateToPlan: () -> Unit
 ) {
     val planList = createPlanViewModel.planList
@@ -123,11 +126,17 @@ fun CreatePlanScreen(
             SaveCancelButtons(
                 navigateToPlan = navigateToPlan,
                 savePlanLogic = {
+                    val uid = FirebaseAuth.getInstance().uid!!
                     if (!currentDate.isNullOrEmpty()) {
                         createPlanViewModel.savePlan(
                             plans = planListState.toList(),
-                            uid = FirebaseAuth.getInstance().uid!!,
+                            uid = uid,
                             date = currentDate
+                        )
+                        statisticsViewModel.modifyData(
+                            uid = uid,
+                            addDataCount = planListState.size,
+                            mode = StatisticsMode.TOTAL
                         )
                     }
                 }

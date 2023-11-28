@@ -36,10 +36,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.project.plannerv2.R
 import com.project.plannerv2.application.PlannerV2Application
+import com.project.plannerv2.util.StatisticsMode
 import com.project.plannerv2.view.plan.component.AddScheduleCard
 import com.project.plannerv2.view.plan.component.ScheduleHeader
 import com.project.plannerv2.view.plan.component.ScheduleItem
 import com.project.plannerv2.viewmodel.PlanViewModel
+import com.project.plannerv2.viewmodel.StatisticsViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -48,6 +50,7 @@ import java.util.Locale
 @OptIn(ExperimentalFoundationApi::class)
 fun PlanScreen(
     planViewModel: PlanViewModel = viewModel(),
+    statisticsViewModel: StatisticsViewModel = viewModel(),
     navigateToCreatePlan: () -> Unit
 ) {
     val uid = FirebaseAuth.getInstance().uid
@@ -109,11 +112,16 @@ fun PlanScreen(
                     ScheduleItem(
                         planData = it,
                         checked = it.complete,
-                        onCheckBoxClick = {
+                        onCheckBoxClick = { isCheck ->
                             planViewModel.planCheck(
                                 uid = uid!!,
                                 date = dateFlow.toString(),
                                 position = position.toString()
+                            )
+                            statisticsViewModel.modifyData(
+                                uid = uid,
+                                isCheck = isCheck,
+                                mode = StatisticsMode.COMPLETED
                             )
                         }
                     )
