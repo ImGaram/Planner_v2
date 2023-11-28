@@ -8,6 +8,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.project.plannerv2.data.StatisticsData
 import com.project.plannerv2.util.StatisticsMode
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class StatisticsViewModel: ViewModel() {
     // 통계 데이터베이스 로직
@@ -16,6 +18,28 @@ class StatisticsViewModel: ViewModel() {
     // 갈수록 +하기
     // 삭제하면(추후에 추가 예정) -하기
     // 일요일까지 일정 정보를 수집하고 월요일 12시가 되면 일정 정보를 초기화하기(workManager)
+
+    private val _thisWeekStatistics = MutableStateFlow<StatisticsData?>(null)
+    val thisWeekStatistics = _thisWeekStatistics.asStateFlow()
+
+    fun getThisWeekStatistics(uid: String) {
+        val reference = FirebaseDatabase.getInstance().reference
+            .child("statistics")
+            .child(uid)
+            .child("this week")
+
+        reference.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val statisticsData = snapshot.getValue(StatisticsData::class.java)
+
+                if (statisticsData != null) {
+                    _thisWeekStatistics.value = statisticsData
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
 
     private fun modifyTotalData(
         addDataCount: Int,
