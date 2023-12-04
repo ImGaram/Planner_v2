@@ -1,18 +1,16 @@
 package com.project.plannerv2.viewmodel
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.project.plannerv2.data.PlanData
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 class PlanViewModel: ViewModel() {
-    private val _plans = MutableStateFlow<List<PlanData>?>(null)
-    val plans: StateFlow<List<PlanData>?> = _plans.asStateFlow()
+    private val _plans = mutableStateListOf<PlanData>()
+    val plans: List<PlanData> get() = _plans
 
     fun getPlans(uid: String, date: String) {
         val getPlanReference = FirebaseDatabase.getInstance().reference
@@ -22,13 +20,12 @@ class PlanViewModel: ViewModel() {
 
         getPlanReference.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val planList = mutableListOf<PlanData>()
+
+                _plans.clear()
                 snapshot.children.forEach { dataSnapshot ->
                     val data = dataSnapshot.getValue(PlanData::class.java)
-                    planList.add(data!!)
+                    _plans.add(data!!)
                 }
-
-                _plans.value = planList
             }
 
             override fun onCancelled(error: DatabaseError) {}
@@ -55,5 +52,11 @@ class PlanViewModel: ViewModel() {
 
             override fun onCancelled(error: DatabaseError) {}
         })
+    }
+
+    fun changePlanCompleteAtIndex(position: Int, checked: Boolean) {
+        _plans.find { _plans.indexOf(it) == position }?.let { data ->
+            data.complete = checked
+        }
     }
 }
