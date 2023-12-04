@@ -1,7 +1,13 @@
 package com.project.plannerv2.data
 
-data class PlanData(
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+
+class PlanData(
     val title: String = "",
     val description: String = "",
-    val complete: Boolean = false
-)
+    complete: Boolean = false
+) {
+    var complete by mutableStateOf(complete)
+}

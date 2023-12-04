@@ -1,50 +1,34 @@
 package com.project.plannerv2.view.plan
 
-import android.widget.CalendarView
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.project.plannerv2.R
 import com.project.plannerv2.application.PlannerV2Application
 import com.project.plannerv2.util.StatisticsMode
 import com.project.plannerv2.view.plan.component.AddScheduleCard
+import com.project.plannerv2.view.plan.component.PlanCalendar
 import com.project.plannerv2.view.plan.component.ScheduleHeader
 import com.project.plannerv2.view.plan.component.ScheduleItem
+import com.project.plannerv2.view.plan.component.ScreenScrollButton
 import com.project.plannerv2.viewmodel.PlanViewModel
 import com.project.plannerv2.viewmodel.StatisticsViewModel
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
@@ -54,31 +38,28 @@ fun PlanScreen(
     navigateToCreatePlan: () -> Unit
 ) {
     val uid = FirebaseAuth.getInstance().uid
+    val planState = planViewModel.plans
 
     val dataStore = PlannerV2Application.getInstance().getDataStore()
-    val dateFlow = dataStore.dateFlow.collectAsState(initial = "").value
-    var monthState by remember { mutableStateOf("") }
-    var dayState by remember { mutableStateOf("") }
-
-    val plans = planViewModel.plans.collectAsState()
+    val dateFlow = dataStore.dateFlow.collectAsState(initial = "")
+    val dateState = remember { mutableStateOf(dateFlow.value) }
 
     val scrollState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    var scrollIsLastState by remember { mutableStateOf(false) }     // 스크롤을 더 이상 할수 없는가?(마지막 스크롤인가?)
+    val scrollIsLastState = remember { mutableStateOf(false) }      // 스크롤을 더 이상 할수 없는가?(마지막 스크롤인가?)
     val cantScrollForward = !scrollState.canScrollForward       // 앞으로는 더 스크롤할 수 없음
     val cantScrollBackward = !scrollState.canScrollBackward     // 뒤로는 더 스크롤할 수 없음
 
-    LaunchedEffect(key1 = cantScrollForward, key2 = cantScrollBackward) {
-        if (cantScrollForward) scrollIsLastState = true
-        if (cantScrollBackward) scrollIsLastState = false
-    }
-
-    LaunchedEffect(dateFlow) {
-        if (!dateFlow.isNullOrEmpty() && uid != null) {
-            monthState = dateFlow.split("-")[1]
-            dayState = dateFlow.split("-").last()
-            planViewModel.getPlans(uid, dateFlow)
+    LaunchedEffect(Unit) {
+        if (!dateFlow.value.isNullOrEmpty()) {
+            dateState.value = dateFlow.value
+            planViewModel.getPlans(uid!!, dateState.value!!)
         }
+    }
+    
+    LaunchedEffect(cantScrollForward, cantScrollBackward) {
+        if (cantScrollForward) scrollIsLastState.value = true
+        if (cantScrollBackward) scrollIsLastState.value = false
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -87,35 +68,26 @@ fun PlanScreen(
             state = scrollState
         ) {
             item {
-                AndroidView(
-                    modifier = Modifier.fillMaxWidth(),
-                    factory = { CalendarView(it) }
-                ) { calendarView ->
-                    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
-                    if (!dateFlow.isNullOrEmpty())
-                        calendarView.date = formatter.parse(dateFlow)!!.time
-
-                    calendarView.setOnDateChangeListener { _, year, month, day ->
-                        scope.launch {
-                            monthState = (month + 1).toString()
-                            dayState = day.toString()
-                            dataStore.setDate("$year-${month+1}-$day")
-                        }
-                    }
+                PlanCalendar(
+                    date = dateState,
+                    scope = scope,
+                    dataStore = dataStore
+                ) {
+                    planViewModel.getPlans(uid!!, dateState.value!!)
                 }
             }
 
-            stickyHeader { ScheduleHeader(month = monthState, day = dayState) }
+            stickyHeader { ScheduleHeader(date = dateState) }
 
-            if (plans.value != null) {
-                itemsIndexed(plans.value!!) { position, it ->
+            if (planState.isNotEmpty()) {
+                itemsIndexed(planState) { position, it ->
                     ScheduleItem(
                         planData = it,
-                        checked = it.complete,
                         onCheckBoxClick = { isCheck ->
+                            planViewModel.changePlanCompleteAtIndex(position, isCheck)
                             planViewModel.planCheck(
                                 uid = uid!!,
-                                date = dateFlow.toString(),
+                                date = dateState.value!!,
                                 position = position.toString()
                             )
                             statisticsViewModel.modifyData(
@@ -134,35 +106,15 @@ fun PlanScreen(
                 }
             }
 
-            item {
-                AddScheduleCard { navigateToCreatePlan() }
-            }
+            item { AddScheduleCard { navigateToCreatePlan() } }
         }
 
-        IconButton(
-            modifier = Modifier
-                .clip(CircleShape)
-                .align(Alignment.BottomEnd)
-                .padding(end = 20.dp, bottom = 20.dp),
-            onClick = {
-                scope.launch {
-                    if (scrollIsLastState) scrollState.animateScrollToItem(index = 0)
-                    else scrollState.animateScrollToItem(index = plans.value!!.lastIndex)
-                }
-            },
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = Color(0xFF6EC4A7)
-            )
-        ) {
-            Icon(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .rotate(if (scrollIsLastState) 180f else 0f),
-                painter = painterResource(id = R.drawable.ic_scroll_arrow),
-                tint = Color.White,
-                contentDescription = "down arrow"
-            )
-        }
+        ScreenScrollButton(
+            plans = planState,
+            scrollState = scrollState,
+            scrollIsLastState = scrollIsLastState,
+            scope = scope
+        )
     }
 }
 
