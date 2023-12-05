@@ -3,11 +3,9 @@ package com.project.plannerv2.viewmodel
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.project.plannerv2.data.PlanData
+import com.project.plannerv2.util.getFirebaseData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,8 +36,8 @@ class CreatePlanViewModel: ViewModel() {
             .child(date)
         val objectMap = mutableMapOf<String, PlanData>()
 
-        saveFirebaseRef.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
+        saveFirebaseRef.getFirebaseData(
+            onDataChangeLogic = { snapshot ->
                 snapshot.children.forEach { dataSnapShot ->
                     val data = dataSnapShot.getValue(PlanData::class.java)
                     objectMap[objectMap.size.toString()] = data!!
@@ -53,8 +51,6 @@ class CreatePlanViewModel: ViewModel() {
                     if (task.isSuccessful) _savePlan.value = true
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {}
-        })
+        )
     }
 }
