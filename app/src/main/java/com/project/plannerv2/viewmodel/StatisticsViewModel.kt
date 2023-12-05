@@ -2,12 +2,11 @@ package com.project.plannerv2.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.project.plannerv2.data.StatisticsData
 import com.project.plannerv2.util.StatisticsMode
+import com.project.plannerv2.util.getFirebaseData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -23,22 +22,20 @@ class StatisticsViewModel: ViewModel() {
     val thisWeekStatistics = _thisWeekStatistics.asStateFlow()
 
     fun getThisWeekStatistics(uid: String) {
-        val reference = FirebaseDatabase.getInstance().reference
+        val thisWeekReference = FirebaseDatabase.getInstance().reference
             .child("statistics")
             .child(uid)
             .child("this week")
 
-        reference.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
+        thisWeekReference.getFirebaseData(
+            onDataChangeLogic = { snapshot ->
                 val statisticsData = snapshot.getValue(StatisticsData::class.java)
 
                 if (statisticsData != null) {
                     _thisWeekStatistics.value = statisticsData
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {}
-        })
+        )
     }
 
     private fun modifyTotalData(
@@ -70,21 +67,18 @@ class StatisticsViewModel: ViewModel() {
         isCheck: Boolean = false,
         mode: StatisticsMode
     ) {
-        val reference = FirebaseDatabase.getInstance().reference
+        val thisWeekReference = FirebaseDatabase.getInstance().reference
             .child("statistics")
             .child(uid)
             .child("this week")
 
-        // todo :: 데이터베이스 set value, updateChildren의 결과에 따른 addOnComplete(onFailure)Listener를 한 함수에 관리하는 코드 추가하기
-        reference.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
+        thisWeekReference.getFirebaseData(
+            onDataChangeLogic = { snapshot ->
                 when (mode) {
-                    StatisticsMode.TOTAL -> modifyTotalData(addDataCount, snapshot, reference)
-                    StatisticsMode.COMPLETED -> modifyCompletedData(isCheck, snapshot, reference)
+                    StatisticsMode.TOTAL -> modifyTotalData(addDataCount, snapshot, thisWeekReference)
+                    StatisticsMode.COMPLETED -> modifyCompletedData(isCheck, snapshot, thisWeekReference)
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {}
-        })
+        )
     }
 }

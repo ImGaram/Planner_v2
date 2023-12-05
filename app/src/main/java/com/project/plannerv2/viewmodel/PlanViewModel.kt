@@ -2,11 +2,9 @@ package com.project.plannerv2.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.project.plannerv2.data.PlanData
+import com.project.plannerv2.util.getFirebaseData
 
 class PlanViewModel: ViewModel() {
     private val _plans = mutableStateListOf<PlanData>()
@@ -18,18 +16,15 @@ class PlanViewModel: ViewModel() {
             .child(uid)
             .child(date)
 
-        getPlanReference.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-
+        getPlanReference.getFirebaseData(
+            onDataChangeLogic = { snapshot ->
                 _plans.clear()
                 snapshot.children.forEach { dataSnapshot ->
                     val data = dataSnapshot.getValue(PlanData::class.java)
                     _plans.add(data!!)
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {}
-        })
+        )
     }
 
     fun planCheck(uid: String, date: String, position: String) {
@@ -39,8 +34,8 @@ class PlanViewModel: ViewModel() {
             .child(date)
             .child(position)
 
-        changeCompleteStateReference.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
+        changeCompleteStateReference.getFirebaseData(
+            onDataChangeLogic = { snapshot ->
                 val targetPlan = snapshot.getValue(PlanData::class.java)
                 val map = mutableMapOf<String, Boolean>()
 
@@ -49,9 +44,7 @@ class PlanViewModel: ViewModel() {
                     changeCompleteStateReference.updateChildren(map as Map<String, Boolean>)
                 }
             }
-
-            override fun onCancelled(error: DatabaseError) {}
-        })
+        )
     }
 
     fun changePlanCompleteAtIndex(position: Int, checked: Boolean) {
