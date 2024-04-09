@@ -2,46 +2,48 @@ package com.toyproject.plannerv2.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.toyproject.plannerv2.data.PlanData
-import com.toyproject.plannerv2.util.getFirebaseData
+import com.toyproject.plannerv2.util.readFireStoreData
+import com.toyproject.plannerv2.util.updateFireStoreData
 
 class PlanViewModel: ViewModel() {
     private val _plans = mutableStateListOf<PlanData>()
     val plans: List<PlanData> get() = _plans
 
     fun getPlans(uid: String, date: String) {
-        val getPlanReference = FirebaseDatabase.getInstance().reference
-            .child("schedule")
-            .child(uid)
-            .child(date)
+        val getPlansRef = FirebaseFirestore.getInstance()
+            .collection("schedule")
+            .document(uid)
+            .collection("plans")
 
-        getPlanReference.getFirebaseData(
-            onDataChangeLogic = { snapshot ->
+        // baseDate와 날짜가 같은 document들만 불러오기.
+        getPlansRef.whereEqualTo("baseDate", date).readFireStoreData(
+            onSuccess = {
                 _plans.clear()
-                snapshot.children.forEach { dataSnapshot ->
-                    val data = dataSnapshot.getValue(PlanData::class.java)
-                    _plans.add(data!!)
+                it.forEach { documentSnapshot ->
+                    val planObj = documentSnapshot.toObject(PlanData::class.java)
+                    if (planObj != null) _plans.add(planObj)
                 }
             }
         )
     }
 
-    fun planCheck(uid: String, date: String, position: String) {
-        val changeCompleteStateReference = FirebaseDatabase.getInstance().reference
-            .child("schedule")
-            .child(uid)
-            .child(date)
-            .child(position)
+    fun planCheck(uid: String, documentId: String) {
+        val checkRef = FirebaseFirestore.getInstance()
+            .collection("schedule")
+            .document(uid)
+            .collection("plans")
 
-        changeCompleteStateReference.getFirebaseData(
-            onDataChangeLogic = { snapshot ->
-                val targetPlan = snapshot.getValue(PlanData::class.java)
-                val map = mutableMapOf<String, Boolean>()
+        checkRef.document(documentId).readFireStoreData(
+            onSuccess = {
+                val planInfo = it.data
+                val completed = planInfo?.get("complete") as Boolean?
 
-                if (targetPlan != null) {
-                    map["complete"] = !targetPlan.complete
-                    changeCompleteStateReference.updateChildren(map as Map<String, Boolean>)
+                if (completed != null) {
+                    checkRef.document(documentId).updateFireStoreData(
+                        updateValue = mapOf("complete" to !completed)
+                    )
                 }
             }
         )
