@@ -87,8 +87,7 @@ fun PlanScreen(
                             planViewModel.changePlanCompleteAtIndex(position, isCheck)
                             planViewModel.planCheck(
                                 uid = uid!!,
-                                date = dateState.value!!,
-                                position = position.toString()
+                                documentId = it.createdTime.toString()
                             )
                             statisticsViewModel.modifyData(
                                 uid = uid,
