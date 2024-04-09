@@ -5,6 +5,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.toyproject.plannerv2.data.PlanData
+import com.toyproject.plannerv2.util.createFireStoreData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,39 +21,40 @@ class CreatePlanViewModel: ViewModel() {
         _planList.add(planData)
     }
 
-    fun modifyPlan(title: String, description: String, position: Int) {
-        _planList[position] = PlanData(title, description)
+    fun modifyPlan(baseDate: String?, title: String, description: String, position: Int) {
+        _planList[position] = PlanData(
+            baseDate = baseDate.toString(),
+            title = title,
+            description = description
+        )
     }
 
     fun removePlan(position: Int) {
         _planList.removeAt(position)
     }
 
-    fun savePlan(plans: List<PlanData>, uid: String, date: String) {
-        val test = FirebaseFirestore.getInstance().collection("schedule").document(uid)
-        test.set(mapOf("test" to "test11"))
+    fun savePlan(plans: List<PlanData>, uid: String, baseDate: String?, navigateToPlan: () -> Unit) {
+        val saveRef = FirebaseFirestore.getInstance()
+            .collection("schedule")
+            .document(uid)
+            .collection("plans")
 
-//        val saveFirebaseRef = FirebaseDatabase.getInstance().reference
-//            .child("schedule")
-//            .child(uid)
-//            .child(date)
-//        val objectMap = mutableMapOf<String, PlanData>()
-//
-//        saveFirebaseRef.getFirebaseData(
-//            onDataChangeLogic = { snapshot ->
-//                snapshot.children.forEach { dataSnapShot ->
-//                    val data = dataSnapShot.getValue(PlanData::class.java)
-//                    objectMap[objectMap.size.toString()] = data!!
-//                }
-//
-//                // 새로운 데이터를 add object에 추가하기
-//                plans.forEach { objectMap[objectMap.size.toString()] = it }
-//
-//                // 추가한 데이터로 업데이트
-//                saveFirebaseRef.updateChildren(objectMap as Map<String, PlanData>).addOnCompleteListener { task ->
-//                    if (task.isSuccessful) _savePlan.value = true
-//                }
-//            }
-//        )
+        // 생성될 시점의 unix timestamp 구하기(document id, createdTime에 써먹기 위함)
+        val savedTimeMillis = System.currentTimeMillis()
+        plans.forEach { planData ->
+            val resultPlan = PlanData(
+                baseDate = baseDate.toString(),
+                title = planData.title,
+                description = planData.description,
+                createdTime = savedTimeMillis,
+                complete = false
+            )
+            // documentLength와 생성된 plans들의 길이를 구해서 document의 name을 정함.
+            saveRef.document(savedTimeMillis.toString()).createFireStoreData(
+                setValue = resultPlan,
+                onSuccess = navigateToPlan,
+                onFailure = {}
+            )
+        }
     }
 }
