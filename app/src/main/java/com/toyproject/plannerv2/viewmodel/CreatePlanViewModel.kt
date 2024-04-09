@@ -39,9 +39,9 @@ class CreatePlanViewModel: ViewModel() {
             .document(uid)
             .collection("plans")
 
-        // 생성될 시점의 unix timestamp 구하기(document id, createdTime에 써먹기 위함)
-        val savedTimeMillis = System.currentTimeMillis()
         plans.forEach { planData ->
+            // 생성될 시점의 unix timestamp 구하기(document id, createdTime에 써먹기 위함)
+            val savedTimeMillis = System.currentTimeMillis()
             val resultPlan = PlanData(
                 baseDate = baseDate.toString(),
                 title = planData.title,
