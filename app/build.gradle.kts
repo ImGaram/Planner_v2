@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.project.plannerv2"
+    namespace = "com.toyproject.plannerv2"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.project.plannerv2"
+        applicationId = "com.toyproject.plannerv2"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -58,14 +58,15 @@ dependencies {
     implementation("com.patrykandpatrick.vico:views:1.12.0")
 
     // compose navigation
-    implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
     // firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-auth:22.2.0")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.firebase:firebase-auth:22.3.1")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation("com.google.firebase:firebase-database:20.3.0")
+    implementation("com.google.firebase:firebase-firestore-ktx:24.11.0")
 
     // splash
     implementation("androidx.core:core-splashscreen:1.0.1")
