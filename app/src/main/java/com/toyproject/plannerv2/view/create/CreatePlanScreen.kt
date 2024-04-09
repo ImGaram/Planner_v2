@@ -41,7 +41,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.toyproject.plannerv2.R
 import com.toyproject.plannerv2.application.PlannerV2Application
 import com.toyproject.plannerv2.data.PlanData
-import com.toyproject.plannerv2.util.StatisticsMode
 import com.toyproject.plannerv2.view.create.component.CreatePlanCard
 import com.toyproject.plannerv2.view.create.component.PlanCard
 import com.toyproject.plannerv2.viewmodel.CreatePlanViewModel
@@ -91,6 +90,7 @@ fun CreatePlanScreen(
                     planData = item,
                     savePlanLogic = { title, description ->
                         createPlanViewModel.modifyPlan(
+                            baseDate = currentDate,
                             title = title,
                             description = description,
                             position = index
@@ -131,12 +131,8 @@ fun CreatePlanScreen(
                         createPlanViewModel.savePlan(
                             plans = planListState.toList(),
                             uid = uid,
-                            date = currentDate
-                        )
-                        statisticsViewModel.modifyData(
-                            uid = uid,
-                            addDataCount = planListState.size,
-                            mode = StatisticsMode.TOTAL
+                            baseDate = currentDate,
+                            navigateToPlan = navigateToPlan
                         )
                     }
                 }
