@@ -30,7 +30,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
-    val thisWeekStatisticsState = statisticsViewModel.thisWeekStatistics.collectAsState().value
+    val thisWeekStatisticsState = statisticsViewModel.thisWeekStatistics.collectAsState()
     val scrollState = rememberScrollState()
 
     val uid = FirebaseAuth.getInstance().uid
@@ -57,8 +57,8 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
         )
 
         // firebase data 로 변경
-        val totalPlanCount = thisWeekStatisticsState?.total
-        val completedPlanCount = thisWeekStatisticsState?.completed
+        val totalPlanCount = thisWeekStatisticsState.value?.total
+        val completedPlanCount = thisWeekStatisticsState.value?.completed
 
         if (totalPlanCount != null && completedPlanCount != null) {
             ThisWeekPlanStatisticsChart(
@@ -72,13 +72,16 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
                     .padding(horizontal = 15.dp)
             )
 
+            // 일정 완료율 계산
             val completionRate = completedPlanCount.toFloat() / totalPlanCount.toFloat() * 100f
+            // 완료율이 not a number(NaN)일 때 0으로 처리.
+            val completionRateDecimal = ((if (completionRate.isNaN()) 0f else completionRate) * 10.0).roundToInt() / 10.0
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(15.dp)
                     .background(Color(0xCCFFF6A7)),
-                text = "이번 주 일정 완료율은 ${(completionRate * 10.0).roundToInt() / 10.0}% 입니다.",
+                text = "이번 주 일정 완료율은 ${completionRateDecimal}% 입니다.",
                 fontSize = 18.sp,
                 textAlign = TextAlign.Center
             )
