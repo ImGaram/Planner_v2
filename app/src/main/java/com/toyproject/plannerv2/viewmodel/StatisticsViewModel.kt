@@ -3,10 +3,8 @@ package com.toyproject.plannerv2.viewmodel
 import androidx.lifecycle.ViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.toyproject.plannerv2.data.StatisticsData
 import com.toyproject.plannerv2.util.StatisticsMode
-import com.toyproject.plannerv2.util.getFirebaseData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -21,20 +19,20 @@ class StatisticsViewModel: ViewModel() {
     val thisWeekStatistics = _thisWeekStatistics.asStateFlow()
 
     fun getThisWeekStatistics(uid: String) {
-        val thisWeekReference = FirebaseDatabase.getInstance().reference
-            .child("statistics")
-            .child(uid)
-            .child("this week")
-
-        thisWeekReference.getFirebaseData(
-            onDataChangeLogic = { snapshot ->
-                val statisticsData = snapshot.getValue(StatisticsData::class.java)
-
-                if (statisticsData != null) {
-                    _thisWeekStatistics.value = statisticsData
-                }
-            }
-        )
+//        val thisWeekReference = FirebaseDatabase.getInstance().reference
+//            .child("statistics")
+//            .child(uid)
+//            .child("this week")
+//
+//        thisWeekReference.getFirebaseData(
+//            onDataChangeLogic = { snapshot ->
+//                val statisticsData = snapshot.getValue(StatisticsData::class.java)
+//
+//                if (statisticsData != null) {
+//                    _thisWeekStatistics.value = statisticsData
+//                }
+//            }
+//        )
     }
 
     private fun modifyTotalData(
@@ -66,18 +64,18 @@ class StatisticsViewModel: ViewModel() {
         isCheck: Boolean = false,
         mode: StatisticsMode
     ) {
-        val thisWeekReference = FirebaseDatabase.getInstance().reference
-            .child("statistics")
-            .child(uid)
-            .child("this week")
-
-        thisWeekReference.getFirebaseData(
-            onDataChangeLogic = { snapshot ->
-                when (mode) {
-                    StatisticsMode.TOTAL -> modifyTotalData(addDataCount, snapshot, thisWeekReference)
-                    StatisticsMode.COMPLETED -> modifyCompletedData(isCheck, snapshot, thisWeekReference)
-                }
-            }
-        )
+//        val thisWeekReference = FirebaseDatabase.getInstance().reference
+//            .child("statistics")
+//            .child(uid)
+//            .child("this week")
+//
+//        thisWeekReference.getFirebaseData(
+//            onDataChangeLogic = { snapshot ->
+//                when (mode) {
+//                    StatisticsMode.TOTAL -> modifyTotalData(addDataCount, snapshot, thisWeekReference)
+//                    StatisticsMode.COMPLETED -> modifyCompletedData(isCheck, snapshot, thisWeekReference)
+//                }
+//            }
+//        )
     }
 }
