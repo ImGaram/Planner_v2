@@ -14,14 +14,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 
 class StatisticsViewModel: ViewModel() {
-    private val _thisWeekStatistics = MutableStateFlow<StatisticsData?>(null)
-    val thisWeekStatistics = _thisWeekStatistics.asStateFlow()
+    private val _dailyStatistics = MutableStateFlow<Array<Int>>(emptyArray())
+    val dailyStatistics = _dailyStatistics.asStateFlow()
 
-    // 주간 일정을 불러온다.
-    fun getThisWeekStatistics(uid: String) {
+    // 일간 일정을 불러온다.
+    fun getDailyStatistics(uid: String) {
         val getThisWeekRef = FirebaseFirestore.getInstance()
             .collection("schedule")
             .document(uid)
@@ -39,16 +40,27 @@ class StatisticsViewModel: ViewModel() {
             .whereLessThan("createdTime", timestampLastDay)
             .readFireStoreData(
                 onSuccess = {
+                    // 날마다 일정의 생성 개수를 카운트할 array 생성
+                    val dailyPlans = Array(7) { 0 }
                     var completedPlansCount = 0
                     it.forEach { documentSnapshot ->
                         val documentData = documentSnapshot.toObject<PlanData>()
+                        val documentLocalDate = LocalDate.parse(documentData?.baseDate, DateTimeFormatter.ISO_DATE)
+
+                        // 날짜에 따른 인덱스 수 +1 처리: 요일에 몇 개의 일정을 생성했는지 알 수 있음.
+                        when (documentLocalDate.dayOfWeek) {
+                            DayOfWeek.SUNDAY -> dailyPlans[0]++
+                            DayOfWeek.MONDAY -> dailyPlans[1]++
+                            DayOfWeek.TUESDAY -> dailyPlans[2]++
+                            DayOfWeek.WEDNESDAY -> dailyPlans[3]++
+                            DayOfWeek.THURSDAY -> dailyPlans[4]++
+                            DayOfWeek.FRIDAY -> dailyPlans[5]++
+                            DayOfWeek.SATURDAY -> dailyPlans[6]++
+                        }
                         if (documentData?.complete == true) completedPlansCount++
                     }
-                    // 주간 일정에서 일정의 총 개수와 완료한 일정 개수를 저장함.
-                    _thisWeekStatistics.value = StatisticsData(
-                        total = it.size,
-                        completed = completedPlansCount
-                    )
+                    // 하루에 생성한 총 일정 개수를 넣어주기.
+                    _dailyStatistics.value = dailyPlans
                 }
             )
     }
