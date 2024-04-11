@@ -21,20 +21,17 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.toyproject.plannerv2.application.PlannerV2Application
-import com.toyproject.plannerv2.util.StatisticsMode
 import com.toyproject.plannerv2.view.plan.component.AddScheduleCard
 import com.toyproject.plannerv2.view.plan.component.PlanCalendar
 import com.toyproject.plannerv2.view.plan.component.ScheduleHeader
 import com.toyproject.plannerv2.view.plan.component.ScheduleItem
 import com.toyproject.plannerv2.view.plan.component.ScreenScrollButton
 import com.toyproject.plannerv2.viewmodel.PlanViewModel
-import com.toyproject.plannerv2.viewmodel.StatisticsViewModel
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 fun PlanScreen(
     planViewModel: PlanViewModel = viewModel(),
-    statisticsViewModel: StatisticsViewModel = viewModel(),
     navigateToCreatePlan: () -> Unit
 ) {
     val uid = FirebaseAuth.getInstance().uid
@@ -88,11 +85,6 @@ fun PlanScreen(
                             planViewModel.planCheck(
                                 uid = uid!!,
                                 documentId = it.createdTime.toString()
-                            )
-                            statisticsViewModel.modifyData(
-                                uid = uid,
-                                isCheck = isCheck,
-                                mode = StatisticsMode.COMPLETED
                             )
                         }
                     )
