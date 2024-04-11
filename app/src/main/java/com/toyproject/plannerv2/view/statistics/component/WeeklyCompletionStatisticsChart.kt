@@ -31,11 +31,10 @@ import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.component.text.TextComponent
 import com.patrykandpatrick.vico.core.component.text.textComponent
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.composed.ComposedChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.composed.plus
-import com.patrykandpatrick.vico.core.entry.entryOf
 import com.patrykandpatrick.vico.core.legend.HorizontalLegend
+import com.toyproject.plannerv2.util.intListAsFloatEntryList
 
 @Composable
 fun WeeklyCompletionStatisticsChart(
@@ -84,7 +83,8 @@ fun WeeklyCompletionStatisticsChart(
             bottomAxis = rememberBottomAxis(
                 valueFormatter = { value, _ ->
                     ("${value.toInt()+1}주 전")
-                }
+                },
+                guideline = null
             ),
             runInitialAnimation = true,
             chartScrollState = rememberChartScrollState()
@@ -141,15 +141,4 @@ fun rememberLegend(colors: List<Color>): HorizontalLegend {
         spacing = 10.dp,
         padding = dimensionsOf(top = 8.dp)
     )
-}
-
-private fun intListAsFloatEntryList(list: List<Int>): List<FloatEntry> {
-    val floatEntryList = arrayListOf<FloatEntry>()
-    floatEntryList.clear()
-
-    list.forEachIndexed { index, item ->
-        floatEntryList.add(entryOf(x = index.toFloat(), y = item.toFloat()))
-    }
-
-    return floatEntryList
 }
