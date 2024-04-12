@@ -13,16 +13,20 @@ import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.column.columnChart
 import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollState
 import com.patrykandpatrick.vico.compose.component.lineComponent
-import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
+import com.patrykandpatrick.vico.compose.component.shapeComponent
+import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
+import com.patrykandpatrick.vico.compose.legend.horizontalLegend
+import com.patrykandpatrick.vico.compose.legend.legendItem
 import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
 import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
 import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.component.text.TextComponent
+import com.patrykandpatrick.vico.core.component.text.textComponent
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.toyproject.plannerv2.util.intListAsFloatEntryList
 
 @Composable
-fun ThisWeekPlanStatisticsChart(dailyPlanList: List<Int>) {
+fun DailyStatisticsChart(dailyPlanList: List<Int>) {
     val chartColumnColor = Color(0xFF6EC4A7)
     val maxYRange = (dailyPlanList.max() / 10 + 1) * 10
 
@@ -42,6 +46,22 @@ fun ThisWeekPlanStatisticsChart(dailyPlanList: List<Int>) {
             dataLabel = TextComponent.Builder().build(),
             axisValuesOverrider = AxisValuesOverrider.fixed(minY = 0f, maxY = maxYRange.toFloat())
         ),
+        legend = horizontalLegend(
+            items = List(1) {
+                legendItem(
+                    icon = shapeComponent(
+                        shape =  Shapes.pillShape,
+                        color = chartColumnColor
+                    ),
+                    label = textComponent(),
+                    labelText = "생성한 일정(개)"
+                )
+            },
+            iconSize = 10.dp,
+            iconPadding = 8.dp,
+            spacing = 10.dp,
+            padding = dimensionsOf(top = 8.dp)
+        ),
         chartModelProducer = ChartEntryModelProducer(intListAsFloatEntryList(dailyPlanList)),
         startAxis = rememberStartAxis(
             itemPlacer = AxisItemPlacer.Vertical.default(maxItemCount = maxYRange / 10 + 2)
@@ -53,7 +73,6 @@ fun ThisWeekPlanStatisticsChart(dailyPlanList: List<Int>) {
             },
             guideline = null
         ),
-        runInitialAnimation = true,
         chartScrollState = rememberChartScrollState()
     )
 }
