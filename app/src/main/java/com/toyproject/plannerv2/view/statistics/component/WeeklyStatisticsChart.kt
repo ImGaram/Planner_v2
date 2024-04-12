@@ -86,7 +86,6 @@ fun WeeklyCompletionStatisticsChart(
                 },
                 guideline = null
             ),
-            runInitialAnimation = true,
             chartScrollState = rememberChartScrollState()
         )
     }
