@@ -21,6 +21,9 @@ class StatisticsViewModel: ViewModel() {
     private val _dailyStatistics = MutableStateFlow<Array<Int>>(emptyArray())
     val dailyStatistics = _dailyStatistics.asStateFlow()
 
+    private val _totalStatisticsData = MutableStateFlow<StatisticsData?>(StatisticsData())
+    val totalStatisticsData = _totalStatisticsData.asStateFlow()
+
     // 일간 일정을 불러온다.
     fun getDailyStatistics(uid: String) {
         val getThisWeekRef = FirebaseFirestore.getInstance()
@@ -65,47 +68,26 @@ class StatisticsViewModel: ViewModel() {
             )
     }
 
-    private fun modifyTotalData(
-        addDataCount: Int,
-        snapshot: DataSnapshot,
-        reference: DatabaseReference
-    ) {
-        val data = snapshot.getValue(StatisticsData::class.java)
-        if (data != null) {
-            reference.setValue(StatisticsData(data.total+addDataCount, data.completed))
-        } else reference.setValue(StatisticsData(total = addDataCount, completed = 0))
-    }
+    // 전체 일정에 대한 정보를 불러온다.
+    fun getTotalStatistics(uid: String) {
+        val getTotalStatisticsRef = FirebaseFirestore.getInstance()
+            .collection("schedule")
+            .document(uid)
+            .collection("plans")
 
-    private fun modifyCompletedData(
-        isCheck: Boolean,
-        snapshot: DataSnapshot,
-        reference: DatabaseReference
-    ) {
-        val data = snapshot.getValue(StatisticsData::class.java)
-        if (data != null) {
-            val setData = if (isCheck) +1 else -1
-            reference.setValue(StatisticsData(data.total, data.completed + setData))
-        }
-    }
+        getTotalStatisticsRef.readFireStoreData(
+            onSuccess = {
+                var completedPlanCount = 0
+                it.forEach { documentSnapshot ->
+                    val isPlanCompleted = documentSnapshot.data?.get("complete") as Boolean?
+                    if (isPlanCompleted == true) completedPlanCount++
+                }
 
-    fun modifyData(
-        uid: String,
-        addDataCount: Int = 0,
-        isCheck: Boolean = false,
-        mode: StatisticsMode
-    ) {
-//        val thisWeekReference = FirebaseDatabase.getInstance().reference
-//            .child("statistics")
-//            .child(uid)
-//            .child("this week")
-//
-//        thisWeekReference.getFirebaseData(
-//            onDataChangeLogic = { snapshot ->
-//                when (mode) {
-//                    StatisticsMode.TOTAL -> modifyTotalData(addDataCount, snapshot, thisWeekReference)
-//                    StatisticsMode.COMPLETED -> modifyCompletedData(isCheck, snapshot, thisWeekReference)
-//                }
-//            }
-//        )
+                _totalStatisticsData.value = StatisticsData(
+                    total = it.size,
+                    completed = completedPlanCount
+                )
+            }
+        )
     }
 }
