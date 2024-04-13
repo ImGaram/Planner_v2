@@ -38,11 +38,11 @@ import com.toyproject.plannerv2.util.intListAsFloatEntryList
 
 @Composable
 fun WeeklyCompletionStatisticsChart(
-    completedPlanList: List<Int>,
-    completedRateList: List<Int>
+    totalPlanList: List<Int>,
+    completedPlanList: List<Int>
 ) {
-    val maxYRange = if (completedPlanList.max() >= 100) (completedPlanList.max() / 10 + 2) * 10
-    else (completedRateList.max() / 10 + 2) * 10
+    val maxYRange = if (totalPlanList.max() >= 100) (totalPlanList.max() / 10 + 2) * 10
+    else (completedPlanList.max() / 10 + 2) * 10
 
     val colorList = listOf(Color(0xFF6EC4A7), Color(0xFFFFDB86))
 
@@ -64,8 +64,8 @@ fun WeeklyCompletionStatisticsChart(
             spacing = 100.dp
         )
 
-        val completedPlanEntry = ChartEntryModelProducer(intListAsFloatEntryList(completedPlanList))
-        val completedRateEntry = ChartEntryModelProducer(intListAsFloatEntryList(completedRateList))
+        val completedPlanEntry = ChartEntryModelProducer(intListAsFloatEntryList(totalPlanList))
+        val completedRateEntry = ChartEntryModelProducer(intListAsFloatEntryList(completedPlanList))
 
         Chart(
             modifier = Modifier

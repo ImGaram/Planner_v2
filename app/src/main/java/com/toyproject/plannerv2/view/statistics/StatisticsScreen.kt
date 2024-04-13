@@ -124,8 +124,8 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
             val totalPlanList = weeklyStatisticsState.value.map { it!!.total }.toList()
             val completedPlanList = weeklyStatisticsState.value.map { it!!.completed }.toList()
             WeeklyCompletionStatisticsChart(
-                completedPlanList = totalPlanList,
-                completedRateList = completedPlanList
+                totalPlanList = totalPlanList,
+                completedPlanList = completedPlanList
             )
         } else CircularProgressScreen()
     }
