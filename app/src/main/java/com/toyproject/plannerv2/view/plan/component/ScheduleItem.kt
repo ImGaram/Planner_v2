@@ -55,12 +55,3 @@ fun ScheduleItem(
         }
     }
 }
-
-@Preview
-@Composable
-fun ScheduleItemPreview() {
-    ScheduleItem(
-        planData = PlanData("", ""),
-        onCheckBoxClick = {}
-    )
-}

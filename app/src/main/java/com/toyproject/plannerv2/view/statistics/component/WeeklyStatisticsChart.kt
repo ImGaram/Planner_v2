@@ -31,19 +31,18 @@ import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.component.text.TextComponent
 import com.patrykandpatrick.vico.core.component.text.textComponent
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.composed.ComposedChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.composed.plus
-import com.patrykandpatrick.vico.core.entry.entryOf
 import com.patrykandpatrick.vico.core.legend.HorizontalLegend
+import com.toyproject.plannerv2.util.intListAsFloatEntryList
 
 @Composable
 fun WeeklyCompletionStatisticsChart(
-    completedPlanList: List<Int>,
-    completedRateList: List<Int>
+    totalPlanList: List<Int>,
+    completedPlanList: List<Int>
 ) {
-    val maxYRange = if (completedPlanList.max() >= 100) (completedPlanList.max() / 10 + 2) * 10
-    else (completedRateList.max() / 10 + 2) * 10
+    val maxYRange = if (totalPlanList.max() >= 100) (totalPlanList.max() / 10 + 2) * 10
+    else (completedPlanList.max() / 10 + 2) * 10
 
     val colorList = listOf(Color(0xFF6EC4A7), Color(0xFFFFDB86))
 
@@ -65,8 +64,8 @@ fun WeeklyCompletionStatisticsChart(
             spacing = 100.dp
         )
 
-        val completedPlanEntry = ChartEntryModelProducer(intListAsFloatEntryList(completedPlanList))
-        val completedRateEntry = ChartEntryModelProducer(intListAsFloatEntryList(completedRateList))
+        val completedPlanEntry = ChartEntryModelProducer(intListAsFloatEntryList(totalPlanList))
+        val completedRateEntry = ChartEntryModelProducer(intListAsFloatEntryList(completedPlanList))
 
         Chart(
             modifier = Modifier
@@ -84,9 +83,9 @@ fun WeeklyCompletionStatisticsChart(
             bottomAxis = rememberBottomAxis(
                 valueFormatter = { value, _ ->
                     ("${value.toInt()+1}주 전")
-                }
+                },
+                guideline = null
             ),
-            runInitialAnimation = true,
             chartScrollState = rememberChartScrollState()
         )
     }
@@ -123,7 +122,7 @@ fun rememberChartStyle(columnChartColors: List<Color>): ChartStyle {
 
 @Composable
 fun rememberLegend(colors: List<Color>): HorizontalLegend {
-    val labelTextList = listOf("완료한 일정(개)", "일정 완료율(%)")
+    val labelTextList = listOf("생성한 일정(개)", "완료한 일정(개)")
 
     return horizontalLegend(
         items = List(labelTextList.size) { index ->
@@ -141,15 +140,4 @@ fun rememberLegend(colors: List<Color>): HorizontalLegend {
         spacing = 10.dp,
         padding = dimensionsOf(top = 8.dp)
     )
-}
-
-private fun intListAsFloatEntryList(list: List<Int>): List<FloatEntry> {
-    val floatEntryList = arrayListOf<FloatEntry>()
-    floatEntryList.clear()
-
-    list.forEachIndexed { index, item ->
-        floatEntryList.add(entryOf(x = index.toFloat(), y = item.toFloat()))
-    }
-
-    return floatEntryList
 }

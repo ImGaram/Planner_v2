@@ -201,13 +201,3 @@ fun ModifyPlanCard(
         }
     }
 }
-
-@Preview
-@Composable
-fun PlanInfoCardPreview() {
-    PlanCard(
-        planData = PlanData("", ""),
-        savePlanLogic = { _, _ -> },
-        deleteLogic = {}
-    )
-}

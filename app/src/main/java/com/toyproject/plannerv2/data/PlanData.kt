@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
 class PlanData(
-    val baseDate: String = "",
+    val baseDate: Long? = null,
     val title: String = "",
     val description: String = "",
     val createdTime: Long? = null,

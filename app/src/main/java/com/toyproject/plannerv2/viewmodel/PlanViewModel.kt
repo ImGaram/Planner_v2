@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.toyproject.plannerv2.data.PlanData
 import com.toyproject.plannerv2.util.readFireStoreData
+import com.toyproject.plannerv2.util.stringToUnixTimestamp
 import com.toyproject.plannerv2.util.updateFireStoreData
 
 class PlanViewModel: ViewModel() {
@@ -18,7 +19,7 @@ class PlanViewModel: ViewModel() {
             .collection("plans")
 
         // baseDate와 날짜가 같은 document들만 불러오기.
-        getPlansRef.whereEqualTo("baseDate", date).readFireStoreData(
+        getPlansRef.whereEqualTo("baseDate", date.stringToUnixTimestamp()).readFireStoreData(
             onSuccess = {
                 _plans.clear()
                 it.forEach { documentSnapshot ->

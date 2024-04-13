@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.toyproject.plannerv2.data.PlanData
 import com.toyproject.plannerv2.util.createFireStoreData
+import com.toyproject.plannerv2.util.stringToUnixTimestamp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +24,7 @@ class CreatePlanViewModel: ViewModel() {
 
     fun modifyPlan(baseDate: String?, title: String, description: String, position: Int) {
         _planList[position] = PlanData(
-            baseDate = baseDate.toString(),
+            baseDate = baseDate?.stringToUnixTimestamp(),
             title = title,
             description = description
         )
@@ -43,7 +44,7 @@ class CreatePlanViewModel: ViewModel() {
             // 생성될 시점의 unix timestamp 구하기(document id, createdTime에 써먹기 위함)
             val savedTimeMillis = System.currentTimeMillis()
             val resultPlan = PlanData(
-                baseDate = baseDate.toString(),
+                baseDate = baseDate?.stringToUnixTimestamp(),
                 title = planData.title,
                 description = planData.description,
                 createdTime = savedTimeMillis,
