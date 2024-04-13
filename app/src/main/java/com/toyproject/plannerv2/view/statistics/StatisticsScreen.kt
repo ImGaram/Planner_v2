@@ -37,6 +37,7 @@ import com.toyproject.plannerv2.viewmodel.StatisticsViewModel
 fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
     val dailyStatisticsState = statisticsViewModel.dailyStatistics.collectAsState()
     val totalStatisticsState = statisticsViewModel.totalStatisticsData.collectAsState()
+    val weeklyStatisticsState = statisticsViewModel.weeklyStatistics
     val scrollState = rememberScrollState()
 
     val uid = FirebaseAuth.getInstance().uid
@@ -44,6 +45,7 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
         if (uid != null) {
             statisticsViewModel.getDailyStatistics(uid)
             statisticsViewModel.getTotalStatistics(uid)
+            statisticsViewModel.getWeeklyStatistics(uid)
         }
     }
 
@@ -118,13 +120,14 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
                 .padding(horizontal = 15.dp)
         )
 
-        // firebase data 로 변경
-        val completedPlanList = listOf(65, 23, 77, 146, 55)
-        val completedRateList = listOf(100, 64, 89, 96, 77)
-        WeeklyCompletionStatisticsChart(
-            completedPlanList = completedPlanList,
-            completedRateList = completedRateList
-        )
+        if (weeklyStatisticsState.isNotEmpty()) {
+            val totalPlanList = weeklyStatisticsState.map { it.total }.toList()
+            val completedPlanList = weeklyStatisticsState.map { it.completed }.toList()
+            WeeklyCompletionStatisticsChart(
+                completedPlanList = totalPlanList,
+                completedRateList = completedPlanList
+            )
+        } else CircularProgressScreen()
     }
 }
 
