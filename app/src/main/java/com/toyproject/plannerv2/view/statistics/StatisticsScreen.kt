@@ -32,12 +32,11 @@ import com.toyproject.plannerv2.view.statistics.component.UserProfile
 import com.toyproject.plannerv2.view.statistics.component.WeeklyCompletionStatisticsChart
 import com.toyproject.plannerv2.viewmodel.StatisticsViewModel
 
-// todo :: 주간 일정 차트 구현하기
 @Composable
 fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
     val dailyStatisticsState = statisticsViewModel.dailyStatistics.collectAsState()
     val totalStatisticsState = statisticsViewModel.totalStatisticsData.collectAsState()
-    val weeklyStatisticsState = statisticsViewModel.weeklyStatistics
+    val weeklyStatisticsState = statisticsViewModel.weeklyStatistics.collectAsState()
     val scrollState = rememberScrollState()
 
     val uid = FirebaseAuth.getInstance().uid
@@ -120,9 +119,10 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
                 .padding(horizontal = 15.dp)
         )
 
-        if (weeklyStatisticsState.isNotEmpty()) {
-            val totalPlanList = weeklyStatisticsState.map { it.total }.toList()
-            val completedPlanList = weeklyStatisticsState.map { it.completed }.toList()
+        // weeklyStatisticsState의 모든 데이터들이 null이 아닐 경우에만 차트를 띄우게 하기.
+        if (weeklyStatisticsState.value.all { it != null }) {
+            val totalPlanList = weeklyStatisticsState.value.map { it!!.total }.toList()
+            val completedPlanList = weeklyStatisticsState.value.map { it!!.completed }.toList()
             WeeklyCompletionStatisticsChart(
                 completedPlanList = totalPlanList,
                 completedRateList = completedPlanList
