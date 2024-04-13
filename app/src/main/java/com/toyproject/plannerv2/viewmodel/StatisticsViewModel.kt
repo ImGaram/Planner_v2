@@ -41,7 +41,7 @@ class StatisticsViewModel: ViewModel() {
 
         // 첫 주 시작일보다 크거나 같음 그리고 마지막 날보다 작은 데이터들만 불러오기.
         getDailyRef.whereGreaterThanOrEqualTo("baseDate", timestampFirstDay)
-            .whereLessThan("baseDate", timestampLastDay)
+            .whereLessThanOrEqualTo("baseDate", timestampLastDay)
             .readFireStoreData(
                 onSuccess = {
                     // 날마다 일정의 생성 개수를 카운트할 array 생성
@@ -113,7 +113,7 @@ class StatisticsViewModel: ViewModel() {
             val timestampLastDay = lastDayOfWeek.toString().stringToUnixTimestamp() + 86399000L     // 토요일의 23시 59분 59초까지의 데이터도 포함시키기 위함.
 
             getWeeklyRef.whereGreaterThanOrEqualTo("baseDate", timestampFirstDay)
-                .whereLessThan("baseDate", timestampLastDay)
+                .whereLessThanOrEqualTo("baseDate", timestampLastDay)
                 .readFireStoreData(
                     onSuccess = {
                         var completedPlanCount = 0
