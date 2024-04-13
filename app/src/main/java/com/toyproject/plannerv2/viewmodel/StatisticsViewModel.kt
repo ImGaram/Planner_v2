@@ -7,6 +7,8 @@ import com.google.firebase.firestore.toObject
 import com.toyproject.plannerv2.data.PlanData
 import com.toyproject.plannerv2.data.StatisticsData
 import com.toyproject.plannerv2.util.readFireStoreData
+import com.toyproject.plannerv2.util.stringToUnixTimestamp
+import com.toyproject.plannerv2.util.unixTimestampToLocalDate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.DayOfWeek
@@ -39,8 +41,8 @@ class StatisticsViewModel: ViewModel() {
         val firstDayOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
         val lastDayOfWeek = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
         // second가 아닌 millisecond의 timestmp를 받기 위함
-        val timestampFirstDay = firstDayOfWeek.atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * 1000
-        val timestampLastDay = lastDayOfWeek.atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * 1000
+        val timestampFirstDay = firstDayOfWeek.toString().stringToUnixTimestamp()
+        val timestampLastDay = lastDayOfWeek.toString().stringToUnixTimestamp()
 
         getDailyRef.whereGreaterThan("createdTime", timestampFirstDay)
             .whereLessThan("createdTime", timestampLastDay)
@@ -51,17 +53,19 @@ class StatisticsViewModel: ViewModel() {
                     var completedPlansCount = 0
                     it.forEach { documentSnapshot ->
                         val documentData = documentSnapshot.toObject<PlanData>()
-                        val documentLocalDate = LocalDate.parse(documentData?.baseDate, DateTimeFormatter.ISO_DATE)
+                        val documentLocalDate = documentData?.baseDate?.unixTimestampToLocalDate()
 
-                        // 날짜에 따른 인덱스 수 +1 처리: 요일에 몇 개의 일정을 생성했는지 알 수 있음.
-                        when (documentLocalDate.dayOfWeek) {
-                            DayOfWeek.SUNDAY -> dailyPlans[0]++
-                            DayOfWeek.MONDAY -> dailyPlans[1]++
-                            DayOfWeek.TUESDAY -> dailyPlans[2]++
-                            DayOfWeek.WEDNESDAY -> dailyPlans[3]++
-                            DayOfWeek.THURSDAY -> dailyPlans[4]++
-                            DayOfWeek.FRIDAY -> dailyPlans[5]++
-                            DayOfWeek.SATURDAY -> dailyPlans[6]++
+                        if (documentLocalDate != null) {
+                            // 날짜에 따른 인덱스 수 +1 처리: 요일에 몇 개의 일정을 생성했는지 알 수 있음.
+                            when (documentLocalDate.dayOfWeek) {
+                                DayOfWeek.SUNDAY -> dailyPlans[0]++
+                                DayOfWeek.MONDAY -> dailyPlans[1]++
+                                DayOfWeek.TUESDAY -> dailyPlans[2]++
+                                DayOfWeek.WEDNESDAY -> dailyPlans[3]++
+                                DayOfWeek.THURSDAY -> dailyPlans[4]++
+                                DayOfWeek.FRIDAY -> dailyPlans[5]++
+                                DayOfWeek.SATURDAY -> dailyPlans[6]++
+                            }
                         }
                         if (documentData?.complete == true) completedPlansCount++
                     }
