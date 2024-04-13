@@ -1,6 +1,5 @@
 package com.toyproject.plannerv2.viewmodel
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
@@ -13,8 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 
 class StatisticsViewModel: ViewModel() {
@@ -24,8 +21,8 @@ class StatisticsViewModel: ViewModel() {
     private val _totalStatisticsData = MutableStateFlow<StatisticsData?>(StatisticsData())
     val totalStatisticsData = _totalStatisticsData.asStateFlow()
 
-    private val _weeklyStatistics = mutableStateListOf<StatisticsData>()
-    val weeklyStatistics: List<StatisticsData> get() = _weeklyStatistics
+    private val _weeklyStatistics = MutableStateFlow<MutableList<StatisticsData?>>(MutableList(5) { null })
+    val weeklyStatistics = _weeklyStatistics.asStateFlow()
 
     // 일간 일정을 불러온다.
     fun getDailyStatistics(uid: String) {
@@ -105,9 +102,6 @@ class StatisticsViewModel: ViewModel() {
             .document(uid)
             .collection("plans")
 
-        // 화면 전환 할 때 일정이 쌓이지 않게 하기 위한 list clear.
-        _weeklyStatistics.clear()
-
         val today = LocalDate.now()
         // 당일 기준 5주 전까지의 날짜를 구함
         repeat(5) { minusWeek ->
@@ -115,15 +109,15 @@ class StatisticsViewModel: ViewModel() {
             val todayWeekAgo = today.minusWeeks((minusWeek + 1).toLong())
             // 주의 첫날은 일요일, 주의 마지막 날은 토요일
             // 당일 기준 다음주 첫날인 일요일을 마지막으로 정함.
-            // 이유: 토요일 동안의 일정 생성 여부를 확인해야 하는데 토요일로 기준을 잡으면 토요일 오전 12시가 마지막날 기준이 되기 때문
+            // 이유: 토요일 동안의 일정 생성여부를 확인해야 하는데 토요일로 기준을 잡으면 토요일 오전 12시가 마지막날 기준이 되기 때문(토요일 데이터를 불러올 수 없음)
             val firstDayOfWeek = todayWeekAgo.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
             val lastDayOfWeek = todayWeekAgo.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
             // second가 아닌 millisecond의 timestmp를 받기 위함
-            val timestampFirstDay = firstDayOfWeek.atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * 1000
-            val timestampLastDay = lastDayOfWeek.atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * 1000
+            val timestampFirstDay = firstDayOfWeek.toString().stringToUnixTimestamp()
+            val timestampLastDay = lastDayOfWeek.toString().stringToUnixTimestamp()
 
-            getWeeklyRef.whereGreaterThan("createdTime", timestampFirstDay)
-                .whereLessThan("createdTime", timestampLastDay)
+            getWeeklyRef.whereGreaterThanOrEqualTo("baseDate", timestampFirstDay)
+                .whereLessThan("baseDate", timestampLastDay)
                 .readFireStoreData(
                     onSuccess = {
                         var completedPlanCount = 0
@@ -132,12 +126,9 @@ class StatisticsViewModel: ViewModel() {
                             if (isPlanCompleted == true) completedPlanCount++
                         }
 
-                        // todo :: 주간 일정의 순서를 올바르게 하도록 만들기.
-                        _weeklyStatistics.add(
-                            StatisticsData(
-                                total = it.size,
-                                completed = completedPlanCount
-                            )
+                        _weeklyStatistics.value[minusWeek] = StatisticsData(
+                            total = it.size,
+                            completed = completedPlanCount
                         )
                     }
                 )
