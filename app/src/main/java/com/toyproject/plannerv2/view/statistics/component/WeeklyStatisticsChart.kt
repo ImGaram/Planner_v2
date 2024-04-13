@@ -122,7 +122,7 @@ fun rememberChartStyle(columnChartColors: List<Color>): ChartStyle {
 
 @Composable
 fun rememberLegend(colors: List<Color>): HorizontalLegend {
-    val labelTextList = listOf("완료한 일정(개)", "일정 완료율(%)")
+    val labelTextList = listOf("생성한 일정(개)", "완료한 일정(개)")
 
     return horizontalLegend(
         items = List(labelTextList.size) { index ->
