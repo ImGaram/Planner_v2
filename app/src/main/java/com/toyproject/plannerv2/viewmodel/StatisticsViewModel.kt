@@ -33,13 +33,11 @@ class StatisticsViewModel: ViewModel() {
 
         val today = LocalDate.now()
         // 주의 첫날은 일요일, 주의 마지막 날은 토요일
-        // 당일 기준 다음주 첫날인 일요일을 마지막으로 정함.
-        // 이유: 토요일 동안의 일정 생성여부를 확인해야 하는데 토요일로 기준을 잡으면 토요일 오전 12시가 마지막날 기준이 되기 때문(토요일 데이터를 불러올 수 없음)
         val firstDayOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
-        val lastDayOfWeek = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+        val lastDayOfWeek = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY))
         // second가 아닌 millisecond의 timestmp를 받기 위함
         val timestampFirstDay = firstDayOfWeek.toString().stringToUnixTimestamp()
-        val timestampLastDay = lastDayOfWeek.toString().stringToUnixTimestamp()
+        val timestampLastDay = lastDayOfWeek.toString().stringToUnixTimestamp() + 86399000L     // 토요일의 23시 59분 59초까지의 데이터도 포함시키기 위함.
 
         // 첫 주 시작일보다 크거나 같음 그리고 마지막 날보다 작은 데이터들만 불러오기.
         getDailyRef.whereGreaterThanOrEqualTo("baseDate", timestampFirstDay)
@@ -108,13 +106,11 @@ class StatisticsViewModel: ViewModel() {
             // n주 전 날짜를 구한다(당일 기준)
             val todayWeekAgo = today.minusWeeks((minusWeek + 1).toLong())
             // 주의 첫날은 일요일, 주의 마지막 날은 토요일
-            // 당일 기준 다음주 첫날인 일요일을 마지막으로 정함.
-            // 이유: 토요일 동안의 일정 생성여부를 확인해야 하는데 토요일로 기준을 잡으면 토요일 오전 12시가 마지막날 기준이 되기 때문(토요일 데이터를 불러올 수 없음)
             val firstDayOfWeek = todayWeekAgo.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
-            val lastDayOfWeek = todayWeekAgo.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+            val lastDayOfWeek = todayWeekAgo.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY))
             // second가 아닌 millisecond의 timestmp를 받기 위함
             val timestampFirstDay = firstDayOfWeek.toString().stringToUnixTimestamp()
-            val timestampLastDay = lastDayOfWeek.toString().stringToUnixTimestamp()
+            val timestampLastDay = lastDayOfWeek.toString().stringToUnixTimestamp() + 86399000L     // 토요일의 23시 59분 59초까지의 데이터도 포함시키기 위함.
 
             getWeeklyRef.whereGreaterThanOrEqualTo("baseDate", timestampFirstDay)
                 .whereLessThan("baseDate", timestampLastDay)
