@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.toyproject.plannerv2.data.PlanData
+import com.toyproject.plannerv2.util.deleteFireStoreData
 import com.toyproject.plannerv2.util.readFireStoreData
 import com.toyproject.plannerv2.util.stringToUnixTimestamp
 import com.toyproject.plannerv2.util.updateFireStoreData
@@ -46,6 +47,21 @@ class PlanViewModel: ViewModel() {
                         updateValue = mapOf("complete" to !completed)
                     )
                 }
+            }
+        )
+    }
+
+    fun deletePlan(uid: String, documentId: String) {
+        val deletePlanRef = FirebaseFirestore.getInstance()
+            .collection("schedule")
+            .document(uid)
+            .collection("plans")
+            .document(documentId)
+
+        deletePlanRef.deleteFireStoreData(
+            onSuccess = {
+                val deleteTarget = _plans.find { it.createdTime.toString() == documentId }
+                _plans.remove(deleteTarget)
             }
         )
     }
