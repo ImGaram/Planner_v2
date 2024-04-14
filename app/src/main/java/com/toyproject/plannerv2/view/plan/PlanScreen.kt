@@ -8,7 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissValue
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,13 +28,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.toyproject.plannerv2.application.PlannerV2Application
 import com.toyproject.plannerv2.view.plan.component.AddScheduleCard
 import com.toyproject.plannerv2.view.plan.component.PlanCalendar
+import com.toyproject.plannerv2.view.plan.component.PlanCardBackground
 import com.toyproject.plannerv2.view.plan.component.ScheduleHeader
 import com.toyproject.plannerv2.view.plan.component.ScheduleItem
 import com.toyproject.plannerv2.view.plan.component.ScreenScrollButton
 import com.toyproject.plannerv2.viewmodel.PlanViewModel
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 fun PlanScreen(
     planViewModel: PlanViewModel = viewModel(),
     navigateToCreatePlan: () -> Unit
@@ -78,15 +84,35 @@ fun PlanScreen(
 
             if (planState.isNotEmpty()) {
                 itemsIndexed(planState) { position, it ->
-                    ScheduleItem(
-                        planData = it,
-                        onCheckBoxClick = { isCheck ->
-                            planViewModel.changePlanCompleteAtIndex(position, isCheck)
-                            planViewModel.planCheck(
-                                uid = uid!!,
-                                documentId = it.createdTime.toString()
-                            )
+                    val dismissState = rememberDismissState(
+                        confirmValueChange = { value ->
+                            if (value == DismissValue.DismissedToStart) {
+                                planViewModel.deletePlan(
+                                    uid = uid!!,
+                                    documentId = it.createdTime.toString()
+                                )
+                                true
+                            } else false
                         }
+                    )
+                    SwipeToDismiss(
+                        state = dismissState,
+                        background = {
+                            PlanCardBackground(swipeDismissState = dismissState)
+                        },
+                        dismissContent = {
+                            ScheduleItem(
+                                planData = it,
+                                onCheckBoxClick = { isCheck ->
+                                    planViewModel.changePlanCompleteAtIndex(position, isCheck)
+                                    planViewModel.planCheck(
+                                        uid = uid!!,
+                                        documentId = it.createdTime.toString()
+                                    )
+                                }
+                            )
+                        },
+                        directions = setOf(DismissDirection.EndToStart)     // 닫을 수 있는 방향을 왼쪽 -> 오른쪽만 가능하게 설정
                     )
 
                     Divider(

@@ -61,4 +61,12 @@ fun DocumentReference.updateFireStoreData(
     }
 }
 
-// delete 만들기(필요하면)
+fun DocumentReference.deleteFireStoreData(
+    onSuccess: () -> Unit = {},
+    onFailure: (Exception?) -> Unit = {}
+) {
+    this.delete().addOnCompleteListener { task ->
+        if (task.isSuccessful) onSuccess()
+        else onFailure(task.exception)
+    }
+}
