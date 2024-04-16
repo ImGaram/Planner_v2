@@ -16,7 +16,6 @@ import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -25,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.toyproject.plannerv2.application.PlannerV2Application
 import com.toyproject.plannerv2.view.plan.component.AddScheduleCard
 import com.toyproject.plannerv2.view.plan.component.PlanCalendar
 import com.toyproject.plannerv2.view.plan.component.PlanCardBackground
@@ -33,19 +31,17 @@ import com.toyproject.plannerv2.view.plan.component.ScheduleHeader
 import com.toyproject.plannerv2.view.plan.component.ScheduleItem
 import com.toyproject.plannerv2.view.plan.component.ScreenScrollButton
 import com.toyproject.plannerv2.viewmodel.PlanViewModel
+import java.time.LocalDate
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 fun PlanScreen(
     planViewModel: PlanViewModel = viewModel(),
-    navigateToCreatePlan: () -> Unit
+    navigateToCreatePlan: (String) -> Unit
 ) {
     val uid = FirebaseAuth.getInstance().uid
     val planState = planViewModel.plans
-
-    val dataStore = PlannerV2Application.getInstance().getDataStore()
-    val dateFlow = dataStore.dateFlow.collectAsState(initial = "")
-    val dateState = remember { mutableStateOf(dateFlow.value) }
+    val localDate = remember { mutableStateOf(LocalDate.now().toString()) }
 
     val scrollState = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -54,10 +50,7 @@ fun PlanScreen(
     val cantScrollBackward = !scrollState.canScrollBackward     // 뒤로는 더 스크롤할 수 없음
 
     LaunchedEffect(Unit) {
-        if (!dateFlow.value.isNullOrEmpty()) {
-            dateState.value = dateFlow.value
-            planViewModel.getPlans(uid!!, dateState.value!!)
-        }
+        planViewModel.getPlans(uid!!, localDate.value)
     }
     
     LaunchedEffect(cantScrollForward, cantScrollBackward) {
@@ -71,16 +64,12 @@ fun PlanScreen(
             state = scrollState
         ) {
             item {
-                PlanCalendar(
-                    date = dateState,
-                    scope = scope,
-                    dataStore = dataStore
-                ) {
-                    planViewModel.getPlans(uid!!, dateState.value!!)
+                PlanCalendar(scope = scope,) {
+                    planViewModel.getPlans(uid!!, it)
                 }
             }
 
-            stickyHeader { ScheduleHeader(date = dateState) }
+            stickyHeader { ScheduleHeader(date = localDate) }
 
             if (planState.isNotEmpty()) {
                 itemsIndexed(planState) { position, it ->
@@ -123,7 +112,7 @@ fun PlanScreen(
                 }
             }
 
-            item { AddScheduleCard { navigateToCreatePlan() } }
+            item { AddScheduleCard { navigateToCreatePlan(localDate.value) } }
         }
 
         ScreenScrollButton(

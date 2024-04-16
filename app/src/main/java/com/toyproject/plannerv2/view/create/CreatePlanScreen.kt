@@ -33,28 +33,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.toyproject.plannerv2.R
-import com.toyproject.plannerv2.application.PlannerV2Application
 import com.toyproject.plannerv2.data.PlanData
 import com.toyproject.plannerv2.view.create.component.CreatePlanCard
 import com.toyproject.plannerv2.view.create.component.PlanCard
 import com.toyproject.plannerv2.viewmodel.CreatePlanViewModel
-import com.toyproject.plannerv2.viewmodel.StatisticsViewModel
 
 @Composable
 fun CreatePlanScreen(
     createPlanViewModel: CreatePlanViewModel = viewModel(),
-    statisticsViewModel: StatisticsViewModel = viewModel(),
+    selectedDate: String?,
     navigateToPlan: () -> Unit
 ) {
     val planList = createPlanViewModel.planList
     val savePlanState = createPlanViewModel.savePlan.collectAsState()
-    val currentDate = PlannerV2Application.getInstance().getDataStore().dateFlow.collectAsState(initial = "").value
     val planListState = remember { planList }
     var buttonsVisibility by remember { mutableStateOf(false) }
 
@@ -90,7 +86,7 @@ fun CreatePlanScreen(
                     planData = item,
                     savePlanLogic = { title, description ->
                         createPlanViewModel.modifyPlan(
-                            baseDate = currentDate,
+                            baseDate = selectedDate,
                             title = title,
                             description = description,
                             position = index
@@ -127,11 +123,11 @@ fun CreatePlanScreen(
                 navigateToPlan = navigateToPlan,
                 savePlanLogic = {
                     val uid = FirebaseAuth.getInstance().uid!!
-                    if (!currentDate.isNullOrEmpty()) {
+                    if (!selectedDate.isNullOrEmpty()) {
                         createPlanViewModel.savePlan(
                             plans = planListState.toList(),
                             uid = uid,
-                            baseDate = currentDate,
+                            baseDate = selectedDate,
                             navigateToPlan = navigateToPlan
                         )
                     }
@@ -204,10 +200,4 @@ fun SaveCancelButtons(
             Text(text = "생성")
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CreatePlanScreenPreview() {
-    CreatePlanScreen {}
 }
