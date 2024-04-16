@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ScheduleHeader(date: MutableState<String?>) {
+fun ScheduleHeader(date: MutableState<String>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -24,7 +24,7 @@ fun ScheduleHeader(date: MutableState<String?>) {
     ) {
         Text(
             modifier = Modifier.padding(vertical = 5.dp, horizontal = 10.dp),
-            text = "${parseDate(date.value!!)} 일정",
+            text = "${parseDate(date.value)} 일정",
             fontSize = 15.sp
         )
     }
