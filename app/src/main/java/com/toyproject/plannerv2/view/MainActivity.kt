@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    if (isLogin.value == true) LoginLoadingIndicator()
+                    if (isLogin.value == false) LoginLoadingIndicator()
                 }
             }
         }
