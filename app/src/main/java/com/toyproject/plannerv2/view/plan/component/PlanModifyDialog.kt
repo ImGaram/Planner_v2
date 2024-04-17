@@ -22,7 +22,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -32,8 +31,8 @@ import com.toyproject.plannerv2.view.component.textfield.PlannerV2TextField
 @Composable
 fun PlanModifyDialog(
     planData: PlanData,
+    onSaveClick: (title: String, description: String) -> Unit,
     onDismissRequest: () -> Unit,
-    onConfirmClick: () -> Unit,
     onCancelClick: () -> Unit
 ) {
     val titleState = remember { mutableStateOf(planData.title) }
@@ -93,20 +92,9 @@ fun PlanModifyDialog(
                     modifier = Modifier.width(100.dp),
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB86)),
-                    onClick = onConfirmClick
+                    onClick = { onSaveClick(titleState.value, descriptionState.value) }
                 ) { Text(text = "저장") }
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun DialogPreview() {
-    PlanModifyDialog(
-        planData = PlanData(title = "title", description = "description"),
-        onDismissRequest = {},
-        onCancelClick = {},
-        onConfirmClick = {}
-    )
 }

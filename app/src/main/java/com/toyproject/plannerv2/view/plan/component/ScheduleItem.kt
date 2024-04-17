@@ -106,7 +106,9 @@ fun ScheduleItem(
             PlanModifyDialog(
                 planData = planData,
                 onDismissRequest = { dialogState.value = false },
-                onConfirmClick = { dialogState.value = false },
+                onSaveClick = { title, description ->
+                    dialogState.value = false
+                },
                 onCancelClick =  { dialogState.value = false }
             )
         }
