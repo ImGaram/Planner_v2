@@ -31,11 +31,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.toyproject.plannerv2.R
 import com.toyproject.plannerv2.data.PlanData
+import com.toyproject.plannerv2.view.component.textfield.PlannerV2TextField
 
 @Composable
 fun PlanCard(
@@ -144,7 +144,7 @@ fun ModifyPlanCard(
             .clip(RoundedCornerShape(8.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ChangePlanInfoTextField(
+        PlannerV2TextField(
             modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp),
             value = title,
             hint = "제목을 입력하세요.",
@@ -164,7 +164,7 @@ fun ModifyPlanCard(
             }
         )
 
-        ChangePlanInfoTextField(
+        PlannerV2TextField(
             modifier = Modifier
                 .padding(horizontal = 15.dp)
                 .height(85.dp),

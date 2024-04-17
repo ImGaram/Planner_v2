@@ -9,7 +9,9 @@ class PlanData(
     val title: String = "",
     val description: String = "",
     val createdTime: Long? = null,
-    complete: Boolean = false
+    complete: Boolean = false,
+    isMenuOpen: Boolean = false
 ) {
     var complete by mutableStateOf(complete)
+    var isMenuOpen by mutableStateOf(isMenuOpen)
 }

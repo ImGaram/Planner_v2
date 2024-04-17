@@ -8,6 +8,7 @@ import com.toyproject.plannerv2.util.deleteFireStoreData
 import com.toyproject.plannerv2.util.readFireStoreData
 import com.toyproject.plannerv2.util.stringToUnixTimestamp
 import com.toyproject.plannerv2.util.updateFireStoreData
+import java.lang.Exception
 
 class PlanViewModel: ViewModel() {
     private val _plans = mutableStateListOf<PlanData>()
@@ -48,6 +49,30 @@ class PlanViewModel: ViewModel() {
                     )
                 }
             }
+        )
+    }
+
+    fun modifyPlan(
+        uid: String,
+        documentId: String,
+        title: String,
+        description: String,
+        onModifySuccess: () -> Unit = {},
+        onModifyFailed: (Exception?) -> Unit = {}
+    ) {
+        val modifyPlanRef = FirebaseFirestore.getInstance()
+            .collection("schedule")
+            .document(uid)
+            .collection("plans")
+            .document(documentId)
+
+        modifyPlanRef.updateFireStoreData(
+            updateValue = mapOf(
+                "title" to title,
+                "description" to description
+            ),
+            onSuccess = onModifySuccess,
+            onFailure = onModifyFailed
         )
     }
 

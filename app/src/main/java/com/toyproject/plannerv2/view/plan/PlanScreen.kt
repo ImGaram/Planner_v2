@@ -40,8 +40,8 @@ fun PlanScreen(
     navigateToCreatePlan: (String) -> Unit
 ) {
     val uid = FirebaseAuth.getInstance().uid
-    val planState = planViewModel.plans
-    val localDate = remember { mutableStateOf(LocalDate.now().toString()) }
+    val planState = remember { mutableStateOf(planViewModel.plans) }
+    val selectedLocalDate = remember { mutableStateOf(LocalDate.now().toString()) }
 
     val scrollState = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -50,7 +50,7 @@ fun PlanScreen(
     val cantScrollBackward = !scrollState.canScrollBackward     // 뒤로는 더 스크롤할 수 없음
 
     LaunchedEffect(Unit) {
-        planViewModel.getPlans(uid!!, localDate.value)
+        planViewModel.getPlans(uid!!, selectedLocalDate.value)
     }
     
     LaunchedEffect(cantScrollForward, cantScrollBackward) {
@@ -64,15 +64,16 @@ fun PlanScreen(
             state = scrollState
         ) {
             item {
-                PlanCalendar(scope = scope,) {
+                PlanCalendar(scope = scope) {
+                    selectedLocalDate.value = it
                     planViewModel.getPlans(uid!!, it)
                 }
             }
 
-            stickyHeader { ScheduleHeader(date = localDate) }
+            stickyHeader { ScheduleHeader(date = selectedLocalDate) }
 
-            if (planState.isNotEmpty()) {
-                itemsIndexed(planState) { position, it ->
+            if (planState.value.isNotEmpty()) {
+                itemsIndexed(planState.value) { position, it ->
                     val dismissState = rememberDismissState(
                         confirmValueChange = { value ->
                             if (value == DismissValue.DismissedToStart) {
@@ -98,6 +99,15 @@ fun PlanScreen(
                                         uid = uid!!,
                                         documentId = it.createdTime.toString()
                                     )
+                                },
+                                onPlanModify = { title, description ->
+                                    planViewModel.modifyPlan(
+                                        uid = uid.toString(),
+                                        documentId = it.createdTime.toString(),
+                                        title = title,
+                                        description = description,
+                                        onModifySuccess = { planViewModel.getPlans(uid.toString(), selectedLocalDate.value) }
+                                    )
                                 }
                             )
                         },
@@ -112,11 +122,11 @@ fun PlanScreen(
                 }
             }
 
-            item { AddScheduleCard { navigateToCreatePlan(localDate.value) } }
+            item { AddScheduleCard { navigateToCreatePlan(selectedLocalDate.value) } }
         }
 
         ScreenScrollButton(
-            plans = planState,
+            plans = planState.value,
             scrollState = scrollState,
             scrollIsLastState = scrollIsLastState,
             scope = scope
