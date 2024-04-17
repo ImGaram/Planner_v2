@@ -30,7 +30,8 @@ import com.toyproject.plannerv2.data.PlanData
 @Composable
 fun ScheduleItem(
     planData: PlanData,
-    onCheckBoxClick: (Boolean) -> Unit
+    onCheckBoxClick: (Boolean) -> Unit,
+    onPlanModify: (title: String, description: String) -> Unit
 ) {
     val dialogState = remember { mutableStateOf(false) }
 
@@ -44,9 +45,7 @@ fun ScheduleItem(
             Checkbox(
                 modifier = Modifier.padding(vertical = 7.dp, horizontal = 10.dp),
                 checked = planData.complete,
-                onCheckedChange = {
-                    onCheckBoxClick(!planData.complete)
-                }
+                onCheckedChange = { onCheckBoxClick(!planData.complete) }
             )
 
             Column(
@@ -73,9 +72,7 @@ fun ScheduleItem(
 
             IconButton(
                 modifier = Modifier.padding(horizontal = 10.dp),
-                onClick = {
-                    planData.isMenuOpen = !planData.isMenuOpen
-                }
+                onClick = { planData.isMenuOpen = !planData.isMenuOpen }
             ) {
                 Icon(
                     modifier = Modifier.rotate(if (planData.isMenuOpen) 180f else 0f),
@@ -108,6 +105,7 @@ fun ScheduleItem(
                 onDismissRequest = { dialogState.value = false },
                 onSaveClick = { title, description ->
                     dialogState.value = false
+                    onPlanModify(title, description)
                 },
                 onCancelClick =  { dialogState.value = false }
             )
