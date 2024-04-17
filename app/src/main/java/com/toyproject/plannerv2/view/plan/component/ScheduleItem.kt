@@ -32,7 +32,6 @@ fun ScheduleItem(
     planData: PlanData,
     onCheckBoxClick: (Boolean) -> Unit
 ) {
-    val expendState = remember { mutableStateOf(false) }
 
     Column {
         Row(
@@ -74,11 +73,11 @@ fun ScheduleItem(
             IconButton(
                 modifier = Modifier.padding(horizontal = 10.dp),
                 onClick = {
-                    expendState.value = !expendState.value
+                    planData.isMenuOpen = !planData.isMenuOpen
                 }
             ) {
                 Icon(
-                    modifier = Modifier.rotate(if (expendState.value) 180f else 0f),
+                    modifier = Modifier.rotate(if (planData.isMenuOpen) 180f else 0f),
                     imageVector = Icons.Default.KeyboardArrowDown,
                     tint = Color(0xFF6EC4A7),
                     contentDescription = "more icon"
@@ -86,7 +85,7 @@ fun ScheduleItem(
             }
         }
 
-        if (expendState.value) {
+        if (planData.isMenuOpen) {
             Divider(
                 modifier = Modifier
                     .height(0.5.dp)
@@ -98,7 +97,7 @@ fun ScheduleItem(
                 titleIconTint = Color(0xFFFFDB86),
                 menuTitle = "일정 수정하기"
             ) {
-                
+
             }
         }
     }
