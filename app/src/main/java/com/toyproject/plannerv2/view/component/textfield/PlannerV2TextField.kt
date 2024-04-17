@@ -1,4 +1,4 @@
-package com.toyproject.plannerv2.view.create.component
+package com.toyproject.plannerv2.view.component.textfield
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,7 +19,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ChangePlanInfoTextField(
+fun PlannerV2TextField(
     modifier: Modifier = Modifier,
     value: String,
     hint: String,
