@@ -32,6 +32,7 @@ fun ScheduleItem(
     planData: PlanData,
     onCheckBoxClick: (Boolean) -> Unit
 ) {
+    val dialogState = remember { mutableStateOf(false) }
 
     Column {
         Row(
@@ -97,8 +98,17 @@ fun ScheduleItem(
                 titleIconTint = Color(0xFFFFDB86),
                 menuTitle = "일정 수정하기"
             ) {
-
+                dialogState.value = true
             }
+        }
+
+        if (dialogState.value) {
+            PlanModifyDialog(
+                planData = planData,
+                onDismissRequest = { dialogState.value = false },
+                onConfirmClick = { dialogState.value = false },
+                onCancelClick =  { dialogState.value = false }
+            )
         }
     }
 }
