@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PlanMenuItem(
     titleIconImageVector: ImageVector,
-    titleIconTint: Color = Color.Black,
+    itemColor: Color = Color.Black,
     menuTitle: String,
     menuClick: () -> Unit
 ) {
@@ -30,12 +30,13 @@ fun PlanMenuItem(
         Icon(
             modifier = Modifier.padding(10.dp),
             imageVector = titleIconImageVector,
-            tint = titleIconTint,
+            tint = itemColor,
             contentDescription = "plan menu icon"
         )
         Text(
             modifier = Modifier.weight(1f),
-            text = menuTitle
+            text = menuTitle,
+            color = itemColor
         )
     }
 }
