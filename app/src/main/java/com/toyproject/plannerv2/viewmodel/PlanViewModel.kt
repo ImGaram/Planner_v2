@@ -76,7 +76,12 @@ class PlanViewModel: ViewModel() {
         )
     }
 
-    fun deletePlan(uid: String, documentId: String) {
+    fun deletePlan(
+        uid: String,
+        documentId: String,
+        onDeleteSuccess: () -> Unit = {},
+        onDeleteFailed: (Exception?) -> Unit = {}
+    ) {
         val deletePlanRef = FirebaseFirestore.getInstance()
             .collection("schedule")
             .document(uid)
@@ -84,10 +89,8 @@ class PlanViewModel: ViewModel() {
             .document(documentId)
 
         deletePlanRef.deleteFireStoreData(
-            onSuccess = {
-                val deleteTarget = _plans.find { it.createdTime.toString() == documentId }
-                _plans.remove(deleteTarget)
-            }
+            onSuccess = onDeleteSuccess,
+            onFailure = onDeleteFailed
         )
     }
 
