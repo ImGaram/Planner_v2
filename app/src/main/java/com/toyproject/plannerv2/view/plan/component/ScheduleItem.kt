@@ -87,7 +87,7 @@ fun ScheduleItem(
 
         if (planData.isMenuOpen) {
             val titleList = listOf("일정 수정하기", "일정 삭제하기")
-            val titleColorList = listOf(Color(0xFFFFDB86), Color.Red)
+            val itemColorList = listOf(Color(0xFFFFDB86), Color.Red)
             val iconList = listOf(Icons.Default.DateRange, Icons.Default.Delete)
 
             titleList.forEachIndexed { index, title ->
@@ -99,7 +99,7 @@ fun ScheduleItem(
 
                 PlanMenuItem(
                     titleIconImageVector = iconList[index],
-                    itemColor = titleColorList[index],
+                    itemColor = itemColorList[index],
                     menuTitle = title
                 ) {
                     when (title) {
