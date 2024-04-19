@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.toyproject.plannerv2.view.category.navigation.categoryRoute
 import com.toyproject.plannerv2.view.component.bottomnavigation.PlannerV2BottomNavigation
 import com.toyproject.plannerv2.view.component.topbar.PlannerV2TopAppBar
 import com.toyproject.plannerv2.view.login.component.LoginLoadingIndicator
@@ -47,7 +48,7 @@ class MainActivity : ComponentActivity() {
                         topBar = { PlannerV2TopAppBar() },
                         bottomBar = {
                             when (currentRoute?.destination?.route) {
-                                planRoute, statisticsRoute -> PlannerV2BottomNavigation(navHostController = navHostController)
+                                planRoute, categoryRoute, statisticsRoute -> PlannerV2BottomNavigation(navHostController = navHostController)
                             }
                         }
                     ) {

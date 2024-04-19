@@ -3,6 +3,7 @@ package com.toyproject.plannerv2.view
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.toyproject.plannerv2.view.category.navigation.categoryScreen
 import com.toyproject.plannerv2.view.create.navigation.createPlanScreen
 import com.toyproject.plannerv2.view.create.navigation.navigateToCreatePlan
 import com.toyproject.plannerv2.view.login.navigation.loginScreen
@@ -29,5 +30,7 @@ fun PlannerV2NavHost(
         )
 
         statisticsScreen()
+
+        categoryScreen()
     }
 }
