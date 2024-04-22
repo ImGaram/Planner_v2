@@ -105,7 +105,10 @@ fun PlanScreen(
             }
 
             item {
-                AddCard(cardTitle = "클릭해서 일정 추가하기...") {
+                AddCard(
+                    modifier = Modifier.padding(vertical = 7.dp, horizontal = 10.dp),
+                    cardTitle = "클릭해서 일정 추가하기..."
+                ) {
                     navigateToCreatePlan(selectedLocalDate.value)
                 }
             }
