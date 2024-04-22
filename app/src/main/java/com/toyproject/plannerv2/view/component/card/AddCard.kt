@@ -15,21 +15,20 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun AddCard(
+    modifier: Modifier = Modifier,
     cardTitle: String,
     onCardClick: () -> Unit
 ) {
     val stroke = Stroke(width = 2f, pathEffect = PathEffect.dashPathEffect(intervals = floatArrayOf(10f, 10f), phase = 10f))
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 7.dp, horizontal = 10.dp)
             .clip(RoundedCornerShape(8.dp))
             .drawBehind {
                 drawRoundRect(
@@ -47,13 +46,5 @@ fun AddCard(
             color = Color.LightGray,
             fontSize = 20.sp
         )
-    }
-}
-
-@Preview
-@Composable
-fun P() {
-    AddCard(cardTitle = "클릭해서 일정 추가하기...") {
-
     }
 }
