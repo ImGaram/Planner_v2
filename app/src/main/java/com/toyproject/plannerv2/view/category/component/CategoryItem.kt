@@ -33,7 +33,7 @@ fun CategoryItem(categoryData: CategoryData) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp)
+            .height(85.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Color.White)
     ) {
@@ -61,6 +61,7 @@ fun CategoryItem(categoryData: CategoryData) {
                 Text(
                     modifier = Modifier.padding(end = 10.dp),
                     text = "일정 ${categoryData.savedPlanCount}개",
+                    fontSize = 14.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
