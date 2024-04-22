@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.toyproject.plannerv2.view.plan.component.AddScheduleCard
+import com.toyproject.plannerv2.view.component.card.AddCard
 import com.toyproject.plannerv2.view.plan.component.PlanCalendar
 import com.toyproject.plannerv2.view.plan.component.ScheduleHeader
 import com.toyproject.plannerv2.view.plan.component.ScheduleItem
@@ -104,7 +104,11 @@ fun PlanScreen(
                 }
             }
 
-            item { AddScheduleCard { navigateToCreatePlan(selectedLocalDate.value) } }
+            item {
+                AddCard(cardTitle = "클릭해서 일정 추가하기...") {
+                    navigateToCreatePlan(selectedLocalDate.value)
+                }
+            }
         }
 
         ScreenScrollButton(

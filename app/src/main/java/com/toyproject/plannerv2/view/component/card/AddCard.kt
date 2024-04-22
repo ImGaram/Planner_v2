@@ -1,4 +1,4 @@
-package com.toyproject.plannerv2.view.plan.component
+package com.toyproject.plannerv2.view.component.card
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -20,7 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun AddScheduleCard(onCardClick: () -> Unit) {
+fun AddCard(
+    cardTitle: String,
+    onCardClick: () -> Unit
+) {
     val stroke = Stroke(width = 2f, pathEffect = PathEffect.dashPathEffect(intervals = floatArrayOf(10f, 10f), phase = 10f))
 
     Box(
@@ -40,7 +43,7 @@ fun AddScheduleCard(onCardClick: () -> Unit) {
     ) {
         Text(
             modifier = Modifier.padding(vertical = 15.dp),
-            text = "클릭해서 일정 추가하기...",
+            text = cardTitle,
             color = Color.LightGray,
             fontSize = 20.sp
         )
@@ -49,6 +52,8 @@ fun AddScheduleCard(onCardClick: () -> Unit) {
 
 @Preview
 @Composable
-fun AddScheduleCardPreview() {
-    AddScheduleCard {}
+fun P() {
+    AddCard(cardTitle = "클릭해서 일정 추가하기...") {
+
+    }
 }
