@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.view.category.component.CategoryItem
+import com.toyproject.plannerv2.view.component.card.AddCard
 
 @Composable
 fun CategoryScreen() {
@@ -66,6 +67,12 @@ fun CategoryScreen() {
         ) {
             items(tempCategoryList) {
                 CategoryItem(categoryData = it)
+            }
+
+            item {
+                AddCard(cardTitle = "클릭해서 카테고리 생성하기...") {
+
+                }
             }
         }
     }
