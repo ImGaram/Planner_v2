@@ -1,6 +1,7 @@
 package com.toyproject.plannerv2.view.create.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.toyproject.plannerv2.R
@@ -103,6 +105,15 @@ fun PlanInfoCard(
                 text = description.ifEmpty { "비어 있음" },
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
+            )
+
+            CategoryDropdown(
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(8.dp)),
+                onMenuClick = {
+
+                }
             )
         }
 
