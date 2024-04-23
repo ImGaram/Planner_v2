@@ -8,6 +8,7 @@ class PlanData(
     val baseDate: Long? = null,
     val title: String = "",
     val description: String = "",
+    val category: String? = null,
     val createdTime: Long? = null,
     complete: Boolean = false,
     isMenuOpen: Boolean = false
