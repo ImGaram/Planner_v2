@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -86,9 +87,9 @@ fun ScheduleItem(
         }
 
         if (planData.isMenuOpen) {
-            val titleList = listOf("일정 수정하기", "일정 삭제하기")
-            val itemColorList = listOf(Color(0xFFFFDB86), Color.Red)
-            val iconList = listOf(Icons.Default.DateRange, Icons.Default.Delete)
+            val titleList = listOf("일정 수정하기", "카테고리 설정하기", "일정 삭제하기")
+            val itemColorList = listOf(Color(0xFFFFDB86), Color(0xFF6EC4A7), Color.Red)
+            val iconList = listOf(Icons.Default.DateRange, Icons.Default.List, Icons.Default.Delete)
 
             titleList.forEachIndexed { index, title ->
                 Divider(
