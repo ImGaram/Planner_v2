@@ -32,7 +32,7 @@ fun PlannerV2TextField(
     var textState by remember { mutableStateOf(value) }
 
     BasicTextField(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         value = textState,
         onValueChange = {
             textState = it

@@ -47,7 +47,9 @@ fun PlanModifyDialog(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             PlannerV2TextField(
-                modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 15.dp, vertical = 10.dp),
                 value = titleState.value,
                 hint = "변경할 제목을 입력하세요.",
                 singleLine = true,
@@ -65,6 +67,7 @@ fun PlanModifyDialog(
 
             PlannerV2TextField(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 15.dp)
                     .height(85.dp),
                 value = descriptionState.value,

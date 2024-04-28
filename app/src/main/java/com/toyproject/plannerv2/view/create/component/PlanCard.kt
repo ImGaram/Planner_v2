@@ -156,7 +156,9 @@ fun ModifyPlanCard(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         PlannerV2TextField(
-            modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp, vertical = 10.dp),
             value = title,
             hint = "제목을 입력하세요.",
             singleLine = true,
@@ -177,6 +179,7 @@ fun ModifyPlanCard(
 
         PlannerV2TextField(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = 15.dp)
                 .height(85.dp),
             value = description,
