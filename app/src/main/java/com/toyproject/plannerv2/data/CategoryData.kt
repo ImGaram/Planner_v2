@@ -4,5 +4,5 @@ data class CategoryData(
     val categoryTitle: String = "",
     val savedPlanCount: Int = 0,
     val categoryColorHex: String = "",
-    val createdTime: String = ""
+    val createdTime: Long? = null
 )
