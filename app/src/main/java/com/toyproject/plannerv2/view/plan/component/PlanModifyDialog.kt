@@ -20,10 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.toyproject.plannerv2.data.PlanData
 import com.toyproject.plannerv2.view.component.textfield.PlannerV2TextField
@@ -49,21 +46,13 @@ fun PlanModifyDialog(
             PlannerV2TextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 15.dp, vertical = 10.dp),
+                    .padding(horizontal = 15.dp, vertical = 10.dp)
+                    .height(45.dp),
                 value = titleState.value,
                 hint = "변경할 제목을 입력하세요.",
                 singleLine = true,
-                maxLines = 1,
-                textStyle = TextStyle(
-                    fontSize = 19.sp,
-                    fontWeight = FontWeight.Medium
-                ),
-                hintTextStyle = TextStyle(
-                    fontSize = 19.sp,
-                    fontWeight = FontWeight.Medium
-                ),
-                onValueChange = { titleState.value = it }
-            )
+                maxLines = 1
+            ) { titleState.value = it }
 
             PlannerV2TextField(
                 modifier = Modifier
@@ -74,8 +63,8 @@ fun PlanModifyDialog(
                 hint = "변경할 상세 내용을 입력하세요.",
                 singleLine = false,
                 maxLines = 4,
-                onValueChange = { descriptionState.value = it }
-            )
+                textContentAlignment = Alignment.TopStart
+            ) { descriptionState.value = it }
 
             Row(
                 modifier = Modifier

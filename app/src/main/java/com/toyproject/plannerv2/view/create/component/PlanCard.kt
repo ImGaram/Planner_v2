@@ -29,10 +29,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.toyproject.plannerv2.R
@@ -158,24 +156,16 @@ fun ModifyPlanCard(
         PlannerV2TextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 15.dp, vertical = 10.dp),
+                .padding(horizontal = 15.dp, vertical = 10.dp)
+                .height(45.dp),
             value = title,
             hint = "제목을 입력하세요.",
             singleLine = true,
-            maxLines = 1,
-            textStyle = TextStyle(
-                fontSize = 19.sp,
-                fontWeight = FontWeight.Medium
-            ),
-            hintTextStyle = TextStyle(
-                fontSize = 19.sp,
-                fontWeight = FontWeight.Medium
-            ),
-            onValueChange = {
-                titleState = it
-                onTitleChange(titleState)
-            }
-        )
+            maxLines = 1
+        ) {
+            titleState = it
+            onTitleChange(titleState)
+        }
 
         PlannerV2TextField(
             modifier = Modifier
@@ -186,11 +176,11 @@ fun ModifyPlanCard(
             hint = "상세 내용을 입력하세요.",
             singleLine = false,
             maxLines = 4,
-            onValueChange = {
-                descriptionState = it
-                onDescriptionChange(descriptionState)
-            }
-        )
+            textContentAlignment = Alignment.TopStart
+        ) {
+            descriptionState = it
+            onDescriptionChange(descriptionState)
+        }
 
         Row(
             modifier = Modifier
