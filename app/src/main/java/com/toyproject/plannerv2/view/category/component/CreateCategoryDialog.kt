@@ -49,7 +49,7 @@ fun CreateCategoryDialog(
                 .padding(10.dp),
         ) {
             Text(
-                text = "카테고리 생성하기",
+                text = "새 카테고리",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold
             )
