@@ -13,6 +13,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -22,23 +23,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.view.category.component.CategoryItem
 import com.toyproject.plannerv2.view.category.component.CreateCategoryDialog
 import com.toyproject.plannerv2.view.component.card.AddCard
+import com.toyproject.plannerv2.view.component.progress.CircularProgressScreen
 import com.toyproject.plannerv2.viewmodel.CategoryViewModel
 
 @Composable
 fun CategoryScreen(categoryViewModel: CategoryViewModel = viewModel()) {
     val uid = FirebaseAuth.getInstance().uid
-    val tempCategoryList = listOf(
-        CategoryData(categoryTitle = "카테고리 1", savedPlanCount = 3, categoryColorHex = "#FF0000"),
-        CategoryData(categoryTitle = "카테고리 2", savedPlanCount = 6, categoryColorHex = "#FFFF00"),
-    )
+    val categoryList = categoryViewModel.categories.collectAsState()
     val createDialogState = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        // firebase에 category item 불러오기
+        categoryViewModel.getCategory(uid.toString())
     }
 
     Column {
@@ -66,23 +64,25 @@ fun CategoryScreen(categoryViewModel: CategoryViewModel = viewModel()) {
                 .padding(horizontal = 15.dp)
         )
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 15.dp),
-            contentPadding = PaddingValues(horizontal = 15.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            items(tempCategoryList) {
-                CategoryItem(categoryData = it)
-            }
+        if (!categoryList.value.isNullOrEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 15.dp),
+                contentPadding = PaddingValues(horizontal = 15.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                items(categoryList.value!!) {
+                    CategoryItem(categoryData = it)
+                }
 
-            item {
-                AddCard(cardTitle = "클릭해서 카테고리 생성하기...") {
-                    createDialogState.value = true
+                item {
+                    AddCard(cardTitle = "클릭해서 카테고리 생성하기...") {
+                        createDialogState.value = true
+                    }
                 }
             }
-        }
+        } else CircularProgressScreen()
     }
 
     if (createDialogState.value) {
@@ -93,6 +93,7 @@ fun CategoryScreen(categoryViewModel: CategoryViewModel = viewModel()) {
                     uid = uid.toString(),
                     categoryData = it
                 )
+                categoryViewModel.getCategory(uid = uid.toString())
                 createDialogState.value = false
             },
             onCancelClick = { createDialogState.value = false }
