@@ -1,5 +1,8 @@
 package com.toyproject.plannerv2.view.category.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +19,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -38,6 +42,11 @@ fun CreateCategoryDialog(
 ) {
     val titleState = remember { mutableStateOf("") }
     val colorState = remember { mutableStateOf("#FFFFFFFF") }
+    val saveVisibility = remember { mutableStateOf(false) }
+
+    LaunchedEffect(titleState.value) {
+        saveVisibility.value = titleState.value.isNotBlank()
+    }
 
     Dialog(onDismissRequest = onDismissRequest) {
         Column(
@@ -94,19 +103,25 @@ fun CreateCategoryDialog(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                Button(
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB86)),
-                    onClick = {
-                        onSaveClick(
-                            CategoryData(
-                                categoryTitle = titleState.value,
-                                categoryColorHex = colorState.value,
-                                createdTime = System.currentTimeMillis()
+                AnimatedVisibility(
+                    visible = saveVisibility.value,
+                    enter = slideInVertically(initialOffsetY = { it }),
+                    exit = slideOutVertically(targetOffsetY = { it + 10 })      // dialog에 기본적으로 설정된 padding 값(10) 만큼 추가 값을 부여함.
+                ) {
+                    Button(
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB86)),
+                        onClick = {
+                            onSaveClick(
+                                CategoryData(
+                                    categoryTitle = titleState.value,
+                                    categoryColorHex = colorState.value,
+                                    createdTime = System.currentTimeMillis()
+                                )
                             )
-                        )
-                    }
-                ) { Text(text = "생성하기") }
+                        }
+                    ) { Text(text = "생성하기") }
+                }
             }
         }
     }
