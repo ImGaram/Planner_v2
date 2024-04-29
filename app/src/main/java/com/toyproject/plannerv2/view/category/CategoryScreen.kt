@@ -20,22 +20,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.view.category.component.CategoryItem
 import com.toyproject.plannerv2.view.category.component.CreateCategoryDialog
 import com.toyproject.plannerv2.view.component.card.AddCard
+import com.toyproject.plannerv2.viewmodel.CategoryViewModel
 
 @Composable
-fun CategoryScreen() {
-    LaunchedEffect(Unit) {
-        // firebase에 category item 불러오기
-    }
-
+fun CategoryScreen(categoryViewModel: CategoryViewModel = viewModel()) {
+    val uid = FirebaseAuth.getInstance().uid
     val tempCategoryList = listOf(
         CategoryData(categoryTitle = "카테고리 1", savedPlanCount = 3, categoryColorHex = "#FF0000"),
         CategoryData(categoryTitle = "카테고리 2", savedPlanCount = 6, categoryColorHex = "#FFFF00"),
     )
     val createDialogState = remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        // firebase에 category item 불러오기
+    }
 
     Column {
         Text(
@@ -85,7 +89,10 @@ fun CategoryScreen() {
         CreateCategoryDialog(
             onDismissRequest = { createDialogState.value = false },
             onSaveClick = {
-
+                categoryViewModel.createCategory(
+                    uid = uid.toString(),
+                    categoryData = it
+                )
                 createDialogState.value = false
             },
             onCancelClick = { createDialogState.value = false }
