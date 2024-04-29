@@ -29,7 +29,7 @@ import com.toyproject.plannerv2.viewmodel.PlanViewModel
 import java.time.LocalDate
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 fun PlanScreen(
     planViewModel: PlanViewModel = viewModel(),
     navigateToCreatePlan: (String) -> Unit
