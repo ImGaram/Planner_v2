@@ -13,6 +13,8 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.view.category.component.CategoryItem
+import com.toyproject.plannerv2.view.category.component.CreateCategoryDialog
 import com.toyproject.plannerv2.view.component.card.AddCard
 
 @Composable
@@ -32,6 +35,7 @@ fun CategoryScreen() {
         CategoryData(categoryTitle = "카테고리 1", savedPlanCount = 3, categoryColorHex = "#FF0000"),
         CategoryData(categoryTitle = "카테고리 2", savedPlanCount = 6, categoryColorHex = "#FFFF00"),
     )
+    val createDialogState = remember { mutableStateOf(false) }
 
     Column {
         Text(
@@ -71,9 +75,20 @@ fun CategoryScreen() {
 
             item {
                 AddCard(cardTitle = "클릭해서 카테고리 생성하기...") {
-
+                    createDialogState.value = true
                 }
             }
         }
+    }
+
+    if (createDialogState.value) {
+        CreateCategoryDialog(
+            onDismissRequest = { createDialogState.value = false },
+            onSaveClick = {
+
+                createDialogState.value = false
+            },
+            onCancelClick = { createDialogState.value = false }
+        )
     }
 }
