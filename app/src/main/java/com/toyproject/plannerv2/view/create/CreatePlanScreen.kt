@@ -41,18 +41,26 @@ import com.toyproject.plannerv2.R
 import com.toyproject.plannerv2.data.PlanData
 import com.toyproject.plannerv2.view.create.component.CreatePlanCard
 import com.toyproject.plannerv2.view.create.component.PlanCard
+import com.toyproject.plannerv2.viewmodel.CategoryViewModel
 import com.toyproject.plannerv2.viewmodel.CreatePlanViewModel
 
 @Composable
 fun CreatePlanScreen(
     createPlanViewModel: CreatePlanViewModel = viewModel(),
+    categoryViewModel: CategoryViewModel = viewModel(),
     selectedDate: String?,
     navigateToPlan: () -> Unit
 ) {
     val planList = createPlanViewModel.planList
     val savePlanState = createPlanViewModel.savePlan.collectAsState()
+    val categoryList = categoryViewModel.categories.collectAsState()
     val planListState = remember { planList }
     var buttonsVisibility by remember { mutableStateOf(false) }
+
+    val uid = FirebaseAuth.getInstance().uid
+    LaunchedEffect(Unit) {
+        categoryViewModel.getCategory(uid = uid.toString())
+    }
 
     LaunchedEffect(planListState.toList()) {
         var titleIsEmpty = false
@@ -81,19 +89,22 @@ fun CreatePlanScreen(
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            itemsIndexed(planListState) { index, item ->
-                PlanCard(
-                    planData = item,
-                    savePlanLogic = { title, description ->
-                        createPlanViewModel.modifyPlan(
-                            baseDate = selectedDate,
-                            title = title,
-                            description = description,
-                            position = index
-                        )
-                    },
-                    deleteLogic = { createPlanViewModel.removePlan(index) }
-                )
+            if (categoryList.value != null) {
+                itemsIndexed(planListState) { index, item ->
+                    PlanCard(
+                        planData = item,
+                        dropdownMenuItem = categoryList.value!!,
+                        savePlanLogic = { title, description ->
+                            createPlanViewModel.modifyPlan(
+                                baseDate = selectedDate,
+                                title = title,
+                                description = description,
+                                position = index
+                            )
+                        },
+                        deleteLogic = { createPlanViewModel.removePlan(index) }
+                    )
+                }
             }
 
             item {
@@ -122,11 +133,10 @@ fun CreatePlanScreen(
             SaveCancelButtons(
                 navigateToPlan = navigateToPlan,
                 savePlanLogic = {
-                    val uid = FirebaseAuth.getInstance().uid!!
                     if (!selectedDate.isNullOrEmpty()) {
                         createPlanViewModel.savePlan(
                             plans = planListState.toList(),
-                            uid = uid,
+                            uid = uid.toString(),
                             baseDate = selectedDate,
                             navigateToPlan = navigateToPlan
                         )
