@@ -3,12 +3,10 @@ package com.toyproject.plannerv2.view.create.component
 import android.graphics.Color.parseColor
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Checkbox
@@ -23,15 +21,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.toyproject.plannerv2.data.CategoryData
 
 @Composable
 fun CategoryDropdown(
     modifier: Modifier = Modifier,
+    dropdownMenuItem: List<CategoryData>,
     onMenuClick: (String) -> Unit,
 ) {
     val selectedCategoryState = remember { mutableStateMapOf<String, Map<String, Any>>() }
+    val menuItemCheckBoxState = remember { mutableStateOf(Array(dropdownMenuItem.size) { false }) }     // 생성할 일정의 dropdown menu의 checkbox state를 관리함.
     val dropdownState = remember { mutableStateOf(false) }
     val selectState = remember { mutableStateOf("카테고리 선택...") }
     val selectColorState = remember { mutableStateOf("#FFC5C5C5") }
@@ -42,8 +43,12 @@ fun CategoryDropdown(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier.weight(1f),
-                text = selectState.value.ifEmpty { "카테고리 선택..." }
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 10.dp),
+                text = selectState.value.ifEmpty { "카테고리 선택..." },
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
 
             Icon(
@@ -56,24 +61,19 @@ fun CategoryDropdown(
         }
 
         DropdownMenu(
-            modifier = Modifier,
+            modifier = Modifier.background(Color.White),
             expanded = dropdownState.value,
             onDismissRequest = { dropdownState.value = false }
         ) {
-            // firestore category data로 교체
-            val categoryList = listOf(
-                CategoryData(categoryTitle = "카테고리 1", savedPlanCount = 3, categoryColorHex = "#FF0000"),
-                CategoryData(categoryTitle = "카테고리 2", savedPlanCount = 6, categoryColorHex = "#FFFF00"),
-            )
-
-            categoryList.forEach {
-                val menuItemCheckBoxState = remember { mutableStateOf(false) }
-
+            dropdownMenuItem.forEachIndexed { index, it ->
                 DropdownMenuItem(
                     text = {
                         Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = it.categoryTitle
+                            modifier = Modifier
+                                .padding(start = 7.dp)
+                                .fillMaxWidth(),
+                            text = it.categoryTitle,
+                            color = Color(parseColor(it.categoryColorHex))
                         )
                     },
                     onClick = {
@@ -84,22 +84,17 @@ fun CategoryDropdown(
                     },
                     leadingIcon = {
                         Checkbox(
-                            checked = menuItemCheckBoxState.value,
+                            checked = menuItemCheckBoxState.value[index],
                             onCheckedChange = { checked ->
-                                menuItemCheckBoxState.value = checked
+                                menuItemCheckBoxState.value[index] = checked
+
                                 if (checked) selectedCategoryState[it.categoryTitle] = mapOf("title" to it.categoryTitle, "color" to it.categoryColorHex)
                                 else selectedCategoryState.remove(it.categoryTitle)
                                 selectState.value = selectedCategoryState.keys.joinToString(", ")
                             }
                         )
                     },
-                    trailingIcon = {
-                        Box(
-                            modifier = Modifier
-                                .size(20.dp)
-                                .background(Color(parseColor(it.categoryColorHex)))
-                        )
-                    }
+                    trailingIcon = { /* 일부러 비워놔서 checkBox와 맞지 않는 공백을 맞춤. */ }
                 )
             }
         }
