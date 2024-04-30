@@ -34,12 +34,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.toyproject.plannerv2.R
+import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.data.PlanData
 import com.toyproject.plannerv2.view.component.textfield.PlannerV2TextField
 
 @Composable
 fun PlanCard(
     planData: PlanData,
+    dropdownMenuItem: List<CategoryData>,
     savePlanLogic: (title: String, description: String) -> Unit,
     deleteLogic: () -> Unit
 ) {
@@ -64,6 +66,7 @@ fun PlanCard(
             title = planData.title,
             description = planData.description,
             onCardClick = { isModifyPlanState = true },
+            dropdownMenuItem = dropdownMenuItem,
             onIconClick = deleteLogic
         )
     }
@@ -73,6 +76,7 @@ fun PlanCard(
 fun PlanInfoCard(
     title: String,
     description: String,
+    dropdownMenuItem: List<CategoryData>,
     onCardClick: () -> Unit,
     onIconClick: () -> Unit
 ) {
@@ -109,6 +113,7 @@ fun PlanInfoCard(
                 modifier = Modifier
                     .padding(top = 10.dp)
                     .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(8.dp)),
+                dropdownMenuItem = dropdownMenuItem,
                 onMenuClick = {
 
                 }
