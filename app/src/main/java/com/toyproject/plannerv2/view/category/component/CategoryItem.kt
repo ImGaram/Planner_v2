@@ -60,7 +60,7 @@ fun CategoryItem(categoryData: CategoryData) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     modifier = Modifier.padding(end = 10.dp),
-                    text = "일정 ${categoryData.savedPlanCount}개",
+                    text = "일정 10개",
                     fontSize = 14.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
