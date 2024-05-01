@@ -8,11 +8,12 @@ class PlanData(
     val baseDate: Long? = null,
     val title: String = "",
     val description: String = "",
-    val category: String? = null,
     val createdTime: Long? = null,
+    category: Map<String, Map<String, Any>> = mapOf(),
     complete: Boolean = false,
     isMenuOpen: Boolean = false
 ) {
     var complete by mutableStateOf(complete)
     var isMenuOpen by mutableStateOf(isMenuOpen)
+    var category by mutableStateOf(category)
 }
