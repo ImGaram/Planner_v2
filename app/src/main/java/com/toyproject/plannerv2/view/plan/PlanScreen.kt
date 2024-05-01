@@ -9,9 +9,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -35,7 +35,7 @@ fun PlanScreen(
     navigateToCreatePlan: (String) -> Unit
 ) {
     val uid = FirebaseAuth.getInstance().uid
-    val planState = remember { mutableStateOf(planViewModel.plans) }
+    val planState = planViewModel.plans.collectAsState()
     val selectedLocalDate = remember { mutableStateOf(LocalDate.now().toString()) }
 
     val scrollState = rememberLazyListState()
@@ -71,6 +71,7 @@ fun PlanScreen(
                 itemsIndexed(planState.value) { position, it ->
                     ScheduleItem(
                         planData = it,
+                        categoryData = it.category.values.map { it },
                         onCheckBoxClick = { isCheck ->
                             planViewModel.changePlanCompleteAtIndex(position, isCheck)
                             planViewModel.planCheck(
