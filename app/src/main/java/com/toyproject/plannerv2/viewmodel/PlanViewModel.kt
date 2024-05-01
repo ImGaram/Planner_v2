@@ -1,6 +1,5 @@
 package com.toyproject.plannerv2.viewmodel
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.toyproject.plannerv2.data.PlanData
@@ -8,11 +7,12 @@ import com.toyproject.plannerv2.util.deleteFireStoreData
 import com.toyproject.plannerv2.util.readFireStoreData
 import com.toyproject.plannerv2.util.stringToUnixTimestamp
 import com.toyproject.plannerv2.util.updateFireStoreData
-import java.lang.Exception
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class PlanViewModel: ViewModel() {
-    private val _plans = mutableStateListOf<PlanData>()
-    val plans: List<PlanData> get() = _plans
+    private val _plans = MutableStateFlow<List<PlanData>>(emptyList())
+    val plans = _plans.asStateFlow()
 
     fun getPlans(uid: String, date: String) {
         val getPlansRef = FirebaseFirestore.getInstance()
@@ -23,10 +23,14 @@ class PlanViewModel: ViewModel() {
         // baseDate와 날짜가 같은 document들만 불러오기.
         getPlansRef.whereEqualTo("baseDate", date.stringToUnixTimestamp()).readFireStoreData(
             onSuccess = {
-                _plans.clear()
+                _plans.value = emptyList()  // 일정을 여러 번 불러와야 할 때,
                 it.forEach { documentSnapshot ->
                     val planObj = documentSnapshot.toObject(PlanData::class.java)
-                    if (planObj != null) _plans.add(planObj)
+                    if (planObj != null) {
+                        val currentPlans = _plans.value.toMutableList()
+                        currentPlans.add(planObj)
+                        _plans.value = currentPlans
+                    }
                 }
             }
         )
@@ -95,7 +99,7 @@ class PlanViewModel: ViewModel() {
     }
 
     fun changePlanCompleteAtIndex(position: Int, checked: Boolean) {
-        _plans.find { _plans.indexOf(it) == position }?.let { data ->
+        _plans.value.find { _plans.value.indexOf(it) == position }?.let { data ->
             data.complete = checked
         }
     }
