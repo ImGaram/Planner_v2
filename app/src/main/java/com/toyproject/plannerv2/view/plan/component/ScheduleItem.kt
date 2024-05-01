@@ -1,11 +1,17 @@
 package com.toyproject.plannerv2.view.plan.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
@@ -21,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +39,7 @@ import com.toyproject.plannerv2.data.PlanData
 @Composable
 fun ScheduleItem(
     planData: PlanData,
+    categoryData: List<Map<String, Any>>,
     onCheckBoxClick: (Boolean) -> Unit,
     onPlanModify: (title: String, description: String) -> Unit,
     onPlanDelete: () -> Unit
@@ -63,14 +71,23 @@ fun ScheduleItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+
                 Text(
-                    modifier = Modifier.padding(top = 5.dp),
                     text = planData.description,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Thin,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+
+                LazyRow(
+                    modifier = Modifier.padding(top = 5.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    items(categoryData) {map ->
+                        CategoryBadge(title = map["title"].toString(), colorHex = map["color"].toString())
+                    }
+                }
             }
 
             IconButton(
@@ -122,5 +139,24 @@ fun ScheduleItem(
                 onCancelClick =  { dialogState.value = false }
             )
         }
+    }
+}
+
+@Composable
+fun CategoryBadge(title: String, colorHex: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(10.dp)
+                .clip(CircleShape)
+                .background(Color(android.graphics.Color.parseColor(colorHex)))
+        )
+
+        Text(
+            modifier = Modifier.padding(start = 5.dp),
+            text = title,
+            fontSize = 9.sp,
+            fontWeight = FontWeight.Thin
+        )
     }
 }
