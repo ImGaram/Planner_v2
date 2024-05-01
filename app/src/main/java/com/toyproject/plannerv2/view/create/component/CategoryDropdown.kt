@@ -15,7 +15,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,33 +27,31 @@ import com.toyproject.plannerv2.data.CategoryData
 @Composable
 fun CategoryDropdown(
     modifier: Modifier = Modifier,
-    dropdownMenuItem: List<CategoryData>,
-    onMenuClick: (String) -> Unit,
+    dropdownItems: List<CategoryData>,
+    title: String,
+    checkBoxStateList: List<Boolean>,
+    onDropdownCheckBoxClick: (Boolean, Int, CategoryData) -> Unit
 ) {
-    val selectedCategoryState = remember { mutableStateMapOf<String, Map<String, Any>>() }
-    val menuItemCheckBoxState = remember { mutableStateOf(Array(dropdownMenuItem.size) { false }) }     // 생성할 일정의 dropdown menu의 checkbox state를 관리함.
-    val dropdownState = remember { mutableStateOf(false) }
-    val selectState = remember { mutableStateOf("카테고리 선택...") }
-    val selectColorState = remember { mutableStateOf("#FFC5C5C5") }
+    val dropdownExpendedState = remember { mutableStateOf(false) }
 
     Column {
         Row(
-            modifier = modifier,
+            modifier = modifier
+                .clickable { dropdownExpendedState.value = true },
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // dropdown menu title
             Text(
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 10.dp),
-                text = selectState.value.ifEmpty { "카테고리 선택..." },
+                text = title,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
 
             Icon(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .clickable { dropdownState.value = true },
+                modifier = Modifier.padding(10.dp),
                 imageVector = Icons.Default.ArrowDropDown,
                 contentDescription = "dropdown open"
             )
@@ -62,10 +59,10 @@ fun CategoryDropdown(
 
         DropdownMenu(
             modifier = Modifier.background(Color.White),
-            expanded = dropdownState.value,
-            onDismissRequest = { dropdownState.value = false }
+            expanded = dropdownExpendedState.value,
+            onDismissRequest = { dropdownExpendedState.value = false }
         ) {
-            dropdownMenuItem.forEachIndexed { index, it ->
+            dropdownItems.forEachIndexed { index, it ->
                 DropdownMenuItem(
                     text = {
                         Text(
@@ -76,21 +73,12 @@ fun CategoryDropdown(
                             color = Color(parseColor(it.categoryColorHex))
                         )
                     },
-                    onClick = {
-                        onMenuClick(it.categoryTitle)
-                        selectState.value = it.categoryTitle
-                        selectColorState.value = it.categoryColorHex
-                        dropdownState.value = false
-                    },
+                    onClick = { dropdownExpendedState.value = false },
                     leadingIcon = {
                         Checkbox(
-                            checked = menuItemCheckBoxState.value[index],
+                            checked = checkBoxStateList[index],
                             onCheckedChange = { checked ->
-                                menuItemCheckBoxState.value[index] = checked
-
-                                if (checked) selectedCategoryState[it.categoryTitle] = mapOf("title" to it.categoryTitle, "color" to it.categoryColorHex)
-                                else selectedCategoryState.remove(it.categoryTitle)
-                                selectState.value = selectedCategoryState.keys.joinToString(", ")
+                                onDropdownCheckBoxClick(checked, index, it)
                             }
                         )
                     },
