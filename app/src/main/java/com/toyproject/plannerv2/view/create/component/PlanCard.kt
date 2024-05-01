@@ -42,7 +42,7 @@ import com.toyproject.plannerv2.view.component.textfield.PlannerV2TextField
 fun PlanCard(
     planData: PlanData,
     dropdownMenuItem: List<CategoryData>,
-    savePlanLogic: (title: String, description: String) -> Unit,
+    savePlanLogic: (title: String, description: String, category: Map<String, Map<String, Any>>) -> Unit,
     deleteLogic: () -> Unit
 ) {
     var isModifyPlanState by remember { mutableStateOf(false) }
@@ -56,27 +56,27 @@ fun PlanCard(
             onTitleChange = { titleState = it },
             onDescriptionChange = { descriptionState = it },
             onSaveButtonClick = {
-                savePlanLogic(titleState, descriptionState)
+                savePlanLogic(titleState, descriptionState, planData.category)
                 isModifyPlanState = false
             },
             onCancelButtonClick = { isModifyPlanState = false }
         )
     } else {
         PlanInfoCard(
-            title = planData.title,
-            description = planData.description,
+            planData = planData,
+            categoryDataList = dropdownMenuItem,
             onCardClick = { isModifyPlanState = true },
-            dropdownMenuItem = dropdownMenuItem,
-            onIconClick = deleteLogic
+            onIconClick = {
+                deleteLogic()
+            }
         )
     }
 }
 
 @Composable
 fun PlanInfoCard(
-    title: String,
-    description: String,
-    dropdownMenuItem: List<CategoryData>,
+    planData: PlanData,
+    categoryDataList: List<CategoryData>,
     onCardClick: () -> Unit,
     onIconClick: () -> Unit
 ) {
@@ -97,14 +97,15 @@ fun PlanInfoCard(
         ) {
             Text(
                 modifier = Modifier.padding(bottom = 10.dp),
-                text = title.ifEmpty { "새 일정" },
+                text = planData.title.ifEmpty { "새 일정" },
                 fontSize = 19.sp,
                 fontWeight = FontWeight.SemiBold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+
             Text(
-                text = description.ifEmpty { "비어 있음" },
+                text = planData.description.ifEmpty { "비어 있음" },
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -113,9 +114,28 @@ fun PlanInfoCard(
                 modifier = Modifier
                     .padding(top = 10.dp)
                     .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(8.dp)),
-                dropdownMenuItem = dropdownMenuItem,
-                onMenuClick = {
-
+                dropdownItems = categoryDataList,
+                title = planData.category.values.map { it["title"] }.joinToString(", ").ifEmpty {
+                    // 선택된 category(planData.category)에서 title만 추출해 dropdown의 title로 설정.
+                    "카테고리 선택..."
+                },
+                checkBoxStateList = categoryDataList.map {
+                    // 현재 모든 카테고리의 title과 planData.category의 title을 비교해 공통된게 있는 데이터는 true, 아니면 false.
+                    planData.category.values.map { map -> map["title"] }.contains(it.categoryTitle)
+                },
+                onDropdownCheckBoxClick = { checked, index, categoryData ->
+                    // 현재 map을 불러와서(mutableMap) 변경사항 적용 후 기존 planData.category에 적용.
+                    val currentMap = planData.category.toMutableMap()
+                    if (checked) {
+                        currentMap[index.toString()] = mapOf(
+                            "color" to categoryData.categoryColorHex,
+                            "title" to categoryData.categoryTitle
+                        )
+                        planData.category = currentMap
+                    } else {
+                        currentMap.remove(index.toString())
+                        planData.category = currentMap
+                    }
                 }
             )
         }
