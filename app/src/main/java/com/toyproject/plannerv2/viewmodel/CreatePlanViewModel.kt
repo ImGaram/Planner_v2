@@ -1,7 +1,5 @@
 package com.toyproject.plannerv2.viewmodel
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.toyproject.plannerv2.data.PlanData
@@ -12,26 +10,25 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class CreatePlanViewModel: ViewModel() {
-    private val _planList = mutableStateListOf<PlanData>()
-    val planList: SnapshotStateList<PlanData> = _planList
-
-    private val _savePlan = MutableStateFlow(false)
-    val savePlan: StateFlow<Boolean> = _savePlan.asStateFlow()
+    private val _planList = MutableStateFlow<List<PlanData>>(emptyList())
+    val planList = _planList.asStateFlow()
 
     fun addPlan(planData: PlanData) {
-        _planList.add(planData)
+        val currentPlans = _planList.value.toMutableList()
+        currentPlans.add(planData)
+        _planList.value = currentPlans
     }
 
-    fun modifyPlan(baseDate: String?, title: String, description: String, position: Int) {
-        _planList[position] = PlanData(
-            baseDate = baseDate?.stringToUnixTimestamp(),
-            title = title,
-            description = description
-        )
+    fun modifyPlan(position: Int, modifyData: PlanData) {
+        val currentPlans = _planList.value.toMutableList()
+        currentPlans[position] = modifyData
+        _planList.value = currentPlans
     }
 
     fun removePlan(position: Int) {
-        _planList.removeAt(position)
+        val currentPlans = _planList.value.toMutableList()
+        currentPlans.removeAt(position)
+        _planList.value = currentPlans
     }
 
     fun savePlan(plans: List<PlanData>, uid: String, baseDate: String?, navigateToPlan: () -> Unit) {
@@ -48,6 +45,7 @@ class CreatePlanViewModel: ViewModel() {
                 title = planData.title,
                 description = planData.description,
                 createdTime = savedTimeMillis,
+                category = planData.category,
                 complete = false
             )
             // documentLength와 생성된 plans들의 길이를 구해서 document의 name을 정함.
