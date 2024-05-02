@@ -89,12 +89,12 @@ fun CreatePlanScreen(
                     PlanCard(
                         planData = item,
                         dropdownMenuItem = categoryList.value!!,
-                        savePlanLogic = { title, description, category ->
+                        savePlanLogic = { title, description, categories ->
                             val modifyData = PlanData(
                                 baseDate = selectedDate?.stringToUnixTimestamp(),
                                 title = title,
                                 description = description,
-                                category = category
+                                categories = categories
                             )
                             createPlanViewModel.modifyPlan(
                                 position = index,

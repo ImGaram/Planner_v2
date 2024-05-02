@@ -71,7 +71,7 @@ fun PlanScreen(
                 itemsIndexed(planState.value) { position, it ->
                     ScheduleItem(
                         planData = it,
-                        categoryData = it.category.values.map { it },
+                        categoryData = it.categories.values.map { it },
                         onCheckBoxClick = { isCheck ->
                             planViewModel.changePlanCompleteAtIndex(position, isCheck)
                             planViewModel.planCheck(

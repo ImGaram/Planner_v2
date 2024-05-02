@@ -56,7 +56,7 @@ fun PlanCard(
             onTitleChange = { titleState = it },
             onDescriptionChange = { descriptionState = it },
             onSaveButtonClick = {
-                savePlanLogic(titleState, descriptionState, planData.category)
+                savePlanLogic(titleState, descriptionState, planData.categories)
                 isModifyPlanState = false
             },
             onCancelButtonClick = { isModifyPlanState = false }
@@ -115,26 +115,26 @@ fun PlanInfoCard(
                     .padding(top = 10.dp)
                     .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(8.dp)),
                 dropdownItems = categoryDataList,
-                title = planData.category.values.map { it["title"] }.joinToString(", ").ifEmpty {
+                title = planData.categories.values.map { it["title"] }.joinToString(", ").ifEmpty {
                     // 선택된 category(planData.category)에서 title만 추출해 dropdown의 title로 설정.
                     "카테고리 선택..."
                 },
                 checkBoxStateList = categoryDataList.map {
                     // 현재 모든 카테고리의 title과 planData.category의 title을 비교해 공통된게 있는 데이터는 true, 아니면 false.
-                    planData.category.values.map { map -> map["title"] }.contains(it.categoryTitle)
+                    planData.categories.values.map { map -> map["title"] }.contains(it.categoryTitle)
                 },
                 onDropdownCheckBoxClick = { checked, index, categoryData ->
                     // 현재 map을 불러와서(mutableMap) 변경사항 적용 후 기존 planData.category에 적용.
-                    val currentMap = planData.category.toMutableMap()
+                    val currentMap = planData.categories.toMutableMap()
                     if (checked) {
-                        currentMap[index.toString()] = mapOf(
+                        currentMap[categoryData.id] = mapOf(
                             "color" to categoryData.categoryColorHex,
                             "title" to categoryData.categoryTitle
                         )
-                        planData.category = currentMap
+                        planData.categories = currentMap
                     } else {
-                        currentMap.remove(index.toString())
-                        planData.category = currentMap
+                        currentMap.remove(categoryData.id)
+                        planData.categories = currentMap
                     }
                 }
             )

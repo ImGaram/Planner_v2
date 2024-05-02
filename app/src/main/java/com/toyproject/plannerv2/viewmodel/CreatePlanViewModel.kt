@@ -6,7 +6,6 @@ import com.toyproject.plannerv2.data.PlanData
 import com.toyproject.plannerv2.util.createFireStoreData
 import com.toyproject.plannerv2.util.stringToUnixTimestamp
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class CreatePlanViewModel: ViewModel() {
@@ -45,7 +44,7 @@ class CreatePlanViewModel: ViewModel() {
                 title = planData.title,
                 description = planData.description,
                 createdTime = savedTimeMillis,
-                category = planData.category,
+                categories = planData.categories,
                 complete = false
             )
             // documentLength와 생성된 plans들의 길이를 구해서 document의 name을 정함.
