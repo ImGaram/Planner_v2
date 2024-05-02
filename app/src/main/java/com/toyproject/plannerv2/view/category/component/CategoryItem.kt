@@ -5,13 +5,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
@@ -22,72 +20,76 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.toyproject.plannerv2.data.CategoryData
+import com.toyproject.plannerv2.util.unixTimestampToLocalDateTime
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Composable
-fun CategoryItem(categoryData: CategoryData) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(85.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color.White)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(15.dp)
-                .background(Color(android.graphics.Color.parseColor(categoryData.categoryColorHex)))
-        )
-
-        Column(
-            modifier = Modifier.padding(10.dp)
-        ) {
-            Text(
-                text = categoryData.categoryTitle,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Normal,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+fun CategoryItem(
+    modifier: Modifier = Modifier,
+    categoryData: CategoryData,
+    onModifyClick: () -> Unit = {},
+    onDeleteClick: () -> Unit = {}
+) {
+    Box(modifier = modifier) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .width(10.dp)
+                    .fillMaxHeight()
+                    .clip(CircleShape)
+                    .background(Color(android.graphics.Color.parseColor(categoryData.categoryColorHex)))
             )
 
-            Spacer(modifier = Modifier.weight(1f))
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 5.dp)
+                    .weight(1f)
+            ) {
                 Text(
-                    modifier = Modifier.padding(end = 10.dp),
-                    text = "일정 10개",
-                    fontSize = 14.sp,
+                    modifier = Modifier.fillMaxWidth(),
+                    text = categoryData.categoryTitle,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
+                    overflow = TextOverflow.Ellipsis
                 )
 
-                Icon(
-                    modifier = Modifier
-                        .padding(5.dp)
-                        .clickable {
-
-                        },
-                    imageVector = Icons.Default.Create,
-                    contentDescription = "category modify",
-                    tint = Color(0xFFFFDB86)
-                )
-
-                Icon(
-                    modifier = Modifier
-                        .padding(5.dp)
-                        .clickable {
-
-                        },
-                    imageVector = Icons.Default.Delete,
-                    tint = Color.Red,
-                    contentDescription = "category delete"
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "생성일: ${formatLocalDateTime(categoryData.createdTime?.unixTimestampToLocalDateTime())}",
+                    fontSize = 10.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
+
+            Icon(
+                modifier = Modifier
+                    .padding(end = 5.dp)
+                    .clip(CircleShape)
+                    .clickable { onModifyClick() },
+                imageVector = Icons.Default.Create,
+                contentDescription = "category modify",
+                tint = Color(0xFFFFDB86)
+            )
+
+            Icon(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable { onDeleteClick() },
+                imageVector = Icons.Default.Delete,
+                tint = Color.Red,
+                contentDescription = "category delete"
+            )
         }
     }
+}
+
+private fun formatLocalDateTime(localDateTime: LocalDateTime?): String {
+    val pattern = DateTimeFormatter.ofPattern("yyyy년 M월 d일 a H시 m분", Locale.KOREAN)
+    return localDateTime?.format(pattern).toString()
 }
