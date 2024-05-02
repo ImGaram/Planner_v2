@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.view.component.textfield.PlannerV2TextField
+import java.util.UUID
 
 @Composable
 fun CreateCategoryDialog(
@@ -114,6 +115,7 @@ fun CreateCategoryDialog(
                         onClick = {
                             onSaveClick(
                                 CategoryData(
+                                    id = UUID.randomUUID().toString(),
                                     categoryTitle = titleState.value,
                                     categoryColorHex = colorState.value,
                                     createdTime = System.currentTimeMillis()
