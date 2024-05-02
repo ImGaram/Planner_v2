@@ -84,7 +84,7 @@ fun ScheduleItem(
                     modifier = Modifier.padding(top = 5.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    items(categoryData) {map ->
+                    items(categoryData.sortedBy { it["title"].toString() }) {map ->
                         CategoryBadge(title = map["title"].toString(), colorHex = map["color"].toString())
                     }
                 }
