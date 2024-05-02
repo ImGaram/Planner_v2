@@ -68,12 +68,23 @@ fun CategoryScreen(categoryViewModel: CategoryViewModel = viewModel()) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 15.dp),
+                    .padding(top = 5.dp),
                 contentPadding = PaddingValues(horizontal = 15.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 items(categoryList.value!!) {
-                    CategoryItem(categoryData = it)
+                    CategoryItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(60.dp)
+                            .padding(10.dp),
+                        categoryData = it
+                    )
+
+                    Divider(
+                        modifier = Modifier
+                            .padding(vertical = 5.dp)
+                            .height(0.5.dp)
+                    )
                 }
 
                 item {
