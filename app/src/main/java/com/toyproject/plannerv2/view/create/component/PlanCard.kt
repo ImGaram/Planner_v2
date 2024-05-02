@@ -123,7 +123,7 @@ fun PlanInfoCard(
                     // 현재 모든 카테고리의 title과 planData.category의 title을 비교해 공통된게 있는 데이터는 true, 아니면 false.
                     planData.categories.values.map { map -> map["title"] }.contains(it.categoryTitle)
                 },
-                onDropdownCheckBoxClick = { checked, index, categoryData ->
+                onDropdownCheckBoxClick = { checked, categoryData ->
                     // 현재 map을 불러와서(mutableMap) 변경사항 적용 후 기존 planData.category에 적용.
                     val currentMap = planData.categories.toMutableMap()
                     if (checked) {

@@ -30,7 +30,7 @@ fun CategoryDropdown(
     dropdownItems: List<CategoryData>,
     title: String,
     checkBoxStateList: List<Boolean>,
-    onDropdownCheckBoxClick: (Boolean, Int, CategoryData) -> Unit
+    onDropdownCheckBoxClick: (Boolean, CategoryData) -> Unit
 ) {
     val dropdownExpendedState = remember { mutableStateOf(false) }
 
@@ -78,7 +78,7 @@ fun CategoryDropdown(
                         Checkbox(
                             checked = checkBoxStateList[index],
                             onCheckedChange = { checked ->
-                                onDropdownCheckBoxClick(checked, index, it)
+                                onDropdownCheckBoxClick(checked, it)
                             }
                         )
                     },
