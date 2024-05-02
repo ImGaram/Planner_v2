@@ -1,6 +1,5 @@
 package com.toyproject.plannerv2.view.category
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -64,7 +63,7 @@ fun CategoryScreen(categoryViewModel: CategoryViewModel = viewModel()) {
                 .padding(horizontal = 15.dp)
         )
 
-        if (!categoryList.value.isNullOrEmpty()) {
+        if (categoryList.value != null) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
