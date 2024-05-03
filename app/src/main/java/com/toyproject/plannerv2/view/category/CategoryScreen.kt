@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.view.category.component.CategoryItem
 import com.toyproject.plannerv2.view.category.component.CreateCategoryDialog
 import com.toyproject.plannerv2.view.component.card.AddCard
@@ -78,10 +79,24 @@ fun CategoryScreen(categoryViewModel: CategoryViewModel = viewModel()) {
                             .padding(10.dp),
                         categoryData = it,
                         onModifyClick = { title, color ->
-
+                            val modifyCategoryData = CategoryData(
+                                id = it.id,
+                                categoryTitle = title,
+                                categoryColorHex = color,
+                                createdTime = it.createdTime
+                            )
+                            categoryViewModel.modifyCategory(
+                                uid = uid.toString(),
+                                modifyValue = modifyCategoryData,
+                                onSuccess = { categoryViewModel.getCategory(uid = uid.toString()) }
+                            )
                         },
                         onDeleteClick = {
-
+                            categoryViewModel.deleteCategory(
+                                uid = uid.toString(),
+                                deleteId = it.createdTime.toString(),
+                                onSuccess = { categoryViewModel.getCategory(uid = uid.toString()) }
+                            )
                         }
                     )
 
