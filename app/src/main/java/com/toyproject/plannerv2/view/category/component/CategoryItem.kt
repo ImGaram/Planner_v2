@@ -97,7 +97,10 @@ fun CategoryItem(
         CategoryModifyDialog(
             categoryData = categoryData,
             onDismissRequest = { categoryModifyState.value = false },
-            onSaveClick = { title, color -> onModifyClick(title, color) },
+            onSaveClick = { title, color ->
+                onModifyClick(title, color)
+                categoryModifyState.value = false
+            },
             onCancelClick = { categoryModifyState.value = false }
         )
     }
@@ -105,7 +108,10 @@ fun CategoryItem(
     if (categoryDeleteState.value) {
         CategoryDeleteDialog(
             onDismissRequest = { categoryDeleteState.value = false },
-            onDeleteClick = onDeleteClick,
+            onDeleteClick = {
+                onDeleteClick()
+                categoryDeleteState.value = false
+            },
             onCancelClick = { categoryDeleteState.value = false }
         )
     }
