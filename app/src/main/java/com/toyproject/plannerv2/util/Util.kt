@@ -1,5 +1,6 @@
 package com.toyproject.plannerv2.util
 
+import androidx.compose.ui.graphics.Color
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.entryOf
 import java.time.Instant
@@ -33,4 +34,14 @@ fun Long.unixTimestampToLocalDate(): LocalDate {
 
 fun Long.unixTimestampToLocalDateTime(): LocalDateTime {
     return Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDateTime()
+}
+
+// Color type 데이터를 hexCode 형식으로 변환
+fun Color.toHexCode(): String {
+    val alpha = alpha * 255
+    val red = red * 255
+    val green = green * 255
+    val blue = blue * 255
+
+    return String.format("#%02x%02x%02x%02x", alpha.toInt(), red.toInt(), green.toInt(), blue.toInt())
 }

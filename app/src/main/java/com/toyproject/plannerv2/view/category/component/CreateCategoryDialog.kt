@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.toyproject.plannerv2.data.CategoryData
+import com.toyproject.plannerv2.util.toHexCode
 import com.toyproject.plannerv2.view.component.textfield.PlannerV2TextField
 import java.util.UUID
 
@@ -127,13 +128,4 @@ fun CreateCategoryDialog(
             }
         }
     }
-}
-
-private fun Color.toHexCode(): String {
-    val alpha = alpha * 255
-    val red = red * 255
-    val green = green * 255
-    val blue = blue * 255
-
-    return String.format("#%02x%02x%02x%02x", alpha.toInt(), red.toInt(), green.toInt(), blue.toInt())
 }
