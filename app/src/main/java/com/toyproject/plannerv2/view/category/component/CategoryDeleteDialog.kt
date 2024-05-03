@@ -61,7 +61,7 @@ fun CategoryDeleteDialog(
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB86)),
                     onClick = onDeleteClick
-                ) { Text(text = "생성하기") }
+                ) { Text(text = "확인") }
             }
         }
     }
