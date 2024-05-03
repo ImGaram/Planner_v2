@@ -76,7 +76,13 @@ fun CategoryScreen(categoryViewModel: CategoryViewModel = viewModel()) {
                             .fillMaxWidth()
                             .height(60.dp)
                             .padding(10.dp),
-                        categoryData = it
+                        categoryData = it,
+                        onModifyClick = { title, color ->
+
+                        },
+                        onDeleteClick = {
+
+                        }
                     )
 
                     Divider(

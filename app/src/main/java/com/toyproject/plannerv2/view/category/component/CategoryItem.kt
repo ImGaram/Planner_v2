@@ -16,6 +16,8 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,9 +35,12 @@ import java.util.Locale
 fun CategoryItem(
     modifier: Modifier = Modifier,
     categoryData: CategoryData,
-    onModifyClick: () -> Unit = {},
-    onDeleteClick: () -> Unit = {}
+    onModifyClick: (String, String) -> Unit,
+    onDeleteClick: () -> Unit
 ) {
+    val categoryModifyState = remember { mutableStateOf(false) }
+    val categoryDeleteState = remember { mutableStateOf(false) }
+
     Box(modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
@@ -71,7 +76,7 @@ fun CategoryItem(
                 modifier = Modifier
                     .padding(end = 5.dp)
                     .clip(CircleShape)
-                    .clickable { onModifyClick() },
+                    .clickable { categoryModifyState.value = true },
                 imageVector = Icons.Default.Create,
                 contentDescription = "category modify",
                 tint = Color(0xFFFFDB86)
@@ -80,12 +85,29 @@ fun CategoryItem(
             Icon(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .clickable { onDeleteClick() },
+                    .clickable { categoryDeleteState.value = true },
                 imageVector = Icons.Default.Delete,
                 tint = Color.Red,
                 contentDescription = "category delete"
             )
         }
+    }
+
+    if (categoryModifyState.value) {
+        CategoryModifyDialog(
+            categoryData = categoryData,
+            onDismissRequest = { categoryModifyState.value = false },
+            onSaveClick = { title, color -> onModifyClick(title, color) },
+            onCancelClick = { categoryModifyState.value = false }
+        )
+    }
+
+    if (categoryDeleteState.value) {
+        CategoryDeleteDialog(
+            onDismissRequest = { categoryDeleteState.value = false },
+            onDeleteClick = onDeleteClick,
+            onCancelClick = { categoryDeleteState.value = false }
+        )
     }
 }
 
