@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.util.createFireStoreData
+import com.toyproject.plannerv2.util.deleteFireStoreData
 import com.toyproject.plannerv2.util.readFireStoreData
+import com.toyproject.plannerv2.util.updateFireStoreData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -40,6 +42,46 @@ class CategoryViewModel: ViewModel() {
             onFailure = {
                 onFailure(it)
             }
+        )
+    }
+
+    fun modifyCategory(
+        uid: String,
+        modifyValue: CategoryData,
+        onSuccess: () -> Unit = {},
+        onFailure: (Exception?) -> Unit = {}
+    ) {
+        val modifyRef = FirebaseFirestore.getInstance()
+            .collection("schedule")
+            .document(uid)
+            .collection("category")
+            .document(modifyValue.createdTime.toString())
+
+        modifyRef.updateFireStoreData(
+            updateValue = mapOf(
+                "categoryTitle" to modifyValue.categoryTitle,
+                "categoryColorHex" to modifyValue.categoryColorHex
+            ),
+            onSuccess = onSuccess,
+            onFailure = onFailure
+        )
+    }
+
+    fun deleteCategory(
+        uid: String,
+        deleteId: String,
+        onSuccess: () -> Unit = {},
+        onFailure: (Exception?) -> Unit = {}
+    ) {
+        val deleteRef = FirebaseFirestore.getInstance()
+            .collection("schedule")
+            .document(uid)
+            .collection("category")
+            .document(deleteId)
+
+        deleteRef.deleteFireStoreData(
+            onSuccess = onSuccess,
+            onFailure = onFailure
         )
     }
 }
