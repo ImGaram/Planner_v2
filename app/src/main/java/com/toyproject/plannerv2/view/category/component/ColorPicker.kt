@@ -9,11 +9,12 @@ import com.godaddy.android.colorpicker.HsvColor
 @Composable
 fun ColorPicker(
     modifier: Modifier = Modifier,
+    initialColor: Color = Color.White,
     onColorChange: (color: Color) -> Unit
 ) {
     ClassicColorPicker(
         modifier = modifier,
-        color = HsvColor.from(Color.White),
+        color = HsvColor.from(initialColor),
         onColorChanged = { hsvColor: HsvColor ->
             onColorChange(hsvColor.toColor())
         }
