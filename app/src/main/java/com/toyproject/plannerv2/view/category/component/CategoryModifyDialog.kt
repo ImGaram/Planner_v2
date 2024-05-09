@@ -132,7 +132,7 @@ fun CategoryModifyDialog(
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB86)),
                         onClick = { onSaveClick(categoryTitleState.value, categoryColorState.value) }
-                    ) { Text(text = "생성하기") }
+                    ) { Text(text = "수정하기") }
                 }
             }
         }
