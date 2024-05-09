@@ -1,11 +1,13 @@
 package com.toyproject.plannerv2.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.util.createFireStoreData
 import com.toyproject.plannerv2.util.deleteFireStoreData
 import com.toyproject.plannerv2.util.readFireStoreData
+import com.toyproject.plannerv2.util.updateFieldFireStoreData
 import com.toyproject.plannerv2.util.updateFireStoreData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -65,11 +67,35 @@ class CategoryViewModel: ViewModel() {
             onSuccess = onSuccess,
             onFailure = onFailure
         )
+
+        val updatePlanCategoryRef = FirebaseFirestore.getInstance()
+            .collection("schedule")
+            .document(uid)
+            .collection("plans")
+
+        updatePlanCategoryRef.orderBy("categories.${modifyValue.id}").readFireStoreData(
+            onSuccess = {
+                it.forEach { documentSnapshot ->
+                    documentSnapshot.reference.updateFieldFireStoreData(
+                        updateField = "categories.${modifyValue.id}",
+                        updateValue = mapOf(
+                            "title" to modifyValue.categoryTitle,
+                            "color" to modifyValue.categoryColorHex
+                        )
+                    )
+                }
+            }
+        )
     }
 
+    /**
+     * [deleteId] : category data에서 삭제될 id(createdTime)
+     * [deletePlanTargetId] : plan data에서 삭제될 category의 id
+     */
     fun deleteCategory(
         uid: String,
         deleteId: String,
+        deletePlanTargetId: String,
         onSuccess: () -> Unit = {},
         onFailure: (Exception?) -> Unit = {}
     ) {
@@ -82,6 +108,23 @@ class CategoryViewModel: ViewModel() {
         deleteRef.deleteFireStoreData(
             onSuccess = onSuccess,
             onFailure = onFailure
+        )
+
+        // 삭제된 카테고리를 plan data에도 삭제시켜야 함.
+        val deletePlanCategoryRef = FirebaseFirestore.getInstance()
+            .collection("schedule")
+            .document(uid)
+            .collection("plans")
+
+        deletePlanCategoryRef.orderBy("categories.$deletePlanTargetId").readFireStoreData(
+            onSuccess = {
+                it.forEach { documentSnapshot ->
+                    documentSnapshot.reference.updateFieldFireStoreData(
+                        updateField = "categories.${deletePlanTargetId}",
+                        updateValue = FieldValue.delete()
+                    )
+                }
+            }
         )
     }
 }

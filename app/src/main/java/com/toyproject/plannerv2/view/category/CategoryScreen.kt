@@ -95,6 +95,7 @@ fun CategoryScreen(categoryViewModel: CategoryViewModel = viewModel()) {
                             categoryViewModel.deleteCategory(
                                 uid = uid.toString(),
                                 deleteId = it.createdTime.toString(),
+                                deletePlanTargetId = it.id,
                                 onSuccess = { categoryViewModel.getCategory(uid = uid.toString()) }
                             )
                         }
