@@ -61,6 +61,18 @@ fun DocumentReference.updateFireStoreData(
     }
 }
 
+fun DocumentReference.updateFieldFireStoreData(
+    updateField: String,
+    updateValue: Any,
+    onSuccess: () -> Unit = {},
+    onFailure: (Exception?) -> Unit = {}
+) {
+    this.update(updateField, updateValue).addOnCompleteListener { task ->
+        if (task.isSuccessful) onSuccess()
+        else onFailure(task.exception)
+    }
+}
+
 fun DocumentReference.deleteFireStoreData(
     onSuccess: () -> Unit = {},
     onFailure: (Exception?) -> Unit = {}
