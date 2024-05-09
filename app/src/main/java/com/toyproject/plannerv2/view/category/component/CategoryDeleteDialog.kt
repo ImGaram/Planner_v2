@@ -58,6 +58,7 @@ fun CategoryDeleteDialog(
                 Spacer(modifier = Modifier.weight(1f))
 
                 Button(
+                    modifier = Modifier.width(100.dp),
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB86)),
                     onClick = onDeleteClick
