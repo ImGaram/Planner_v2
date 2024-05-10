@@ -34,16 +34,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.data.PlanData
 
 @Composable
 fun ScheduleItem(
     planData: PlanData,
     categoryData: List<Map<String, Any>>,
+    categoryList: List<CategoryData>,
     onCheckBoxClick: (Boolean) -> Unit,
     onPlanModify: (title: String, description: String) -> Unit,
-    onPlanDelete: () -> Unit
+    onPlanDelete: () -> Unit,
+    onCategoryUpdate: (Map<String, Map<String, Any>>) -> Unit = {},
 ) {
+    val bottomSheetState = remember { mutableStateOf(false) }
     val dialogState = remember { mutableStateOf(false) }
 
     Column {
@@ -122,6 +126,7 @@ fun ScheduleItem(
                 ) {
                     when (title) {
                         "일정 수정하기" -> dialogState.value = true
+                        "카테고리 설정하기" -> bottomSheetState.value = true
                         "일정 삭제하기" -> onPlanDelete()
                     }
                 }
@@ -137,6 +142,17 @@ fun ScheduleItem(
                     onPlanModify(title, description)
                 },
                 onCancelClick =  { dialogState.value = false }
+            )
+        }
+
+        if (bottomSheetState.value) {
+            SetCategoryBottomSheet(
+                categoryList = categoryList,
+                selectedCategories = planData.categories.values,
+                onDismissRequest = {
+                    bottomSheetState.value = false
+                },
+                onSaveClick = onCategoryUpdate
             )
         }
     }
