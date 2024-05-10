@@ -127,4 +127,26 @@ class CategoryViewModel: ViewModel() {
             }
         )
     }
+
+    /**
+     * plan data의 카테고리 설정에서 카테고리를 변경했을 때 호출
+     */
+    fun updateCategory(
+        uid: String,
+        targetPlanDocId: String,
+        categoryValue: Map<String, Map<String, Any>>,
+        onUpdateSuccess: () -> Unit
+    ) {
+        val updateCategoryRef = FirebaseFirestore.getInstance()
+            .collection("schedule")
+            .document(uid)
+            .collection("plans")
+            .document(targetPlanDocId)
+
+        updateCategoryRef.updateFieldFireStoreData(
+            updateField = "categories",
+            updateValue = categoryValue,
+            onSuccess = onUpdateSuccess
+        )
+    }
 }
