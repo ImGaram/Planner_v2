@@ -25,6 +25,7 @@ import com.toyproject.plannerv2.view.plan.component.PlanCalendar
 import com.toyproject.plannerv2.view.plan.component.ScheduleHeader
 import com.toyproject.plannerv2.view.plan.component.ScheduleItem
 import com.toyproject.plannerv2.view.plan.component.ScreenScrollButton
+import com.toyproject.plannerv2.viewmodel.CategoryViewModel
 import com.toyproject.plannerv2.viewmodel.PlanViewModel
 import java.time.LocalDate
 
@@ -32,11 +33,13 @@ import java.time.LocalDate
 @OptIn(ExperimentalFoundationApi::class)
 fun PlanScreen(
     planViewModel: PlanViewModel = viewModel(),
+    categoryViewModel: CategoryViewModel = viewModel(),
     navigateToCreatePlan: (String) -> Unit
 ) {
     val uid = FirebaseAuth.getInstance().uid
     val planState = planViewModel.plans.collectAsState()
     val selectedLocalDate = remember { mutableStateOf(LocalDate.now().toString()) }
+    val categoryState = categoryViewModel.categories.collectAsState()
 
     val scrollState = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -46,6 +49,7 @@ fun PlanScreen(
 
     LaunchedEffect(Unit) {
         planViewModel.getPlans(uid!!, selectedLocalDate.value)
+        categoryViewModel.getCategory(uid = uid.toString())
     }
     
     LaunchedEffect(cantScrollForward, cantScrollBackward) {
@@ -67,11 +71,12 @@ fun PlanScreen(
 
             stickyHeader { ScheduleHeader(date = selectedLocalDate) }
 
-            if (planState.value.isNotEmpty()) {
+            if (planState.value.isNotEmpty() && !categoryState.value.isNullOrEmpty()) {
                 itemsIndexed(planState.value) { position, it ->
                     ScheduleItem(
                         planData = it,
                         categoryData = it.categories.values.map { it },
+                        categoryList = categoryState.value!!,
                         onCheckBoxClick = { isCheck ->
                             planViewModel.changePlanCompleteAtIndex(position, isCheck)
                             planViewModel.planCheck(
@@ -93,6 +98,16 @@ fun PlanScreen(
                                 uid = uid!!,
                                 documentId = it.createdTime.toString(),
                                 onDeleteSuccess = { planViewModel.getPlans(uid.toString(), selectedLocalDate.value) }
+                            )
+                        },
+                        onCategoryUpdate = { updateValue ->
+                            categoryViewModel.updateCategory(
+                                uid = uid.toString(),
+                                targetPlanDocId = it.createdTime.toString(),
+                                categoryValue = updateValue,
+                                onUpdateSuccess = {
+                                    planViewModel.getPlans(uid.toString(), selectedLocalDate.value)
+                                }
                             )
                         }
                     )
