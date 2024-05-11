@@ -130,7 +130,7 @@ fun CategoryBottomSheetItem(
             modifier = Modifier
                 .padding(end = 15.dp)
                 .size(20.dp)
-                .background(Color.White)
+                .background(Color(android.graphics.Color.parseColor(categoryData.categoryColorHex)))
         )
     }
 }
