@@ -3,10 +3,14 @@ package com.toyproject.plannerv2.view.create.component
 import android.graphics.Color.parseColor
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Checkbox
@@ -57,33 +61,42 @@ fun CategoryDropdown(
             )
         }
 
+        val dropdownScrollState = rememberScrollState()
         DropdownMenu(
             modifier = Modifier.background(Color.White),
             expanded = dropdownExpendedState.value,
             onDismissRequest = { dropdownExpendedState.value = false }
         ) {
-            dropdownItems.forEachIndexed { index, it ->
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            modifier = Modifier
-                                .padding(start = 7.dp)
-                                .fillMaxWidth(),
-                            text = it.categoryTitle,
-                            color = Color(parseColor(it.categoryColorHex))
+            Box(
+                modifier = Modifier
+                    .height(150.dp)
+                    .verticalScroll(dropdownScrollState)
+            ) {
+                Column {
+                    dropdownItems.forEachIndexed { index, it ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    modifier = Modifier
+                                        .padding(start = 7.dp)
+                                        .fillMaxWidth(),
+                                    text = it.categoryTitle,
+                                    color = Color(parseColor(it.categoryColorHex))
+                                )
+                            },
+                            onClick = { dropdownExpendedState.value = false },
+                            leadingIcon = {
+                                Checkbox(
+                                    checked = checkBoxStateList[index],
+                                    onCheckedChange = { checked ->
+                                        onDropdownCheckBoxClick(checked, it)
+                                    }
+                                )
+                            },
+                            trailingIcon = { /* 일부러 비워놔서 checkBox와 맞지 않는 공백을 맞춤. */ }
                         )
-                    },
-                    onClick = { dropdownExpendedState.value = false },
-                    leadingIcon = {
-                        Checkbox(
-                            checked = checkBoxStateList[index],
-                            onCheckedChange = { checked ->
-                                onDropdownCheckBoxClick(checked, it)
-                            }
-                        )
-                    },
-                    trailingIcon = { /* 일부러 비워놔서 checkBox와 맞지 않는 공백을 맞춤. */ }
-                )
+                    }
+                }
             }
         }
     }
