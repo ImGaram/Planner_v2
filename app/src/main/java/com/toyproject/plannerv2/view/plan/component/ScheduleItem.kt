@@ -1,15 +1,22 @@
 package com.toyproject.plannerv2.view.plan.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -20,21 +27,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.data.PlanData
 
 @Composable
 fun ScheduleItem(
     planData: PlanData,
+    categoryData: List<Map<String, Any>>,
+    categoryList: List<CategoryData>,
     onCheckBoxClick: (Boolean) -> Unit,
     onPlanModify: (title: String, description: String) -> Unit,
-    onPlanDelete: () -> Unit
+    onPlanDelete: () -> Unit,
+    onCategoryUpdate: (Map<String, Map<String, Any>>) -> Unit = {},
 ) {
+    val bottomSheetState = remember { mutableStateOf(false) }
     val dialogState = remember { mutableStateOf(false) }
 
     Column {
@@ -62,14 +75,23 @@ fun ScheduleItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+
                 Text(
-                    modifier = Modifier.padding(top = 5.dp),
                     text = planData.description,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Thin,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+
+                LazyRow(
+                    modifier = Modifier.padding(top = 5.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    items(categoryData.sortedBy { it["title"].toString() }) {map ->
+                        CategoryBadge(title = map["title"].toString(), colorHex = map["color"].toString())
+                    }
+                }
             }
 
             IconButton(
@@ -86,9 +108,9 @@ fun ScheduleItem(
         }
 
         if (planData.isMenuOpen) {
-            val titleList = listOf("일정 수정하기", "일정 삭제하기")
-            val itemColorList = listOf(Color(0xFFFFDB86), Color.Red)
-            val iconList = listOf(Icons.Default.DateRange, Icons.Default.Delete)
+            val titleList = listOf("일정 수정하기", "카테고리 설정하기", "일정 삭제하기")
+            val itemColorList = listOf(Color(0xFFFFDB86), Color(0xFF6EC4A7), Color.Red)
+            val iconList = listOf(Icons.Default.DateRange, Icons.Default.List, Icons.Default.Delete)
 
             titleList.forEachIndexed { index, title ->
                 Divider(
@@ -104,6 +126,7 @@ fun ScheduleItem(
                 ) {
                     when (title) {
                         "일정 수정하기" -> dialogState.value = true
+                        "카테고리 설정하기" -> bottomSheetState.value = true
                         "일정 삭제하기" -> onPlanDelete()
                     }
                 }
@@ -121,5 +144,38 @@ fun ScheduleItem(
                 onCancelClick =  { dialogState.value = false }
             )
         }
+
+        if (bottomSheetState.value) {
+            SetCategoryBottomSheet(
+                categoryList = categoryList,
+                selectedCategories = planData.categories.values,
+                onDismissRequest = {
+                    bottomSheetState.value = false
+                },
+                onSaveClick = {
+                    onCategoryUpdate(it)
+                    bottomSheetState.value = false
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun CategoryBadge(title: String, colorHex: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(10.dp)
+                .clip(CircleShape)
+                .background(Color(android.graphics.Color.parseColor(colorHex)))
+        )
+
+        Text(
+            modifier = Modifier.padding(start = 5.dp),
+            text = title,
+            fontSize = 9.sp,
+            fontWeight = FontWeight.Thin
+        )
     }
 }

@@ -2,7 +2,7 @@ package com.toyproject.plannerv2.view.component.textfield
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -12,11 +12,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun PlannerV2TextField(
@@ -25,14 +27,13 @@ fun PlannerV2TextField(
     hint: String,
     singleLine: Boolean,
     maxLines: Int,
-    textStyle: TextStyle = TextStyle(),
-    hintTextStyle: TextStyle = TextStyle(),
+    textContentAlignment: Alignment = Alignment.CenterStart,
     onValueChange: (String) -> Unit
 ) {
     var textState by remember { mutableStateOf(value) }
 
     BasicTextField(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         value = textState,
         onValueChange = {
             textState = it
@@ -40,22 +41,22 @@ fun PlannerV2TextField(
         },
         singleLine = singleLine,
         maxLines = maxLines,
-        textStyle = textStyle
+        textStyle = TextStyle(fontSize = 19.sp)
     ) { innerTextField ->
         Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .clip(RoundedCornerShape(10.dp))
-                .background(Color(0xFFF3F3F3))
+                .background(Color(0xFFF3F3F3)),
+            contentAlignment = textContentAlignment
         ) {
-            if (textState.isEmpty())
-                Text(
-                    modifier = Modifier.padding(vertical = 10.dp, horizontal = 15.dp),
-                    text = hint,
-                    color = Color(0xFF9B9B9B),
-                    style = hintTextStyle
-                )
             Box(modifier = Modifier.padding(vertical = 10.dp, horizontal = 15.dp)) {
+                if (textState.isEmpty())
+                    Text(
+                        text = hint,
+                        color = Color(0xFF9B9B9B),
+                        style = TextStyle(fontSize = 19.sp)
+                    )
                 innerTextField()
             }
         }
