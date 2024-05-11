@@ -152,7 +152,10 @@ fun ScheduleItem(
                 onDismissRequest = {
                     bottomSheetState.value = false
                 },
-                onSaveClick = onCategoryUpdate
+                onSaveClick = {
+                    onCategoryUpdate(it)
+                    bottomSheetState.value = false
+                }
             )
         }
     }
