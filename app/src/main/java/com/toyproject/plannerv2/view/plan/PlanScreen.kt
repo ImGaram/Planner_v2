@@ -71,7 +71,7 @@ fun PlanScreen(
 
             stickyHeader { ScheduleHeader(date = selectedLocalDate) }
 
-            if (planState.value.isNotEmpty() && !categoryState.value.isNullOrEmpty()) {
+            if (planState.value.isNotEmpty() && categoryState.value != null) {
                 itemsIndexed(planState.value) { position, it ->
                     ScheduleItem(
                         planData = it,
