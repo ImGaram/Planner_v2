@@ -24,7 +24,6 @@ import com.toyproject.plannerv2.view.component.card.AddCard
 import com.toyproject.plannerv2.view.plan.component.PlanCalendar
 import com.toyproject.plannerv2.view.plan.component.ScheduleHeader
 import com.toyproject.plannerv2.view.plan.component.ScheduleItem
-import com.toyproject.plannerv2.view.plan.component.ScreenScrollButton
 import com.toyproject.plannerv2.viewmodel.CategoryViewModel
 import com.toyproject.plannerv2.viewmodel.PlanViewModel
 import java.time.LocalDate
@@ -41,27 +40,15 @@ fun PlanScreen(
     val selectedLocalDate = remember { mutableStateOf(LocalDate.now().toString()) }
     val categoryState = categoryViewModel.categories.collectAsState()
 
-    val scrollState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    val scrollIsLastState = remember { mutableStateOf(false) }      // 스크롤을 더 이상 할수 없는가?(마지막 스크롤인가?)
-    val cantScrollForward = !scrollState.canScrollForward       // 앞으로는 더 스크롤할 수 없음
-    val cantScrollBackward = !scrollState.canScrollBackward     // 뒤로는 더 스크롤할 수 없음
 
     LaunchedEffect(Unit) {
         planViewModel.getPlans(uid!!, selectedLocalDate.value)
         categoryViewModel.getCategory(uid = uid.toString())
     }
-    
-    LaunchedEffect(cantScrollForward, cantScrollBackward) {
-        if (cantScrollForward) scrollIsLastState.value = true
-        if (cantScrollBackward) scrollIsLastState.value = false
-    }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = scrollState
-        ) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
             item {
                 PlanCalendar(scope = scope) {
                     selectedLocalDate.value = it
@@ -129,13 +116,6 @@ fun PlanScreen(
                 }
             }
         }
-
-        ScreenScrollButton(
-            plans = planState.value,
-            scrollState = scrollState,
-            scrollIsLastState = scrollIsLastState,
-            scope = scope
-        )
     }
 }
 
