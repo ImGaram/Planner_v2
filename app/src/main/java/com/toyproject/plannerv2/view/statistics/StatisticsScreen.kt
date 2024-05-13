@@ -37,6 +37,7 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
     val dailyStatisticsState = statisticsViewModel.dailyStatistics.collectAsState()
     val totalStatisticsState = statisticsViewModel.totalStatisticsData.collectAsState()
     val weeklyStatisticsState = statisticsViewModel.weeklyStatistics.collectAsState()
+    val weeklyLoadCntState = statisticsViewModel.weeklyLoadCount.collectAsState()
     val scrollState = rememberScrollState()
 
     val uid = FirebaseAuth.getInstance().uid
@@ -120,7 +121,7 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
         )
 
         // weeklyStatisticsState의 모든 데이터들이 null이 아닐 경우에만 차트를 띄우게 하기.
-        if (weeklyStatisticsState.value.all { it != null }) {
+        if (weeklyLoadCntState.value >= 5) {
             val totalPlanList = weeklyStatisticsState.value.map { it!!.total }.toList()
             val completedPlanList = weeklyStatisticsState.value.map { it!!.completed }.toList()
             WeeklyCompletionStatisticsChart(

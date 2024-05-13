@@ -24,6 +24,10 @@ class StatisticsViewModel: ViewModel() {
     private val _weeklyStatistics = MutableStateFlow<MutableList<StatisticsData?>>(MutableList(5) { null })
     val weeklyStatistics = _weeklyStatistics.asStateFlow()
 
+    // 주간 일정이 모두 불러와졌는지 확인하는 state
+    private val _weeklyLoadCount = MutableStateFlow(0)
+    val weeklyLoadCount = _weeklyLoadCount.asStateFlow()
+
     // 일간 일정을 불러온다.
     fun getDailyStatistics(uid: String) {
         val getDailyRef = FirebaseFirestore.getInstance()
@@ -126,6 +130,7 @@ class StatisticsViewModel: ViewModel() {
                             total = it.size,
                             completed = completedPlanCount
                         )
+                        _weeklyLoadCount.value++
                     }
                 )
         }
