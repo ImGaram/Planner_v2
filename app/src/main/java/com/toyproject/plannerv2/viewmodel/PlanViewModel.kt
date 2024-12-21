@@ -2,6 +2,7 @@ package com.toyproject.plannerv2.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.data.PlanData
 import com.toyproject.plannerv2.util.deleteFireStoreData
 import com.toyproject.plannerv2.util.readFireStoreData
@@ -13,6 +14,8 @@ import kotlinx.coroutines.flow.asStateFlow
 class PlanViewModel: ViewModel() {
     private val _plans = MutableStateFlow<List<PlanData>>(emptyList())
     val plans = _plans.asStateFlow()
+
+    private val _filterRollback = MutableStateFlow<List<PlanData>>(emptyList())
 
     fun getPlans(uid: String, date: String) {
         val getPlansRef = FirebaseFirestore.getInstance()
@@ -28,8 +31,10 @@ class PlanViewModel: ViewModel() {
                     val planObj = documentSnapshot.toObject(PlanData::class.java)
                     if (planObj != null) {
                         val currentPlans = _plans.value.toMutableList()
+
                         currentPlans.add(planObj)
                         _plans.value = currentPlans
+                        _filterRollback.value = currentPlans
                     }
                 }
             }
@@ -96,6 +101,14 @@ class PlanViewModel: ViewModel() {
             onSuccess = onDeleteSuccess,
             onFailure = onDeleteFailed
         )
+    }
+
+    fun filterPlan(categoryData: CategoryData?) {
+        if (categoryData == null) {
+            _plans.value = _filterRollback.value
+        } else {
+            _plans.value = _filterRollback.value.filter { it.categories.containsKey(categoryData.id) }
+        }
     }
 
     fun changePlanCompleteAtIndex(position: Int, checked: Boolean) {
