@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class CategoryViewModel: ViewModel() {
-    private val _categories = MutableStateFlow<List<CategoryData>?>(null)
+    private val _categories = MutableStateFlow<List<CategoryData>>(emptyList())
     val categories = _categories.asStateFlow()
 
     fun createCategory(uid: String, categoryData: CategoryData) {
