@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -56,55 +55,61 @@ fun PlanScreen(
                 }
             }
 
-            stickyHeader { ScheduleHeader(date = selectedLocalDate) }
+            stickyHeader {
+                ScheduleHeader(
+                    date = selectedLocalDate,
+                    categories = categoryState.value,
+                    onFilterSelected = {
+                        planViewModel.filterPlan(it)
+                    }
+                )
+            }
 
-            if (planState.value.isNotEmpty() && categoryState.value != null) {
-                itemsIndexed(planState.value) { position, it ->
-                    ScheduleItem(
-                        planData = it,
-                        categoryData = it.categories.values.map { it },
-                        categoryList = categoryState.value!!,
-                        onCheckBoxClick = { isCheck ->
-                            planViewModel.changePlanCompleteAtIndex(position, isCheck)
-                            planViewModel.planCheck(
-                                uid = uid!!,
-                                documentId = it.createdTime.toString()
-                            )
-                        },
-                        onPlanModify = { title, description ->
-                            planViewModel.modifyPlan(
-                                uid = uid.toString(),
-                                documentId = it.createdTime.toString(),
-                                title = title,
-                                description = description,
-                                onModifySuccess = { planViewModel.getPlans(uid.toString(), selectedLocalDate.value) }
-                            )
-                        },
-                        onPlanDelete = {
-                            planViewModel.deletePlan(
-                                uid = uid!!,
-                                documentId = it.createdTime.toString(),
-                                onDeleteSuccess = { planViewModel.getPlans(uid.toString(), selectedLocalDate.value) }
-                            )
-                        },
-                        onCategoryUpdate = { updateValue ->
-                            categoryViewModel.updateCategory(
-                                uid = uid.toString(),
-                                targetPlanDocId = it.createdTime.toString(),
-                                categoryValue = updateValue,
-                                onUpdateSuccess = {
-                                    planViewModel.getPlans(uid.toString(), selectedLocalDate.value)
-                                }
-                            )
-                        }
-                    )
+            itemsIndexed(planState.value) { position, it ->
+                ScheduleItem(
+                    planData = it,
+                    categoryData = it.categories.values.map { it },
+                    categoryList = categoryState.value,
+                    onCheckBoxClick = { isCheck ->
+                        planViewModel.changePlanCompleteAtIndex(position, isCheck)
+                        planViewModel.planCheck(
+                            uid = uid!!,
+                            documentId = it.createdTime.toString()
+                        )
+                    },
+                    onPlanModify = { title, description ->
+                        planViewModel.modifyPlan(
+                            uid = uid.toString(),
+                            documentId = it.createdTime.toString(),
+                            title = title,
+                            description = description,
+                            onModifySuccess = { planViewModel.getPlans(uid.toString(), selectedLocalDate.value) }
+                        )
+                    },
+                    onPlanDelete = {
+                        planViewModel.deletePlan(
+                            uid = uid!!,
+                            documentId = it.createdTime.toString(),
+                            onDeleteSuccess = { planViewModel.getPlans(uid.toString(), selectedLocalDate.value) }
+                        )
+                    },
+                    onCategoryUpdate = { updateValue ->
+                        categoryViewModel.updateCategory(
+                            uid = uid.toString(),
+                            targetPlanDocId = it.createdTime.toString(),
+                            categoryValue = updateValue,
+                            onUpdateSuccess = {
+                                planViewModel.getPlans(uid.toString(), selectedLocalDate.value)
+                            }
+                        )
+                    }
+                )
 
-                    Divider(
-                        modifier = Modifier
-                            .height(1.dp)
-                            .padding(horizontal = 15.dp)
-                    )
-                }
+                HorizontalDivider(
+                    modifier = Modifier
+                        .height(1.dp)
+                        .padding(horizontal = 15.dp)
+                )
             }
 
             item {
