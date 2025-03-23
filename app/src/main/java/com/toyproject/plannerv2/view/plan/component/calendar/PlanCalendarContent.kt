@@ -5,19 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,9 +32,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cheonjaeung.compose.grid.SimpleGridCells
 import com.cheonjaeung.compose.grid.VerticalGrid
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.util.Calendar
 import java.util.Locale
 
 @Composable
@@ -54,12 +49,14 @@ fun CalendarHeader(
     ) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-            contentDescription = "header left arrow icon"
+            contentDescription = "header left arrow icon",
+            tint = PlannerTheme.colors.primary
         )
 
         Text(
             text = title,
             style = TextStyle(
+                color = PlannerTheme.colors.primary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
             )
@@ -67,7 +64,8 @@ fun CalendarHeader(
 
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = "header right arrow icon"
+            contentDescription = "header right arrow icon",
+            tint = PlannerTheme.colors.primary
         )
     }
 }
