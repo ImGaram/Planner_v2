@@ -13,8 +13,8 @@ android {
         applicationId = "com.toyproject.plannerv2"
         minSdk = 26
         targetSdk = 34
-        versionCode = 4
-        versionName = "1.0.2"
+        versionCode = 5
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -48,8 +48,6 @@ android {
     }
 }
 
-//compose
-
 dependencies {
     // compose chart
     implementation("com.patrykandpatrick.vico:compose:1.12.0")
@@ -77,8 +75,8 @@ dependencies {
     // compose color picker
     implementation("com.godaddy.android.colorpicker:compose-color-picker-android:0.7.0")
 
-    // compose calendar
-    implementation("com.kizitonwose.calendar:compose:2.6.2")
+    // compose grid
+    implementation("com.cheonjaeung.compose.grid:grid:2.2.1")
 
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
