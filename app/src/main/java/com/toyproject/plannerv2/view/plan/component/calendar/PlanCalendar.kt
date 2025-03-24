@@ -12,11 +12,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -35,6 +37,7 @@ fun PlanHorizontalCalendar(
         initialPage = initialPage,
         pageCount = { (config.yearRange.last - config.yearRange.first) * 12 }
     )
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(pagerState.currentPage) {
         val addMonth = (pagerState.currentPage - currentPage.intValue).toLong()
@@ -52,7 +55,23 @@ fun PlanHorizontalCalendar(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp),
-            title = headerText
+            title = headerText,
+            onRightArrowClick = {
+                scope.launch {
+                    val target = if (currentPage.intValue < pagerState.pageCount - 1) currentPage.intValue + 1
+                    else currentPage.intValue
+
+                    pagerState.animateScrollToPage(target)
+                }
+            },
+            onLeftArrowClick = {
+                scope.launch {
+                    val target = if (currentPage.intValue > 0) currentPage.intValue - 1
+                    else currentPage.intValue
+
+                    pagerState.animateScrollToPage(target)
+                }
+            }
         )
 
         HorizontalPager(
