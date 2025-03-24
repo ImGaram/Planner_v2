@@ -40,7 +40,9 @@ import java.util.Locale
 @Composable
 fun CalendarHeader(
     modifier: Modifier = Modifier,
-    title: String
+    title: String,
+    onRightArrowClick: () -> Unit,
+    onLeftArrowClick: () -> Unit
 ) {
     Row(
         modifier = modifier,
@@ -50,6 +52,7 @@ fun CalendarHeader(
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
             contentDescription = "header left arrow icon",
+            modifier = Modifier.clickable { onLeftArrowClick() },
             tint = PlannerTheme.colors.primary
         )
 
@@ -65,6 +68,7 @@ fun CalendarHeader(
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = "header right arrow icon",
+            modifier = Modifier.clickable { onRightArrowClick() },
             tint = PlannerTheme.colors.primary
         )
     }
@@ -92,8 +96,10 @@ fun CalendarMonthContent(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            for (i in 0 until firstDayOfWeek) {
-                Box(modifier = Modifier.aspectRatio(1f))
+            if (firstDayOfWeek < 7) {
+                for (i in 0 until firstDayOfWeek) {
+                    Box(modifier = Modifier.aspectRatio(1f))
+                }
             }
 
             days.forEach { day ->
