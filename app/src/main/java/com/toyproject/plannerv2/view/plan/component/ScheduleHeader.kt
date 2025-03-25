@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.toyproject.plannerv2.R
 import com.toyproject.plannerv2.data.CategoryData
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 
 @Composable
 fun ScheduleHeader(
@@ -35,9 +35,7 @@ fun ScheduleHeader(
     val filterSelected = remember { mutableStateOf("기본") }
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFFE7FFFD)),
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -45,6 +43,7 @@ fun ScheduleHeader(
                 .weight(1f)
                 .padding(vertical = 5.dp, horizontal = 10.dp),
             text = "${parseDate(date.value)} 일정",
+            color = PlannerTheme.colors.primary,
             fontSize = 15.sp
         )
 
@@ -58,12 +57,13 @@ fun ScheduleHeader(
                     painter = painterResource(R.drawable.ic_filter),
                     contentDescription = "filter icon",
                     modifier = Modifier.padding(end = 4.dp),
-                    tint = Color(0xFF6EC4A7)
+                    tint = PlannerTheme.colors.green
                 )
 
                 Text(
                     text = filterSelected.value,
                     style = TextStyle(
+                        color = PlannerTheme.colors.primary,
                         fontSize = 15.sp
                     ),
                 )
@@ -71,10 +71,16 @@ fun ScheduleHeader(
 
             DropdownMenu(
                 expanded = filterExpanded.value,
-                onDismissRequest = { filterExpanded.value = false }
+                onDismissRequest = { filterExpanded.value = false },
+                containerColor = PlannerTheme.colors.cardBackground
             ) {
                 DropdownMenuItem(
-                    text = { Text(text = "기본") },
+                    text = {
+                        Text(
+                            text = "기본",
+                            color = PlannerTheme.colors.primary
+                        )
+                    },
                     onClick = {
                         filterSelected.value = "기본"
                         onFilterSelected(null)
@@ -84,7 +90,12 @@ fun ScheduleHeader(
 
                 for (i in categories.indices) {
                     DropdownMenuItem(
-                        text = { Text(text = categories[i].categoryTitle) },
+                        text = {
+                            Text(
+                                text = categories[i].categoryTitle,
+                                color = PlannerTheme.colors.primary
+                            )
+                        },
                         onClick = {
                             filterSelected.value = categories[i].categoryTitle
                             onFilterSelected(categories[i])

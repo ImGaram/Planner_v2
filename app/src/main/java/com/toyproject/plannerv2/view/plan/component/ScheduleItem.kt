@@ -13,12 +13,13 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -36,6 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.data.PlanData
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
+import androidx.core.graphics.toColorInt
 
 @Composable
 fun ScheduleItem(
@@ -54,13 +57,17 @@ fun ScheduleItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White),
+                .background(PlannerTheme.colors.background),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
-                modifier = Modifier.padding(vertical = 7.dp, horizontal = 10.dp),
                 checked = planData.complete,
-                onCheckedChange = { onCheckBoxClick(!planData.complete) }
+                onCheckedChange = { onCheckBoxClick(!planData.complete) },
+                modifier = Modifier.padding(vertical = 7.dp, horizontal = 10.dp),
+                colors = CheckboxDefaults.colors(
+                    checkedColor = PlannerTheme.colors.green,
+                    uncheckedColor = PlannerTheme.colors.primaryA25
+                )
             )
 
             Column(
@@ -70,6 +77,7 @@ fun ScheduleItem(
             ) {
                 Text(
                     text = planData.title,
+                    color = PlannerTheme.colors.primary,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Normal,
                     maxLines = 1,
@@ -78,6 +86,7 @@ fun ScheduleItem(
 
                 Text(
                     text = planData.description,
+                    color = PlannerTheme.colors.primary,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Thin,
                     maxLines = 1,
@@ -101,7 +110,7 @@ fun ScheduleItem(
                 Icon(
                     modifier = Modifier.rotate(if (planData.isMenuOpen) 180f else 0f),
                     imageVector = Icons.Default.KeyboardArrowDown,
-                    tint = Color(0xFF6EC4A7),
+                    tint = PlannerTheme.colors.primaryA25,
                     contentDescription = "more icon"
                 )
             }
@@ -109,14 +118,15 @@ fun ScheduleItem(
 
         if (planData.isMenuOpen) {
             val titleList = listOf("일정 수정하기", "카테고리 설정하기", "일정 삭제하기")
-            val itemColorList = listOf(Color(0xFFFFDB86), Color(0xFF6EC4A7), Color.Red)
-            val iconList = listOf(Icons.Default.DateRange, Icons.Default.List, Icons.Default.Delete)
+            val itemColorList = listOf(PlannerTheme.colors.yellow, PlannerTheme.colors.green, PlannerTheme.colors.red)
+            val iconList = listOf(Icons.Default.DateRange, Icons.AutoMirrored.Filled.List, Icons.Default.Delete)
 
             titleList.forEachIndexed { index, title ->
-                Divider(
+                HorizontalDivider(
                     modifier = Modifier
                         .height(0.5.dp)
-                        .padding(horizontal = 15.dp)
+                        .padding(horizontal = 15.dp),
+                    color = PlannerTheme.colors.primaryA25
                 )
 
                 PlanMenuItem(
@@ -168,11 +178,12 @@ fun CategoryBadge(title: String, colorHex: String) {
             modifier = Modifier
                 .size(10.dp)
                 .clip(CircleShape)
-                .background(Color(android.graphics.Color.parseColor(colorHex)))
+                .background(Color(colorHex.toColorInt()))
         )
 
         Text(
             modifier = Modifier.padding(start = 5.dp),
+            color = PlannerTheme.colors.primary,
             text = title,
             fontSize = 9.sp,
             fontWeight = FontWeight.Thin

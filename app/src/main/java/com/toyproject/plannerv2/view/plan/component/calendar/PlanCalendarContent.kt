@@ -23,8 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -123,8 +121,8 @@ fun CalendarDayContent(
     isSelected: Boolean = false,
     onClick: (LocalDate) -> Unit
 ) {
-    val boxColor = if (isSelected) Black
-    else Color(0x1A000000)
+    val boxColor = if (isSelected) PlannerTheme.colors.primary
+    else PlannerTheme.colors.primaryA10
 
     Column(
         modifier = modifier
@@ -135,10 +133,10 @@ fun CalendarDayContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        val textColor = if (date.dayOfWeek == DayOfWeek.SUNDAY) Color.Red
-        else if (date.dayOfWeek == DayOfWeek.SATURDAY) Color.Blue
-        else if (isSelected) Color.White
-        else Black
+        val textColor = if (date.dayOfWeek == DayOfWeek.SUNDAY) PlannerTheme.colors.red
+        else if (date.dayOfWeek == DayOfWeek.SATURDAY) PlannerTheme.colors.blue
+        else if (isSelected) PlannerTheme.colors.primaryVariant
+        else PlannerTheme.colors.primary
 
         Text(
             text = date.dayOfMonth.toString(),
@@ -163,7 +161,7 @@ fun DayOfWeek(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth(),
                 text = dayOfWeek.getDisplayName(java.time.format.TextStyle.NARROW, Locale.KOREAN),
                 style = TextStyle(
-                    color = Black,
+                    color = PlannerTheme.colors.primary,
                     textAlign = TextAlign.Center
                 ),
             )

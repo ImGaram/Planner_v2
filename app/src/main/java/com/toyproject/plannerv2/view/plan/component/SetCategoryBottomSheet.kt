@@ -14,8 +14,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -30,7 +32,9 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.toyproject.plannerv2.data.CategoryData
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 import kotlinx.coroutines.launch
+import androidx.core.graphics.toColorInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,14 +57,15 @@ fun SetCategoryBottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFFAFAFA))
+                .background(PlannerTheme.colors.cardBackground)
         ) {
             Text(
                 modifier = Modifier.padding(10.dp),
-                text = "카테고리 변경"
+                text = "카테고리 변경",
+                color = PlannerTheme.colors.primary
             )
 
-            Divider()
+            HorizontalDivider(color = PlannerTheme.colors.gray300)
 
             LazyColumn(
                 modifier = Modifier
@@ -90,12 +95,15 @@ fun SetCategoryBottomSheet(
                 }
             }
 
-            Divider(modifier = Modifier.padding(top = 10.dp))
+            HorizontalDivider(
+                modifier = Modifier.padding(top = 10.dp),
+                color = PlannerTheme.colors.gray300
+            )
 
             Button(
                 modifier = Modifier.padding(10.dp),
                 shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6EC4A7)),
+                colors = ButtonDefaults.buttonColors(containerColor = PlannerTheme.colors.green),
                 onClick = {
                     onSaveClick(updateCategoryMap)
                     scope.launch {
@@ -117,11 +125,18 @@ fun CategoryBottomSheetItem(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Checkbox(checked = checked, onCheckedChange = onCheckedChange)
+        Checkbox(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            colors = CheckboxDefaults.colors(
+                checkedColor = PlannerTheme.colors.green
+            )
+        )
 
         Text(
             modifier = Modifier.weight(1f),
             text = categoryData.categoryTitle,
+            color = PlannerTheme.colors.primary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -130,7 +145,7 @@ fun CategoryBottomSheetItem(
             modifier = Modifier
                 .padding(end = 15.dp)
                 .size(20.dp)
-                .background(Color(android.graphics.Color.parseColor(categoryData.categoryColorHex)))
+                .background(Color(categoryData.categoryColorHex.toColorInt()))
         )
     }
 }

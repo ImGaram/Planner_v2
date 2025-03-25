@@ -1,6 +1,7 @@
 package com.toyproject.plannerv2.view.plan
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +24,7 @@ import com.toyproject.plannerv2.view.component.card.AddCard
 import com.toyproject.plannerv2.view.plan.component.ScheduleHeader
 import com.toyproject.plannerv2.view.plan.component.ScheduleItem
 import com.toyproject.plannerv2.view.plan.component.calendar.PlanHorizontalCalendar
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 import com.toyproject.plannerv2.viewmodel.CategoryViewModel
 import com.toyproject.plannerv2.viewmodel.PlanViewModel
 import java.time.LocalDate
@@ -44,7 +46,11 @@ fun PlanScreen(
         categoryViewModel.getCategory(uid = uid.toString())
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(PlannerTheme.colors.background)
+    ) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             item {
                 PlanHorizontalCalendar(
@@ -110,7 +116,8 @@ fun PlanScreen(
                 HorizontalDivider(
                     modifier = Modifier
                         .height(1.dp)
-                        .padding(horizontal = 15.dp)
+                        .padding(horizontal = 15.dp),
+                    color = PlannerTheme.colors.gray300
                 )
             }
 

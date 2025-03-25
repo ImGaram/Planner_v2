@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.toyproject.plannerv2.data.PlanData
 import com.toyproject.plannerv2.view.component.textfield.PlannerV2TextField
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 
 @Composable
 fun PlanModifyDialog(
@@ -39,7 +40,7 @@ fun PlanModifyDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(elevation = 1.dp, shape = RoundedCornerShape(8.dp))
-                .background(Color(0xFFFAFAFA))
+                .background(PlannerTheme.colors.cardBackground)
                 .clip(RoundedCornerShape(8.dp)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -74,7 +75,7 @@ fun PlanModifyDialog(
                 Button(
                     modifier = Modifier.width(100.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6EC4A7)),
+                    colors = ButtonDefaults.buttonColors(containerColor = PlannerTheme.colors.green),
                     onClick = onCancelClick
                 ) { Text(text = "취소") }
 
@@ -83,7 +84,7 @@ fun PlanModifyDialog(
                 Button(
                     modifier = Modifier.width(100.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB86)),
+                    colors = ButtonDefaults.buttonColors(containerColor = PlannerTheme.colors.yellow),
                     onClick = { onSaveClick(titleState.value, descriptionState.value) }
                 ) { Text(text = "저장") }
             }

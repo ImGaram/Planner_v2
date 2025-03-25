@@ -15,10 +15,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 
 @Composable
 fun PlannerV2TextField(
@@ -41,20 +41,23 @@ fun PlannerV2TextField(
         },
         singleLine = singleLine,
         maxLines = maxLines,
-        textStyle = TextStyle(fontSize = 19.sp)
+        textStyle = TextStyle(
+            color = PlannerTheme.colors.primary,
+            fontSize = 19.sp
+        )
     ) { innerTextField ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(10.dp))
-                .background(Color(0xFFF3F3F3)),
+                .background(PlannerTheme.colors.gray200),
             contentAlignment = textContentAlignment
         ) {
             Box(modifier = Modifier.padding(vertical = 10.dp, horizontal = 15.dp)) {
                 if (textState.isEmpty())
                     Text(
                         text = hint,
-                        color = Color(0xFF9B9B9B),
+                        color = PlannerTheme.colors.gray400,
                         style = TextStyle(fontSize = 19.sp)
                     )
                 innerTextField()

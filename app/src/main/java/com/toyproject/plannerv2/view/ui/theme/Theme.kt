@@ -9,22 +9,34 @@ import androidx.compose.runtime.staticCompositionLocalOf
 
 private val PlannerDarkColors = PlannerColors(
     primary = PrimaryDark,
+    primaryVariant = PrimaryVariantDark,
+    primaryA10 = PrimaryA10Dark,
+    primaryA25 = PrimaryA25Dark,
     background = BackgroundDark,
     cardBackground = CardBackgroundDark,
-    gray100 = Gray100Dark,
     gray200 = Gray200Dark,
+    gray300 = Gray300Dark,
+    gray400 = Gray400Dark,
+    red = RedDark,
     green = GreenDark,
-    yellow = YellowDark
+    yellow = YellowDark,
+    blue = BlueDark
 )
 
 private val PlannerLightColors = PlannerColors(
     primary = PrimaryLight,
+    primaryVariant = PrimaryVariantLight,
+    primaryA10 = PrimaryA10Light,
+    primaryA25 = PrimaryA25Light,
     background = BackgroundLight,
     cardBackground = CardBackgroundLight,
-    gray100 = Gray100Light,
     gray200 = Gray200Light,
+    gray300 = Gray300Light,
+    gray400 = Gray400Light,
+    red = RedLight,
     green = GreenLight,
-    yellow = YellowLight
+    yellow = YellowLight,
+    blue = BlueLight
 )
 
 object PlannerTheme {
