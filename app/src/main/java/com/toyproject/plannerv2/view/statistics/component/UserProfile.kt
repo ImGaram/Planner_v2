@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 
 @Composable
 fun UserProfile(
@@ -56,6 +57,7 @@ fun UserProfile(
                 modifier = Modifier.drawWithContent {
                     if (readyToDraw) drawContent()
                 },
+                color = PlannerTheme.colors.primary,
                 softWrap = false,
                 style = textStyleState,
                 maxLines = 1,
@@ -66,6 +68,7 @@ fun UserProfile(
             )
             Text(
                 text = account?.email.toString(),
+                color = PlannerTheme.colors.primary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

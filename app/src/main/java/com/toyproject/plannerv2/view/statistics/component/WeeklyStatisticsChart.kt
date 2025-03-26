@@ -35,6 +35,7 @@ import com.patrykandpatrick.vico.core.entry.composed.ComposedChartEntryModelProd
 import com.patrykandpatrick.vico.core.entry.composed.plus
 import com.patrykandpatrick.vico.core.legend.HorizontalLegend
 import com.toyproject.plannerv2.util.intListAsFloatEntryList
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 
 @Composable
 fun WeeklyCompletionStatisticsChart(
@@ -44,7 +45,7 @@ fun WeeklyCompletionStatisticsChart(
     val maxYRange = if (totalPlanList.max() >= 100) (totalPlanList.max() / 10 + 2) * 10
     else (completedPlanList.max() / 10 + 2) * 10
 
-    val colorList = listOf(Color(0xFF6EC4A7), Color(0xFFFFDB86))
+    val colorList = listOf(PlannerTheme.colors.green, PlannerTheme.colors.yellow)
 
     ProvideChartStyle(rememberChartStyle(columnChartColors = colorList)) {
         val completedPlanChart = columnChart(
@@ -131,7 +132,9 @@ fun rememberLegend(colors: List<Color>): HorizontalLegend {
                     shape = Shapes.pillShape,
                     color = colors[index]
                 ),
-                label = textComponent(),
+                label = textComponent {
+                    color = PlannerTheme.colors.primary.toArgb()
+                },
                 labelText = labelTextList[index]
             )
         },

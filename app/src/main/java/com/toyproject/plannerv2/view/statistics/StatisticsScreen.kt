@@ -1,5 +1,6 @@
 package com.toyproject.plannerv2.view.statistics
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,6 +32,7 @@ import com.toyproject.plannerv2.view.statistics.component.DailyStatisticsChart
 import com.toyproject.plannerv2.view.statistics.component.StatisticsScoreCard
 import com.toyproject.plannerv2.view.statistics.component.UserProfile
 import com.toyproject.plannerv2.view.statistics.component.WeeklyCompletionStatisticsChart
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 import com.toyproject.plannerv2.viewmodel.StatisticsViewModel
 
 @Composable
@@ -53,6 +56,7 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
+            .background(PlannerTheme.colors.background)
     ) {
         val currentAccount = GoogleSignIn.getLastSignedInAccount(LocalContext.current)
         UserProfile(
@@ -65,10 +69,14 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
                 modifier = Modifier
                     .weight(1f)
                     .padding(15.dp),
-                cardColor = CardDefaults.cardColors(containerColor = Color(0xFFF3F3F3)),
+                cardColor = CardDefaults.cardColors(containerColor = PlannerTheme.colors.cardBackground),
                 title = "생성된 일정",
                 body = totalStatisticsState.value?.total,
+                titleTextStyle = TextStyle(
+                    color = PlannerTheme.colors.primary
+                ),
                 bodyTextStyle = TextStyle(
+                    color = PlannerTheme.colors.primary,
                     fontSize = 27.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -78,10 +86,14 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
                 modifier = Modifier
                     .weight(1f)
                     .padding(top = 15.dp, end = 15.dp, bottom = 15.dp),
-                cardColor = CardDefaults.cardColors(containerColor = Color(0xFFF3F3F3)),
+                cardColor = CardDefaults.cardColors(containerColor = PlannerTheme.colors.cardBackground),
                 title = "완료된 일정",
                 body = totalStatisticsState.value?.completed,
+                titleTextStyle = TextStyle(
+                    color = PlannerTheme.colors.primary
+                ),
                 bodyTextStyle = TextStyle(
+                    color = PlannerTheme.colors.primary,
                     fontSize = 27.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -91,14 +103,16 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
         Text(
             modifier = Modifier.padding(15.dp),
             text = "일간 일정 통계",
+            color = PlannerTheme.colors.primary,
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold
         )
 
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .height(1.dp)
-                .padding(horizontal = 15.dp)
+                .padding(horizontal = 15.dp),
+            color = PlannerTheme.colors.gray300
         )
 
         if (dailyStatisticsState.value.isNotEmpty()) {
@@ -110,14 +124,16 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
         Text(
             modifier = Modifier.padding(15.dp),
             text = "주간 일정 통계",
+            color = PlannerTheme.colors.primary,
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold
         )
 
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .height(1.dp)
-                .padding(horizontal = 15.dp)
+                .padding(horizontal = 15.dp),
+            color = PlannerTheme.colors.gray300
         )
 
         // weeklyStatisticsState의 모든 데이터들이 null이 아닐 경우에만 차트를 띄우게 하기.
