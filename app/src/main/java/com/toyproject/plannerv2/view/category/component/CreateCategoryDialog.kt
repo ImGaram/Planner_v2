@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,7 +36,9 @@ import androidx.compose.ui.window.Dialog
 import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.util.toHexCode
 import com.toyproject.plannerv2.view.component.textfield.PlannerV2TextField
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 import java.util.UUID
+import androidx.core.graphics.toColorInt
 
 @Composable
 fun CreateCategoryDialog(
@@ -55,12 +59,13 @@ fun CreateCategoryDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(elevation = 1.dp, shape = RoundedCornerShape(8.dp))
-                .background(Color(0xFFFAFAFA))
+                .background(PlannerTheme.colors.cardBackground)
                 .clip(RoundedCornerShape(8.dp))
                 .padding(10.dp),
         ) {
             Text(
                 text = "새 카테고리",
+                color = PlannerTheme.colors.primary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -81,11 +86,17 @@ fun CreateCategoryDialog(
                     modifier = Modifier
                         .padding(start = 10.dp)
                         .size(30.dp)
-                        .background(Color(android.graphics.Color.parseColor(colorState.value))),
+                        .background(Color(colorState.value.toColorInt()))
+                        .border(
+                            width = 1.dp,
+                            color = PlannerTheme.colors.gray300
+                        )
                 )
             }
 
-            Divider()
+            HorizontalDivider(
+                color = PlannerTheme.colors.gray300
+            )
 
             ColorPicker(
                 modifier = Modifier
@@ -99,7 +110,7 @@ fun CreateCategoryDialog(
                 Button(
                     modifier = Modifier.width(100.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6EC4A7)),
+                    colors = ButtonDefaults.buttonColors(containerColor = PlannerTheme.colors.green),
                     onClick = onCancelClick
                 ) { Text(text = "취소") }
 
@@ -112,7 +123,7 @@ fun CreateCategoryDialog(
                 ) {
                     Button(
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB86)),
+                        colors = ButtonDefaults.buttonColors(containerColor = PlannerTheme.colors.yellow),
                         onClick = {
                             onSaveClick(
                                 CategoryData(
