@@ -69,7 +69,7 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
                 modifier = Modifier
                     .weight(1f)
                     .padding(15.dp),
-                cardColor = CardDefaults.cardColors(containerColor = PlannerTheme.colors.cardBackground),
+                cardColor = CardDefaults.cardColors(containerColor = PlannerTheme.colors.gray200),
                 title = "생성된 일정",
                 body = totalStatisticsState.value?.total,
                 titleTextStyle = TextStyle(
@@ -86,7 +86,7 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
                 modifier = Modifier
                     .weight(1f)
                     .padding(top = 15.dp, end = 15.dp, bottom = 15.dp),
-                cardColor = CardDefaults.cardColors(containerColor = PlannerTheme.colors.cardBackground),
+                cardColor = CardDefaults.cardColors(containerColor = PlannerTheme.colors.gray200),
                 title = "완료된 일정",
                 body = totalStatisticsState.value?.completed,
                 titleTextStyle = TextStyle(
