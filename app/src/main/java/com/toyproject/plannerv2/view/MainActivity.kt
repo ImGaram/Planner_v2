@@ -16,7 +16,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.toyproject.plannerv2.view.category.navigation.categoryRoute
 import com.toyproject.plannerv2.view.component.bottomnavigation.PlannerV2BottomNavigation
-import com.toyproject.plannerv2.view.component.topbar.PlannerV2TopAppBar
 import com.toyproject.plannerv2.view.login.component.LoginLoadingIndicator
 import com.toyproject.plannerv2.view.login.navigation.loginRoute
 import com.toyproject.plannerv2.view.plan.navigation.planRoute
@@ -45,7 +44,6 @@ class MainActivity : ComponentActivity() {
 
                 Box(modifier = Modifier.fillMaxSize()) {
                     Scaffold(
-                        topBar = { PlannerV2TopAppBar() },
                         bottomBar = {
                             when (currentRoute?.destination?.route) {
                                 planRoute, categoryRoute, statisticsRoute -> PlannerV2BottomNavigation(navHostController = navHostController)
