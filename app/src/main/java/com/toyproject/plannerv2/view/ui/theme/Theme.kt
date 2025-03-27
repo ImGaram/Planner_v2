@@ -1,70 +1,78 @@
 package com.toyproject.plannerv2.view.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+private val PlannerDarkColors = PlannerColors(
+    primary = PrimaryDark,
+    primaryVariant = PrimaryVariantDark,
+    primaryA10 = PrimaryA10Dark,
+    primaryA25 = PrimaryA25Dark,
+    background = BackgroundDark,
+    cardBackground = CardBackgroundDark,
+    gray200 = Gray200Dark,
+    gray300 = Gray300Dark,
+    gray400 = Gray400Dark,
+    red = RedDark,
+    green = GreenDark,
+    yellow = YellowDark,
+    blue = BlueDark
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+private val PlannerLightColors = PlannerColors(
+    primary = PrimaryLight,
+    primaryVariant = PrimaryVariantLight,
+    primaryA10 = PrimaryA10Light,
+    primaryA25 = PrimaryA25Light,
+    background = BackgroundLight,
+    cardBackground = CardBackgroundLight,
+    gray200 = Gray200Light,
+    gray300 = Gray300Light,
+    gray400 = Gray400Light,
+    red = RedLight,
+    green = GreenLight,
+    yellow = YellowLight,
+    blue = BlueLight
 )
+
+object PlannerTheme {
+    val colors: PlannerColors
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalColors.current
+}
+
+@Composable
+private fun ProvidePlannerV2Theme(
+    colors: PlannerColors,
+    content: @Composable () -> Unit
+) {
+    val colorPalette = remember { colors }
+    colorPalette.update(colors)
+
+    CompositionLocalProvider(
+        LocalColors provides colorPalette,
+        content = content
+    )
+}
 
 @Composable
 fun PlannerV2Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
-        }
+    val colors = remember {
+        if (darkTheme) PlannerDarkColors else PlannerLightColors
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
+    ProvidePlannerV2Theme(
+        colors = colors,
         content = content
     )
 }
+
+val LocalColors = staticCompositionLocalOf { PlannerLightColors }

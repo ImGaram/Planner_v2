@@ -1,5 +1,6 @@
 package com.toyproject.plannerv2.view.category
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +29,7 @@ import com.toyproject.plannerv2.view.category.component.CategoryItem
 import com.toyproject.plannerv2.view.category.component.CreateCategoryDialog
 import com.toyproject.plannerv2.view.component.card.AddCard
 import com.toyproject.plannerv2.view.component.progress.CircularProgressScreen
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 import com.toyproject.plannerv2.viewmodel.CategoryViewModel
 
 @Composable
@@ -39,12 +42,13 @@ fun CategoryScreen(categoryViewModel: CategoryViewModel = viewModel()) {
         categoryViewModel.getCategory(uid.toString())
     }
 
-    Column {
+    Column(modifier = Modifier.background(PlannerTheme.colors.background)) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 10.dp, end = 15.dp, top = 15.dp, bottom = 10.dp),
             text = "카테고리",
+            color = PlannerTheme.colors.primary,
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.End
@@ -55,66 +59,67 @@ fun CategoryScreen(categoryViewModel: CategoryViewModel = viewModel()) {
                 .fillMaxWidth()
                 .padding(end = 15.dp, bottom = 15.dp),
             text = "카테고리를 수정하거나 삭제합니다.",
+            color = PlannerTheme.colors.primary,
             textAlign = TextAlign.End
         )
 
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .height(1.dp)
-                .padding(horizontal = 15.dp)
+                .padding(horizontal = 15.dp),
+            color = PlannerTheme.colors.gray300
         )
 
-        if (categoryList.value != null) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 5.dp),
-                contentPadding = PaddingValues(horizontal = 15.dp),
-            ) {
-                items(categoryList.value!!) {
-                    CategoryItem(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(60.dp)
-                            .padding(10.dp),
-                        categoryData = it,
-                        onModifyClick = { title, color ->
-                            val modifyCategoryData = CategoryData(
-                                id = it.id,
-                                categoryTitle = title,
-                                categoryColorHex = color,
-                                createdTime = it.createdTime
-                            )
-                            categoryViewModel.modifyCategory(
-                                uid = uid.toString(),
-                                modifyValue = modifyCategoryData,
-                                onSuccess = { categoryViewModel.getCategory(uid = uid.toString()) }
-                            )
-                        },
-                        onDeleteClick = {
-                            categoryViewModel.deleteCategory(
-                                uid = uid.toString(),
-                                deleteId = it.createdTime.toString(),
-                                deletePlanTargetId = it.id,
-                                onSuccess = { categoryViewModel.getCategory(uid = uid.toString()) }
-                            )
-                        }
-                    )
-
-                    Divider(
-                        modifier = Modifier
-                            .padding(vertical = 5.dp)
-                            .height(0.5.dp)
-                    )
-                }
-
-                item {
-                    AddCard(cardTitle = "클릭해서 카테고리 생성하기...") {
-                        createDialogState.value = true
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 5.dp),
+            contentPadding = PaddingValues(horizontal = 15.dp),
+        ) {
+            items(categoryList.value) {
+                CategoryItem(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp)
+                        .padding(10.dp),
+                    categoryData = it,
+                    onModifyClick = { title, color ->
+                        val modifyCategoryData = CategoryData(
+                            id = it.id,
+                            categoryTitle = title,
+                            categoryColorHex = color,
+                            createdTime = it.createdTime
+                        )
+                        categoryViewModel.modifyCategory(
+                            uid = uid.toString(),
+                            modifyValue = modifyCategoryData,
+                            onSuccess = { categoryViewModel.getCategory(uid = uid.toString()) }
+                        )
+                    },
+                    onDeleteClick = {
+                        categoryViewModel.deleteCategory(
+                            uid = uid.toString(),
+                            deleteId = it.createdTime.toString(),
+                            deletePlanTargetId = it.id,
+                            onSuccess = { categoryViewModel.getCategory(uid = uid.toString()) }
+                        )
                     }
+                )
+
+                HorizontalDivider(
+                    modifier = Modifier
+                        .padding(vertical = 5.dp)
+                        .height(0.5.dp),
+                    color = PlannerTheme.colors.gray300
+                )
+            }
+
+            item {
+                AddCard(cardTitle = "클릭해서 카테고리 생성하기...") {
+                    createDialogState.value = true
                 }
             }
-        } else CircularProgressScreen()
+        }
     }
 
     if (createDialogState.value) {

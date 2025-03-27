@@ -15,9 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.toyproject.plannerv2.R
 import com.toyproject.plannerv2.view.login.component.GoogleSignInButton
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 import com.toyproject.plannerv2.viewmodel.LoginViewModel
 
 @Composable
@@ -57,10 +55,7 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .paint(
-                painter = painterResource(id = R.drawable.bg_login),
-                contentScale = ContentScale.FillBounds
-            ),
+            .background(PlannerTheme.colors.background),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(3f))
@@ -75,9 +70,10 @@ fun LoginScreen(
 
         Text(
             modifier = Modifier
-                .background(Color(0xCCFFF6A7))
+                .background(PlannerTheme.colors.yellow)
                 .padding(5.dp),
             text = "Schedule Planner",
+            color = PlannerTheme.colors.primary,
             style = TextStyle(
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Medium
@@ -88,9 +84,10 @@ fun LoginScreen(
 
         Text(
             modifier = Modifier
-                .background(Color(0xCCFFF6A7))
+                .background(PlannerTheme.colors.yellow)
                 .padding(5.dp),
             text = "오늘 일정 관리",
+            color = PlannerTheme.colors.primary,
             fontSize = 19.sp
         )
 

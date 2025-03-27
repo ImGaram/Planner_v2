@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
@@ -24,6 +25,7 @@ import com.patrykandpatrick.vico.core.component.text.TextComponent
 import com.patrykandpatrick.vico.core.component.text.textComponent
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.toyproject.plannerv2.util.intListAsFloatEntryList
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 
 @Composable
 fun DailyStatisticsChart(dailyPlanList: List<Int>) {
@@ -53,7 +55,9 @@ fun DailyStatisticsChart(dailyPlanList: List<Int>) {
                         shape =  Shapes.pillShape,
                         color = chartColumnColor
                     ),
-                    label = textComponent(),
+                    label = textComponent {
+                        color = PlannerTheme.colors.primary.toArgb()
+                    },
                     labelText = "생성한 일정(개)"
                 )
             },

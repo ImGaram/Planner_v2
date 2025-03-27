@@ -1,5 +1,6 @@
 package com.toyproject.plannerv2.view.create.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,12 +21,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.toyproject.plannerv2.R
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 
 @Composable
 fun CreatePlanCard(
     onCardClick: () -> Unit
 ) {
     val stroke = Stroke(width = 2f, pathEffect = PathEffect.dashPathEffect(intervals = floatArrayOf(10f, 10f), phase = 10f))
+    val color = PlannerTheme.colors.gray400
 
     Box(
         modifier = Modifier
@@ -35,7 +38,7 @@ fun CreatePlanCard(
             .clip(RoundedCornerShape(8.dp))
             .drawBehind {
                 drawRoundRect(
-                    color = Color.LightGray,
+                    color = color,
                     style = stroke,
                     cornerRadius = CornerRadius(8.dp.toPx())
                 )
@@ -46,7 +49,7 @@ fun CreatePlanCard(
         Icon(
             painter = painterResource(id = R.drawable.ic_create_schedule),
             contentDescription = "create schedule",
-            tint = Color.LightGray
+            tint = color
         )
     }
 }

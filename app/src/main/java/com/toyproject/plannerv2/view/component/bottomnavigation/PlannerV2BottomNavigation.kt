@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 
 @Composable
 fun PlannerV2BottomNavigation(navHostController: NavHostController) {
@@ -24,7 +25,7 @@ fun PlannerV2BottomNavigation(navHostController: NavHostController) {
 
     NavigationBar(
         modifier = Modifier.fillMaxWidth(),
-        containerColor = Color(0xFFFAFAFA)
+        containerColor = PlannerTheme.colors.background
     ) {
         val navBackStackEntry by navHostController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
@@ -48,8 +49,8 @@ fun PlannerV2BottomNavigation(navHostController: NavHostController) {
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.Black,
-                    unselectedIconColor = Color.LightGray,
+                    selectedIconColor = PlannerTheme.colors.primary,
+                    unselectedIconColor = PlannerTheme.colors.gray300,
                     indicatorColor = Color(0x00FAFAFA)
                 )
             )

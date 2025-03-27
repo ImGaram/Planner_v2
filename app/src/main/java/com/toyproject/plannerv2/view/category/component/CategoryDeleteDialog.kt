@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 
 @Composable
 fun CategoryDeleteDialog(
@@ -32,7 +33,7 @@ fun CategoryDeleteDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(elevation = 1.dp, shape = RoundedCornerShape(8.dp))
-                .background(Color(0xFFFAFAFA))
+                .background(PlannerTheme.colors.cardBackground)
                 .clip(RoundedCornerShape(8.dp))
                 .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -40,6 +41,7 @@ fun CategoryDeleteDialog(
             Text(
                 modifier = Modifier.padding(vertical = 15.dp),
                 text = "카테고리를 삭제하시겠습니까?",
+                color = PlannerTheme.colors.primary,
                 fontSize = 20.sp
             )
 
@@ -51,7 +53,7 @@ fun CategoryDeleteDialog(
                 Button(
                     modifier = Modifier.width(100.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6EC4A7)),
+                    colors = ButtonDefaults.buttonColors(containerColor = PlannerTheme.colors.green),
                     onClick = onCancelClick
                 ) { Text(text = "취소") }
 
@@ -60,7 +62,7 @@ fun CategoryDeleteDialog(
                 Button(
                     modifier = Modifier.width(100.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB86)),
+                    colors = ButtonDefaults.buttonColors(containerColor = PlannerTheme.colors.yellow),
                     onClick = onDeleteClick
                 ) { Text(text = "확인") }
             }

@@ -1,6 +1,7 @@
 package com.toyproject.plannerv2.view.category.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,8 @@ import com.toyproject.plannerv2.util.unixTimestampToLocalDateTime
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import androidx.core.graphics.toColorInt
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 
 @Composable
 fun CategoryItem(
@@ -48,7 +51,12 @@ fun CategoryItem(
                     .width(10.dp)
                     .fillMaxHeight()
                     .clip(CircleShape)
-                    .background(Color(android.graphics.Color.parseColor(categoryData.categoryColorHex)))
+                    .border(
+                        width = 1.dp,
+                        color = PlannerTheme.colors.gray300,
+                        shape = CircleShape
+                    )
+                    .background(Color(categoryData.categoryColorHex.toColorInt()))
             )
 
             Column(
@@ -59,6 +67,7 @@ fun CategoryItem(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = categoryData.categoryTitle,
+                    color = PlannerTheme.colors.primary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -66,6 +75,7 @@ fun CategoryItem(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = "생성일: ${formatLocalDateTime(categoryData.createdTime?.unixTimestampToLocalDateTime())}",
+                    color = PlannerTheme.colors.primary,
                     fontSize = 10.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -79,7 +89,7 @@ fun CategoryItem(
                     .clickable { categoryModifyState.value = true },
                 imageVector = Icons.Default.Create,
                 contentDescription = "category modify",
-                tint = Color(0xFFFFDB86)
+                tint = PlannerTheme.colors.yellow
             )
 
             Icon(
@@ -87,7 +97,7 @@ fun CategoryItem(
                     .clip(CircleShape)
                     .clickable { categoryDeleteState.value = true },
                 imageVector = Icons.Default.Delete,
-                tint = Color.Red,
+                tint = PlannerTheme.colors.red,
                 contentDescription = "category delete"
             )
         }

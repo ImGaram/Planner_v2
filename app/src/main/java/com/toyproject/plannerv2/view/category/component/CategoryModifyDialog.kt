@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +39,8 @@ import androidx.compose.ui.window.Dialog
 import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.util.toHexCode
 import com.toyproject.plannerv2.view.component.textfield.PlannerV2TextField
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
+import androidx.core.graphics.toColorInt
 
 @Composable
 fun CategoryModifyDialog(
@@ -58,7 +62,7 @@ fun CategoryModifyDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(elevation = 1.dp, shape = RoundedCornerShape(8.dp))
-                .background(Color(0xFFFAFAFA))
+                .background(PlannerTheme.colors.cardBackground)
                 .clip(RoundedCornerShape(8.dp))
                 .padding(10.dp),
         ) {
@@ -73,18 +77,26 @@ fun CategoryModifyDialog(
                 onValueChange = { categoryTitleState.value = it }
             )
 
-            Divider(modifier = Modifier.padding(vertical = 5.dp))
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 5.dp),
+                color = PlannerTheme.colors.gray300
+            )
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = "색상 수정"
+                    text = "색상 수정",
+                    color = PlannerTheme.colors.primary
                 )
 
                 Box(
                     modifier = Modifier
                         .size(30.dp)
-                        .background(Color(android.graphics.Color.parseColor(categoryColorState.value)))
+                        .background(Color(categoryColorState.value.toColorInt()))
+                        .border(
+                            width = 1.dp,
+                            color = PlannerTheme.colors.gray300
+                        )
                 )
 
                 Icon(
@@ -92,10 +104,9 @@ fun CategoryModifyDialog(
                         .clip(CircleShape)
                         .clickable {
                             categoryColorState.value = categoryData.categoryColorHex
-                            println("카테고리 초기화: ${categoryColorState.value}")
                         },
                     imageVector = Icons.Default.Refresh,
-                    tint = Color.Cyan,
+                    tint = PlannerTheme.colors.blue,
                     contentDescription = "refresh color"
                 )
             }
@@ -104,7 +115,7 @@ fun CategoryModifyDialog(
                 modifier = Modifier
                     .height(150.dp)
                     .padding(top = 10.dp),
-                initialColor = Color(android.graphics.Color.parseColor(categoryColorState.value))
+                initialColor = Color(categoryColorState.value.toColorInt())
             ) {
                 categoryColorState.value = it.toHexCode()
             }
@@ -117,7 +128,7 @@ fun CategoryModifyDialog(
                 Button(
                     modifier = Modifier.width(100.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6EC4A7)),
+                    colors = ButtonDefaults.buttonColors(containerColor = PlannerTheme.colors.green),
                     onClick = onCancelClick
                 ) { Text(text = "취소") }
 
@@ -130,7 +141,7 @@ fun CategoryModifyDialog(
                 ) {
                     Button(
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB86)),
+                        colors = ButtonDefaults.buttonColors(containerColor = PlannerTheme.colors.yellow),
                         onClick = { onSaveClick(categoryTitleState.value, categoryColorState.value) }
                     ) { Text(text = "수정하기") }
                 }

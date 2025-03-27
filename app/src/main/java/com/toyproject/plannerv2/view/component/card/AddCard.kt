@@ -17,11 +17,13 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 
 @Composable
 fun AddCard(
     modifier: Modifier = Modifier,
     cardTitle: String,
+    cardColor: Color = PlannerTheme.colors.gray400,
     onCardClick: () -> Unit
 ) {
     val stroke = Stroke(width = 2f, pathEffect = PathEffect.dashPathEffect(intervals = floatArrayOf(10f, 10f), phase = 10f))
@@ -32,7 +34,7 @@ fun AddCard(
             .clip(RoundedCornerShape(8.dp))
             .drawBehind {
                 drawRoundRect(
-                    color = Color.LightGray,
+                    color = cardColor,
                     style = stroke,
                     cornerRadius = CornerRadius(8.dp.toPx())
                 )
@@ -43,7 +45,7 @@ fun AddCard(
         Text(
             modifier = Modifier.padding(vertical = 15.dp),
             text = cardTitle,
-            color = Color.LightGray,
+            color = cardColor,
             fontSize = 20.sp
         )
     }
