@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">PlannerV2</string>
+    <string name="app_name">Planner - 일정 관리</string>
+    <string name="default_web_client_id">918596624634-jbe4393fpalmv7gn6m86n3tf1lj7kovi.apps.googleusercontent.com</string>
 </resources>
