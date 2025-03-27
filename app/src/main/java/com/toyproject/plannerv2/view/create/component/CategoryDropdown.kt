@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -27,6 +28,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.toyproject.plannerv2.data.CategoryData
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
+import androidx.core.graphics.toColorInt
 
 @Composable
 fun CategoryDropdown(
@@ -50,6 +53,7 @@ fun CategoryDropdown(
                     .weight(1f)
                     .padding(start = 10.dp),
                 text = title,
+                color = PlannerTheme.colors.primary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -57,13 +61,14 @@ fun CategoryDropdown(
             Icon(
                 modifier = Modifier.padding(10.dp),
                 imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = "dropdown open"
+                contentDescription = "dropdown open",
+                tint = PlannerTheme.colors.primary
             )
         }
 
         val dropdownScrollState = rememberScrollState()
         DropdownMenu(
-            modifier = Modifier.background(Color.White),
+            modifier = Modifier.background(PlannerTheme.colors.cardBackground),
             expanded = dropdownExpendedState.value,
             onDismissRequest = { dropdownExpendedState.value = false }
         ) {
@@ -81,7 +86,7 @@ fun CategoryDropdown(
                                         .padding(start = 7.dp)
                                         .fillMaxWidth(),
                                     text = it.categoryTitle,
-                                    color = Color(parseColor(it.categoryColorHex))
+                                    color = Color(it.categoryColorHex.toColorInt())
                                 )
                             },
                             onClick = { dropdownExpendedState.value = false },
@@ -90,7 +95,10 @@ fun CategoryDropdown(
                                     checked = checkBoxStateList[index],
                                     onCheckedChange = { checked ->
                                         onDropdownCheckBoxClick(checked, it)
-                                    }
+                                    },
+                                    colors = CheckboxDefaults.colors(
+                                        checkedColor = PlannerTheme.colors.green
+                                    )
                                 )
                             },
                             trailingIcon = { /* 일부러 비워놔서 checkBox와 맞지 않는 공백을 맞춤. */ }

@@ -3,6 +3,7 @@ package com.toyproject.plannerv2.view.create
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -42,6 +44,7 @@ import com.toyproject.plannerv2.data.PlanData
 import com.toyproject.plannerv2.util.stringToUnixTimestamp
 import com.toyproject.plannerv2.view.create.component.CreatePlanCard
 import com.toyproject.plannerv2.view.create.component.PlanCard
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 import com.toyproject.plannerv2.viewmodel.CategoryViewModel
 import com.toyproject.plannerv2.viewmodel.CreatePlanViewModel
 
@@ -68,15 +71,18 @@ fun CreatePlanScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(PlannerTheme.colors.background),
         horizontalAlignment = Alignment.End
     ) {
         CreatePlanTitle(navigateToPlan = navigateToPlan)
 
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .height(1.dp)
-                .padding(horizontal = 15.dp)
+                .padding(horizontal = 15.dp),
+            color = PlannerTheme.colors.gray300
         )
 
         LazyColumn(
@@ -84,26 +90,24 @@ fun CreatePlanScreen(
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            if (categoryList.value != null) {
-                itemsIndexed(planList.value) { index, item ->
-                    PlanCard(
-                        planData = item,
-                        dropdownMenuItem = categoryList.value!!,
-                        savePlanLogic = { title, description, categories ->
-                            val modifyData = PlanData(
-                                baseDate = selectedDate?.stringToUnixTimestamp(),
-                                title = title,
-                                description = description,
-                                categories = categories
-                            )
-                            createPlanViewModel.modifyPlan(
-                                position = index,
-                                modifyData = modifyData
-                            )
-                        },
-                        deleteLogic = { createPlanViewModel.removePlan(index) }
-                    )
-                }
+            itemsIndexed(planList.value) { index, item ->
+                PlanCard(
+                    planData = item,
+                    dropdownMenuItem = categoryList.value,
+                    savePlanLogic = { title, description, categories ->
+                        val modifyData = PlanData(
+                            baseDate = selectedDate?.stringToUnixTimestamp(),
+                            title = title,
+                            description = description,
+                            categories = categories
+                        )
+                        createPlanViewModel.modifyPlan(
+                            position = index,
+                            modifyData = modifyData
+                        )
+                    },
+                    deleteLogic = { createPlanViewModel.removePlan(index) }
+                )
             }
 
             item {
@@ -118,10 +122,11 @@ fun CreatePlanScreen(
             enter = slideInVertically(initialOffsetY = { it }),
             exit = slideOutVertically(targetOffsetY = { it })
         ) {
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier
                     .height(1.dp)
-                    .padding(horizontal = 15.dp)
+                    .padding(horizontal = 15.dp),
+                color = PlannerTheme.colors.gray300
             )
 
             SaveCancelButtons(
@@ -155,7 +160,8 @@ fun CreatePlanTitle(navigateToPlan: () -> Unit) {
             Icon(
                 modifier = Modifier.padding(5.dp),
                 painter = painterResource(id = R.drawable.ic_back_arrow),
-                contentDescription = "back arrow"
+                contentDescription = "back arrow",
+                tint = PlannerTheme.colors.primary
             )
         }
 
@@ -163,6 +169,7 @@ fun CreatePlanTitle(navigateToPlan: () -> Unit) {
 
         Text(
             text = "일정 생성",
+            color = PlannerTheme.colors.primary,
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold
         )
@@ -170,7 +177,8 @@ fun CreatePlanTitle(navigateToPlan: () -> Unit) {
 
     Text(
         modifier = Modifier.padding(end = 15.dp, bottom = 15.dp),
-        text = "생성한 일정을 클릭하여 수정하세요."
+        text = "생성한 일정을 클릭하여 수정하세요.",
+        color = PlannerTheme.colors.primary
     )
 }
 
@@ -187,7 +195,7 @@ fun SaveCancelButtons(
         Button(
             modifier = Modifier.width(100.dp),
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6EC4A7)),
+            colors = ButtonDefaults.buttonColors(containerColor = PlannerTheme.colors.green),
             onClick = { navigateToPlan() }
         ) {
             Text(text = "취소")
@@ -198,7 +206,7 @@ fun SaveCancelButtons(
         Button(
             modifier = Modifier.width(100.dp),
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB86)),
+            colors = ButtonDefaults.buttonColors(containerColor = PlannerTheme.colors.yellow),
             onClick = { savePlanLogic() }
         ) {
             Text(text = "생성")

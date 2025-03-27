@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -37,6 +39,7 @@ import com.toyproject.plannerv2.R
 import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.data.PlanData
 import com.toyproject.plannerv2.view.component.textfield.PlannerV2TextField
+import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 
 @Composable
 fun PlanCard(
@@ -85,7 +88,7 @@ fun PlanInfoCard(
             .fillMaxWidth()
             .padding(horizontal = 15.dp, vertical = 10.dp)
             .shadow(elevation = 1.dp, shape = RoundedCornerShape(8.dp))
-            .background(Color(0xFFFAFAFA))
+            .background(PlannerTheme.colors.cardBackground)
             .clip(RoundedCornerShape(8.dp))
             .clickable { onCardClick() },
         verticalAlignment = Alignment.CenterVertically
@@ -98,6 +101,7 @@ fun PlanInfoCard(
             Text(
                 modifier = Modifier.padding(bottom = 10.dp),
                 text = planData.title.ifEmpty { "새 일정" },
+                color = PlannerTheme.colors.primary,
                 fontSize = 19.sp,
                 fontWeight = FontWeight.SemiBold,
                 maxLines = 1,
@@ -106,6 +110,7 @@ fun PlanInfoCard(
 
             Text(
                 text = planData.description.ifEmpty { "비어 있음" },
+                color = PlannerTheme.colors.primary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -113,7 +118,7 @@ fun PlanInfoCard(
             CategoryDropdown(
                 modifier = Modifier
                     .padding(top = 10.dp)
-                    .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(8.dp)),
+                    .border(width = 1.dp, color = PlannerTheme.colors.primary, shape = RoundedCornerShape(8.dp)),
                 dropdownItems = categoryDataList,
                 title = planData.categories.values.map { it["title"] }.joinToString(", ").ifEmpty {
                     // 선택된 category(planData.category)에서 title만 추출해 dropdown의 title로 설정.
@@ -149,9 +154,9 @@ fun PlanInfoCard(
         ) {
             Icon(
                 modifier = Modifier.padding(8.dp),
-                painter = painterResource(id = R.drawable.ic_delete_plan),
+                imageVector = Icons.Default.Clear,
                 contentDescription = "delete plan",
-                tint = Color.Red
+                tint = PlannerTheme.colors.red
             )
         }
     }
@@ -174,7 +179,7 @@ fun ModifyPlanCard(
             .fillMaxWidth()
             .padding(horizontal = 15.dp, vertical = 10.dp)
             .shadow(elevation = 1.dp, shape = RoundedCornerShape(8.dp))
-            .background(Color(0xFFFAFAFA))
+            .background(PlannerTheme.colors.cardBackground)
             .clip(RoundedCornerShape(8.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -215,7 +220,7 @@ fun ModifyPlanCard(
             Button(
                 modifier = Modifier.width(100.dp),
                 shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6EC4A7)),
+                colors = ButtonDefaults.buttonColors(containerColor = PlannerTheme.colors.green),
                 onClick = onCancelButtonClick
             ) { Text(text = "취소") }
 
@@ -224,7 +229,7 @@ fun ModifyPlanCard(
             Button(
                 modifier = Modifier.width(100.dp),
                 shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB86)),
+                colors = ButtonDefaults.buttonColors(containerColor = PlannerTheme.colors.yellow),
                 onClick = onSaveButtonClick
             ) { Text(text = "저장") }
         }
