@@ -12,9 +12,9 @@ android {
     defaultConfig {
         applicationId = "com.toyproject.plannerv2"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 5
-        versionName = "1.1.0"
+        targetSdk = 35
+        versionCode = 6
+        versionName = "1.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -59,7 +59,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.9")
 
     // firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth:23.2.0")
     implementation("com.google.android.gms:play-services-auth:21.3.0")

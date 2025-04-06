@@ -1,6 +1,5 @@
 package com.toyproject.plannerv2.view.create.component
 
-import android.graphics.Color.parseColor
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -27,9 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
-import androidx.core.graphics.toColorInt
 
 @Composable
 fun CategoryDropdown(
@@ -89,7 +88,9 @@ fun CategoryDropdown(
                                     color = Color(it.categoryColorHex.toColorInt())
                                 )
                             },
-                            onClick = { dropdownExpendedState.value = false },
+                            onClick = {
+                                onDropdownCheckBoxClick(!checkBoxStateList[index], it)
+                            },
                             leadingIcon = {
                                 Checkbox(
                                     checked = checkBoxStateList[index],
