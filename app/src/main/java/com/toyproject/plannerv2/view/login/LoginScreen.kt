@@ -5,7 +5,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -93,17 +95,45 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.weight(3f))
 
-        val token = stringResource(id = R.string.default_web_client_id)
-        GoogleSignInButton {
-            val googleSignInOptions = GoogleSignInOptions
-                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(token)
-                .requestEmail()
-                .build()
+        Row(
+            modifier = Modifier.padding(horizontal = 24.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(1.dp)
+                    .background(PlannerTheme.colors.gray400)
+            )
 
-            val googleSignInClient = GoogleSignIn.getClient(context, googleSignInOptions)
-            launcher.launch(googleSignInClient.signInIntent)
+            Text(
+                text = "소셜 계정으로 간편 로그인",
+                modifier = Modifier.padding(horizontal = 12.dp),
+                color = PlannerTheme.colors.primary
+            )
+
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(1.dp)
+                    .background(PlannerTheme.colors.gray400)
+            )
         }
+
+        val token = stringResource(id = R.string.default_web_client_id)
+        GoogleSignInButton(
+            modifier = Modifier.padding(top = 24.dp),
+            onClick = {
+                val googleSignInOptions = GoogleSignInOptions
+                    .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(token)
+                    .requestEmail()
+                    .build()
+
+                val googleSignInClient = GoogleSignIn.getClient(context, googleSignInOptions)
+                launcher.launch(googleSignInClient.signInIntent)
+            }
+        )
 
         Spacer(modifier = Modifier.weight(2f))
     }
