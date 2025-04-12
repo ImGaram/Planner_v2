@@ -39,9 +39,9 @@ class MainActivity : ComponentActivity() {
     private val splashState: Boolean by lazy { splashViewModel.splashState.value }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         actionBar?.hide()
+        super.onCreate(savedInstanceState)
 
         splashViewModel.checkLogin()
         installSplashScreen().setKeepOnScreenCondition { splashState }
@@ -70,13 +70,15 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
-                        HorizontalDivider(
-                            modifier = Modifier.height(1.dp),
-                            color = PlannerTheme.colors.gray400
-                        )
-
                         when (currentRoute?.destination?.route) {
-                            planRoute, categoryRoute, statisticsRoute -> PlannerV2BottomNavigation(navHostController = navHostController)
+                            planRoute, categoryRoute, statisticsRoute -> {
+                                HorizontalDivider(
+                                    modifier = Modifier.height(1.dp),
+                                    color = PlannerTheme.colors.gray400
+                                )
+
+                                PlannerV2BottomNavigation(navHostController = navHostController)
+                            }
                         }
                     }
 
