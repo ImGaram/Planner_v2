@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,7 +26,6 @@ import com.toyproject.plannerv2.data.CategoryData
 import com.toyproject.plannerv2.view.category.component.CategoryItem
 import com.toyproject.plannerv2.view.category.component.CreateCategoryDialog
 import com.toyproject.plannerv2.view.component.card.AddCard
-import com.toyproject.plannerv2.view.component.progress.CircularProgressScreen
 import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 import com.toyproject.plannerv2.viewmodel.CategoryViewModel
 
@@ -46,21 +43,19 @@ fun CategoryScreen(categoryViewModel: CategoryViewModel = viewModel()) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 10.dp, end = 15.dp, top = 15.dp, bottom = 10.dp),
+                .padding(start = 15.dp, top = 15.dp, bottom = 10.dp),
             text = "카테고리",
             color = PlannerTheme.colors.primary,
             fontSize = 22.sp,
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.End
+            fontWeight = FontWeight.SemiBold
         )
 
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(end = 15.dp, bottom = 15.dp),
+                .padding(start = 15.dp, bottom = 15.dp),
             text = "카테고리를 수정하거나 삭제합니다.",
-            color = PlannerTheme.colors.primary,
-            textAlign = TextAlign.End
+            color = PlannerTheme.colors.primary
         )
 
         HorizontalDivider(
