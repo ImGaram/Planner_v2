@@ -21,7 +21,10 @@ fun PlannerV2NavHost(
 ) {
     NavHost(navController = navHostController, startDestination = startDestination) {
         loginScreen(
-            navigateToPlan = { navHostController.navigateToPlan() }
+            navigateToPlan = {
+                navHostController.popBackStack()
+                navHostController.navigateToPlan()
+            }
         )
 
         planScreen(
@@ -29,7 +32,7 @@ fun PlannerV2NavHost(
         )
 
         createPlanScreen(
-            navigateToPlan = { navHostController.navigateToPlan() }
+            navigateToPlan = { navHostController.popBackStack() }
         )
 
         statisticsScreen(
