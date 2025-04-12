@@ -67,10 +67,7 @@ fun CreatePlanScreen(
         buttonsVisibility = planList.value.isNotEmpty() && !titleIsEmpty
     }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.End
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         CreatePlanTitle(navigateToPlan = navigateToPlan)
 
         HorizontalDivider(
@@ -146,7 +143,8 @@ fun CreatePlanTitle(navigateToPlan: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 10.dp, end = 15.dp, top = 15.dp, bottom = 10.dp)
+            .padding(start = 10.dp, end = 15.dp, top = 15.dp, bottom = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
             modifier = Modifier.size(36.dp),
@@ -160,10 +158,9 @@ fun CreatePlanTitle(navigateToPlan: () -> Unit) {
             )
         }
 
-        Spacer(modifier = Modifier.weight(1f))
-
         Text(
             text = "일정 생성",
+            modifier = Modifier.padding(start = 16.dp),
             color = PlannerTheme.colors.primary,
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold
@@ -171,7 +168,7 @@ fun CreatePlanTitle(navigateToPlan: () -> Unit) {
     }
 
     Text(
-        modifier = Modifier.padding(end = 15.dp, bottom = 15.dp),
+        modifier = Modifier.padding(start = 15.dp, bottom = 15.dp),
         text = "생성한 일정을 클릭하여 수정하세요.",
         color = PlannerTheme.colors.primary
     )
