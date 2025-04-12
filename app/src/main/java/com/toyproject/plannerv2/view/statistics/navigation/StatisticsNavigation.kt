@@ -11,8 +11,8 @@ fun NavHostController.navigateToStatistics() {
     this.navigate(statisticsRoute)
 }
 
-fun NavGraphBuilder.statisticsScreen() {
+fun NavGraphBuilder.statisticsScreen(navigateToSetting: () -> Unit) {
     composable(route = statisticsRoute) {
-        StatisticsScreen()
+        StatisticsScreen(navigateToSetting = navigateToSetting)
     }
 }

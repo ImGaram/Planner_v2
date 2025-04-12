@@ -33,7 +33,10 @@ import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 import com.toyproject.plannerv2.viewmodel.StatisticsViewModel
 
 @Composable
-fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
+fun StatisticsScreen(
+    statisticsViewModel: StatisticsViewModel = viewModel(),
+    navigateToSetting: () -> Unit
+) {
     val dailyStatisticsState = statisticsViewModel.dailyStatistics.collectAsState()
     val totalStatisticsState = statisticsViewModel.totalStatisticsData.collectAsState()
     val weeklyStatisticsState = statisticsViewModel.weeklyStatistics.collectAsState()
@@ -147,5 +150,5 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
 @Preview(showBackground = true)
 @Composable
 fun StatisticsScreenPreview() {
-    StatisticsScreen()
+    StatisticsScreen {}
 }
