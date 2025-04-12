@@ -1,5 +1,6 @@
 package com.toyproject.plannerv2.view.setting
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,11 +24,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
+import com.toyproject.plannerv2.util.openLink
 import com.toyproject.plannerv2.view.setting.component.SettingItem
 import com.toyproject.plannerv2.view.ui.theme.PlannerTheme
 
 @Composable
-fun SettingScreen(navigateToStatistics: () -> Unit) {
+fun SettingScreen(
+    navigateToStatistics: () -> Unit,
+    navigateToLogin: () -> Unit,
+) {
     val context = LocalContext.current
     val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
 
@@ -57,19 +63,26 @@ fun SettingScreen(navigateToStatistics: () -> Unit) {
         }
 
         SettingItem(
-            onClick = {},
+            onClick = {
+                context.openLink("https://imgaram01206.notion.site/efeeb8aceb71453a9ba0a4034a24a4cb")
+            },
             title = "개인정보처리방침"
         )
 
         SettingItem(
-            onClick = {},
+            onClick = {
+                context.openLink("https://play.google.com/store/apps/details?id=com.toyproject.plannerv2")
+            },
             title = "앱 버전",
             subTitle = packageInfo.versionName.toString()
         )
 
         Button(
             onClick = {
+                FirebaseAuth.getInstance().signOut()
+                Toast.makeText(context, "로그아웃이 완료되었습니다.", Toast.LENGTH_SHORT).show()
 
+                navigateToLogin()
             },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
@@ -83,5 +96,8 @@ fun SettingScreen(navigateToStatistics: () -> Unit) {
 @Preview
 @Composable
 private fun SettingScreenPreview() {
-    SettingScreen {}
+    SettingScreen(
+        navigateToStatistics = {},
+        navigateToLogin = {}
+    )
 }
