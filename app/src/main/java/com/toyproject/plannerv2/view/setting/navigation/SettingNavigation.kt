@@ -11,8 +11,14 @@ fun NavHostController.navigateToSetting() {
     navigate(settingRoute)
 }
 
-fun NavGraphBuilder.settingScreen(navigateToStatistics: () -> Unit) {
+fun NavGraphBuilder.settingScreen(
+    navigateToStatistics: () -> Unit,
+    navigateToLogin: () -> Unit,
+) {
     composable(route = settingRoute) {
-        SettingScreen(navigateToStatistics = navigateToStatistics)
+        SettingScreen(
+            navigateToStatistics = navigateToStatistics,
+            navigateToLogin = navigateToLogin
+        )
     }
 }

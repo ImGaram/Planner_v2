@@ -8,7 +8,11 @@ import com.toyproject.plannerv2.view.login.LoginScreen
 const val loginRoute = "login"
 
 fun NavHostController.navigateToLogin() {
-    this.navigate(loginRoute)
+    this.navigate(loginRoute) {
+        popUpTo(graph.id) {
+            inclusive = true
+        }
+    }
 }
 
 fun NavGraphBuilder.loginScreen(navigateToPlan: () -> Unit) {
