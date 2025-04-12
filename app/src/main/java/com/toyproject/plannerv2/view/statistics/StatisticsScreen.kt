@@ -87,7 +87,6 @@ fun StatisticsScreen(
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = "setting icon",
-                        modifier = Modifier.size(24.dp),
                         tint = PlannerTheme.colors.primary
                     )
                 }

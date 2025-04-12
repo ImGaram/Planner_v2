@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -30,13 +32,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.toyproject.plannerv2.R
 import com.toyproject.plannerv2.data.PlanData
 import com.toyproject.plannerv2.util.stringToUnixTimestamp
 import com.toyproject.plannerv2.view.create.component.CreatePlanCard
@@ -143,16 +143,15 @@ fun CreatePlanTitle(navigateToPlan: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 10.dp, end = 15.dp, top = 15.dp, bottom = 10.dp),
+            .padding(start = 10.dp, top = 15.dp, bottom = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
-            modifier = Modifier.size(36.dp),
+            modifier = Modifier.size(48.dp),
             onClick = { navigateToPlan() }
         ) {
             Icon(
-                modifier = Modifier.padding(5.dp),
-                painter = painterResource(id = R.drawable.ic_back_arrow),
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "back arrow",
                 tint = PlannerTheme.colors.primary
             )
@@ -160,7 +159,6 @@ fun CreatePlanTitle(navigateToPlan: () -> Unit) {
 
         Text(
             text = "일정 생성",
-            modifier = Modifier.padding(start = 16.dp),
             color = PlannerTheme.colors.primary,
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold
