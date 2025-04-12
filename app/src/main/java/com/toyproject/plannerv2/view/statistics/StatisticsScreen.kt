@@ -76,7 +76,7 @@ fun StatisticsScreen(
                     style = TextStyle(
                         color = PlannerTheme.colors.primary,
                         fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.SemiBold
                     )
                 )
 
