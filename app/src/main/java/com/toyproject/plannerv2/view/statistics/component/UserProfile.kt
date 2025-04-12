@@ -44,8 +44,8 @@ fun UserProfile(
         var textStyleState by remember {
             mutableStateOf(
                 TextStyle(
-                    fontSize = 23.sp,
-                    fontWeight = FontWeight.Bold
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium
                 )
             )
         }

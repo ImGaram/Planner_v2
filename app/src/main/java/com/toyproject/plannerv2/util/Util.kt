@@ -1,6 +1,9 @@
 package com.toyproject.plannerv2.util
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.ui.graphics.Color
+import androidx.core.net.toUri
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.entryOf
 import java.time.Instant
@@ -44,4 +47,9 @@ fun Color.toHexCode(): String {
     val blue = blue * 255
 
     return String.format("#%02x%02x%02x%02x", alpha.toInt(), red.toInt(), green.toInt(), blue.toInt())
+}
+
+fun Context.openLink(url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+    startActivity(intent)
 }

@@ -3,7 +3,6 @@ package com.toyproject.plannerv2.view.create
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,9 +15,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,14 +32,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.toyproject.plannerv2.R
 import com.toyproject.plannerv2.data.PlanData
 import com.toyproject.plannerv2.util.stringToUnixTimestamp
 import com.toyproject.plannerv2.view.create.component.CreatePlanCard
@@ -70,12 +67,7 @@ fun CreatePlanScreen(
         buttonsVisibility = planList.value.isNotEmpty() && !titleIsEmpty
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PlannerTheme.colors.background),
-        horizontalAlignment = Alignment.End
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         CreatePlanTitle(navigateToPlan = navigateToPlan)
 
         HorizontalDivider(
@@ -151,21 +143,19 @@ fun CreatePlanTitle(navigateToPlan: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 10.dp, end = 15.dp, top = 15.dp, bottom = 10.dp)
+            .padding(start = 10.dp, top = 15.dp, bottom = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
-            modifier = Modifier.size(36.dp),
+            modifier = Modifier.size(48.dp),
             onClick = { navigateToPlan() }
         ) {
             Icon(
-                modifier = Modifier.padding(5.dp),
-                painter = painterResource(id = R.drawable.ic_back_arrow),
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "back arrow",
                 tint = PlannerTheme.colors.primary
             )
         }
-
-        Spacer(modifier = Modifier.weight(1f))
 
         Text(
             text = "일정 생성",
@@ -176,7 +166,7 @@ fun CreatePlanTitle(navigateToPlan: () -> Unit) {
     }
 
     Text(
-        modifier = Modifier.padding(end = 15.dp, bottom = 15.dp),
+        modifier = Modifier.padding(start = 15.dp, bottom = 15.dp),
         text = "생성한 일정을 클릭하여 수정하세요.",
         color = PlannerTheme.colors.primary
     )

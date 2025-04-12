@@ -55,9 +55,7 @@ fun LoginScreen(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PlannerTheme.colors.background),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(3f))
