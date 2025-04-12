@@ -1,7 +1,6 @@
 package com.toyproject.plannerv2.view.plan
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,11 +45,7 @@ fun PlanScreen(
         categoryViewModel.getCategory(uid = uid.toString())
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PlannerTheme.colors.background)
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             item {
                 PlanHorizontalCalendar(

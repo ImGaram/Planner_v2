@@ -1,6 +1,5 @@
 package com.toyproject.plannerv2.view.statistics
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,14 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -56,7 +53,6 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .background(PlannerTheme.colors.background)
     ) {
         val currentAccount = GoogleSignIn.getLastSignedInAccount(LocalContext.current)
         UserProfile(
