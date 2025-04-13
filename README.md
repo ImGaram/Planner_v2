@@ -4,6 +4,7 @@
 
   <img src="https://img.shields.io/badge/release-1.2.0-brightgreen?style=plastic&logo=googlechrome&logoColor=white&link=https%3A%2F%2Fgithub.com%2FImGaram%2FPlanner_v2%2Freleases%2Ftag%2Fv1.2.0">
   <img src="https://img.shields.io/badge/%EA%B8%B0%EC%88%A0%20%EB%B8%94%EB%A1%9C%EA%B7%B8-EB531F?style=plastic&logo=tistory&logoColor=white&link=https%3A%2F%2Frkdrkd-history.tistory.com%2Fcategory%2F%25E2%259B%258F%25EF%25B8%258F%2520%257C%2520%25EA%25B0%259C%25EB%25B0%259C%2520%25EA%25B8%25B0%25EB%25A1%259D%2F%25E2%258F%25B0%2520%257C%2520Schedule%2520Planner">
+  <img src="https://img.shields.io/badge/License-Apache%202.0-brightgreen">
 </p>
 
 
