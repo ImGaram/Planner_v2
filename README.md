@@ -2,11 +2,13 @@
   <img src="https://github.com/user-attachments/assets/7b9a3231-622a-4c94-b604-fa6823df04aa" width="75%"/>
   <br>
 
-  <img src="https://img.shields.io/badge/release-1.2.0-brightgreen?style=plastic&logo=googlechrome&logoColor=white&link=https%3A%2F%2Fgithub.com%2FImGaram%2FPlanner_v2%2Freleases%2Ftag%2Fv1.2.0">
-  <img src="https://img.shields.io/badge/%EA%B8%B0%EC%88%A0%20%EB%B8%94%EB%A1%9C%EA%B7%B8-EB531F?style=plastic&logo=tistory&logoColor=white&link=https%3A%2F%2Frkdrkd-history.tistory.com%2Fcategory%2F%25E2%259B%258F%25EF%25B8%258F%2520%257C%2520%25EA%25B0%259C%25EB%25B0%259C%2520%25EA%25B8%25B0%25EB%25A1%259D%2F%25E2%258F%25B0%2520%257C%2520Schedule%2520Planner">
-  <img src="https://img.shields.io/badge/License-Apache%202.0-brightgreen">
+  <a style="text-align: center;">
+    <a href="https://github.com/ImGaram/Planner_v2/releases/tag/v1.2.0"><img src="https://img.shields.io/badge/release-1.2.0-brightgreen?style=plastic&logo=googlechrome&logoColor=white"/></a>
+    <a href="https://rkdrkd-history.tistory.com/category/%E2%9B%8F%EF%B8%8F%20%7C%20%EA%B0%9C%EB%B0%9C%20%EA%B8%B0%EB%A1%9D/%E2%8F%B0%20%7C%20Schedule%20Planner"><img src="https://img.shields.io/badge/%EA%B8%B0%EC%88%A0%20%EB%B8%94%EB%A1%9C%EA%B7%B8-EB531F?style=plastic&logo=tistory&logoColor=white"/></a>
+    <img src="https://img.shields.io/badge/License-Apache%202.0-brightgreen"/>
+  </a>
 </p>
-
+<br>
 
 ## 📄 소개
 하루 일정을 작성하고 확인할 수 있는 서비스입니다.
@@ -50,4 +52,11 @@
 
 **tools**
 - github
+
+<br>
+
+## ⬇️ 앱 설치하기
+<a href="https://play.google.com/store/apps/details?id=com.toyproject.plannerv2">
+  <img src="https://github.com/user-attachments/assets/bf349463-a8e6-4ae5-bc08-fe9bca6c1719" width="25%"/>
+</a>
 
